@@ -1,0 +1,49 @@
+reviews:
+  profile: assertive
+  poem: false
+  high_level_summary: true
+  review_status: true
+  collapse_walkthrough: true
+  request_changes_workflow: true
+
+  auto_review:
+    enabled: true
+    drafts: false
+    # Pause automatic incremental reviews after 2 reviewed commits (default 5).
+    # CodeRabbit meters reviews per DEVELOPER IDENTITY across every repo, in a rolling
+    # 7-day window degrading from 30 reviews/7d, and every push spends one. This
+    # enforces push-batching mechanically instead of relying on remembering to batch.
+    auto_pause_after_reviewed_commits: 2
+    # Do NOT add ignore_title_keywords ("chore:" matches this estate's Dependabot
+    # titles) or ignore_usernames for dependabot[bot]/renovate[bot]. Dependency changes
+    # are classed HIGH in .claude/review-policy.json on supply-chain grounds, and Gitar
+    # already skips bot-authored PRs unless allow-listed — silencing CodeRabbit too
+    # would leave supply-chain PRs with no AI review at all.
+
+  path_filters:
+    - "!**/bin/**"
+    - "!**/obj/**"
+    - "!**/dist/**"
+    - "!**/build/**"
+    - "!**/coverage/**"
+    - "!**/*.lock"
+
+  instructions: |
+    Review as a senior engineer. Prioritise correctness, security, maintainability,
+    testability, and accidental complexity.
+
+    Do not nitpick style unless it affects readability or consistency.
+    Prefer actionable findings over commentary.
+    Call out missing tests for changed behaviour.
+    Treat generated files, lock files, snapshots, and formatting churn as low value.
+
+    For .NET code, pay particular attention to:
+    - async/await correctness
+    - nullability
+    - DI lifetime mistakes
+    - exception handling and logging
+    - test coverage around edge cases
+
+    This library parses FIXatdl and is PUBLISHED as a package, so its public API is a
+    compatibility surface: flag breaking signature or behaviour changes explicitly, and
+    treat parser edge cases (malformed, unusual or hostile input) as security-relevant.
