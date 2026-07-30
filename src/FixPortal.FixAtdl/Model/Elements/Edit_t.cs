@@ -567,6 +567,7 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
                 return Convert.ToDecimal(val, CultureInfo.InvariantCulture);
             }
             catch (Exception ex)
+                when (ex is FormatException or InvalidCastException or OverflowException)
             {
                 throw ThrowHelper.New<InvalidOperationException>(
                     null,
