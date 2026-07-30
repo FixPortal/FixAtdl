@@ -54,9 +54,31 @@ Open `FixPortal.FixAtdl.slnx` in Visual Studio, then build the solution and run
 the tests from Test Explorer. The equivalent command-line checks are:
 
 ```powershell
+dotnet tool restore
+```
+
+```powershell
+dotnet csharpier check .
+```
+
+```powershell
 dotnet restore FixPortal.FixAtdl.slnx
+```
+
+```powershell
+dotnet format FixPortal.FixAtdl.slnx analyzers --verify-no-changes --no-restore
+```
+
+```powershell
 dotnet build FixPortal.FixAtdl.slnx --configuration Release --no-restore
+```
+
+```powershell
 dotnet test FixPortal.FixAtdl.slnx --configuration Release --no-build
+```
+
+```powershell
+dotnet pack FixPortal.FixAtdl.slnx --configuration Release --no-build --output ./_pkgout
 ```
 
 Files modified from upstream carry a `// FP Enhancement: <date> — <reason>` banner.
