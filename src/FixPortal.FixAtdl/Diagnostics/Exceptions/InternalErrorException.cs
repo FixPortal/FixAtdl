@@ -15,9 +15,7 @@ public class InternalErrorException : Exception
     /// </summary>
     /// <param name="message">The message.</param>
     public InternalErrorException(string message)
-        : base(message)
-    {
-    }
+        : base(message) { }
 
     /// <summary>
     /// Initializes a new instance of <see cref="InternalErrorException"/>.
@@ -25,8 +23,5 @@ public class InternalErrorException : Exception
     /// <param name="message">The message.</param>
     /// <param name="innerException">The inner exception.</param>
     public InternalErrorException(string message, Exception innerException)
-        : base(message, innerException)
-    {
-    }
+        : base(message, innerException) { }
 }
-

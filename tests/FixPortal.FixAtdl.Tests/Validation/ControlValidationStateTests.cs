@@ -20,7 +20,8 @@ public class ControlValidationStateTests
 
     private static Strategy_t LoadTwap()
     {
-        const string xml = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+        const string xml =
+            @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <Strategies xmlns=""http://www.fixprotocol.org/FIXatdl-1-1/Core""
             xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""
             strategyIdentifierTag=""5001"">
@@ -39,7 +40,7 @@ public class ControlValidationStateTests
         {
             Field = "Participation",
             Operator = Operator_t.Equal,
-            Value = "50"
+            Value = "50",
         };
         ((IResolvable<Strategy_t, IParameter>)edit).Resolve(twap, twap.Parameters);
         return new StrategyEdit_t { Edit = edit, ErrorMessage = "Participation must be 50" };
@@ -52,7 +53,7 @@ public class ControlValidationStateTests
         {
             Field = "Participation",
             Operator = Operator_t.Equal,
-            Value = "50"
+            Value = "50",
         };
         ((IResolvable<Strategy_t, IParameter>)edit).Resolve(twap, twap.Parameters);
         var se = new StrategyEdit_t { Edit = edit, ErrorMessage = "Participation must be 50" };
@@ -82,21 +83,36 @@ public class ControlValidationStateTests
     [Fact]
     public void CurrentState_is_false_when_ControlValidationResult_is_invalid()
     {
-        var state = new ControlValidationState("ctrl-1") { ControlValidationResult = new ValidationResult(ValidationResult.ResultType.Invalid, "bad") };
+        var state = new ControlValidationState("ctrl-1")
+        {
+            ControlValidationResult = new ValidationResult(
+                ValidationResult.ResultType.Invalid,
+                "bad"
+            ),
+        };
         state.CurrentState.Should().BeFalse();
     }
 
     [Fact]
     public void CurrentState_is_true_when_ControlValidationResult_is_valid()
     {
-        var state = new ControlValidationState("ctrl-1") { ControlValidationResult = ValidationResult.ValidResult };
+        var state = new ControlValidationState("ctrl-1")
+        {
+            ControlValidationResult = ValidationResult.ValidResult,
+        };
         state.CurrentState.Should().BeTrue();
     }
 
     [Fact]
     public void CurrentState_is_false_when_ParameterValidationResult_is_invalid()
     {
-        var state = new ControlValidationState("ctrl-1") { ParameterValidationResult = new ValidationResult(ValidationResult.ResultType.Invalid, "param-bad") };
+        var state = new ControlValidationState("ctrl-1")
+        {
+            ParameterValidationResult = new ValidationResult(
+                ValidationResult.ResultType.Invalid,
+                "param-bad"
+            ),
+        };
         state.CurrentState.Should().BeFalse();
     }
 
@@ -166,7 +182,7 @@ public class ControlValidationStateTests
         {
             Field = "Participation",
             Operator = Operator_t.Equal,
-            Value = "50"
+            Value = "50",
         };
         ((IResolvable<Strategy_t, IParameter>)edit).Resolve(twap, twap.Parameters);
         var se = new StrategyEdit_t { Edit = edit, ErrorMessage = "Must be 50" };
@@ -183,21 +199,36 @@ public class ControlValidationStateTests
     [Fact]
     public void ErrorText_is_empty_when_all_valid()
     {
-        var state = new ControlValidationState("ctrl-1") { ControlValidationResult = ValidationResult.ValidResult };
+        var state = new ControlValidationState("ctrl-1")
+        {
+            ControlValidationResult = ValidationResult.ValidResult,
+        };
         state.ErrorText.Should().BeEmpty();
     }
 
     [Fact]
     public void ErrorText_contains_ControlValidationResult_error()
     {
-        var state = new ControlValidationState("ctrl-1") { ControlValidationResult = new ValidationResult(ValidationResult.ResultType.Invalid, "ctrl error") };
+        var state = new ControlValidationState("ctrl-1")
+        {
+            ControlValidationResult = new ValidationResult(
+                ValidationResult.ResultType.Invalid,
+                "ctrl error"
+            ),
+        };
         state.ErrorText.Should().Contain("ctrl error");
     }
 
     [Fact]
     public void ErrorText_contains_ParameterValidationResult_error()
     {
-        var state = new ControlValidationState("ctrl-1") { ParameterValidationResult = new ValidationResult(ValidationResult.ResultType.Invalid, "param error") };
+        var state = new ControlValidationState("ctrl-1")
+        {
+            ParameterValidationResult = new ValidationResult(
+                ValidationResult.ResultType.Invalid,
+                "param error"
+            ),
+        };
         state.ErrorText.Should().Contain("param error");
     }
 
@@ -220,8 +251,14 @@ public class ControlValidationStateTests
 
         var state = new ControlValidationState("ctrl-1")
         {
-            ControlValidationResult = new ValidationResult(ValidationResult.ResultType.Invalid, "ctrl error"),
-            ParameterValidationResult = new ValidationResult(ValidationResult.ResultType.Invalid, "param error")
+            ControlValidationResult = new ValidationResult(
+                ValidationResult.ResultType.Invalid,
+                "ctrl error"
+            ),
+            ParameterValidationResult = new ValidationResult(
+                ValidationResult.ResultType.Invalid,
+                "param error"
+            ),
         };
         state.Add(se);
 
@@ -258,7 +295,11 @@ public class ControlValidationStateTests
     [Fact]
     public void ValidationResult_Missing_type_reports_IsMissing_true()
     {
-        var result = new ValidationResult(ValidationResult.ResultType.Missing, "missing field {0}", "Participation");
+        var result = new ValidationResult(
+            ValidationResult.ResultType.Missing,
+            "missing field {0}",
+            "Participation"
+        );
         result.IsValid.Should().BeFalse();
         result.IsMissing.Should().BeTrue();
         result.ErrorText.Should().Contain("Participation");

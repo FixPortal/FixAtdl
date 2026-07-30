@@ -18,8 +18,8 @@ public class ParameterTypeFeatureTests
     // ──────────────────────────────────────────────────────────────────────────
 
     [Fact]
-    public void IsSet_is_false_on_new_parameter()
-        => new Parameter_t<Int_t>("X").IsSet.Should().BeFalse();
+    public void IsSet_is_false_on_new_parameter() =>
+        new Parameter_t<Int_t>("X").IsSet.Should().BeFalse();
 
     [Fact]
     public void IsSet_is_true_after_WireValue_set()
@@ -189,7 +189,11 @@ public class ParameterTypeFeatureTests
     [InlineData("-2.5", 0, "-3")]
     [InlineData("2.345", 2, "2.35")]
     [InlineData("2.344", 2, "2.34")]
-    public void Float_t_Precision_rounds_away_from_zero(string input, int precision, string expected)
+    public void Float_t_Precision_rounds_away_from_zero(
+        string input,
+        int precision,
+        string expected
+    )
     {
         var p = new Parameter_t<Float_t>("X");
         p.Value.Precision = precision;
@@ -764,18 +768,29 @@ public class ParameterTypeFeatureTests
     public void ValidationResult_formatting_safety_on_zero_args_with_literal_braces()
     {
         // Zero args, string contains literal braces (e.g. from XML)
-        var result = new FixPortal.FixAtdl.Validation.ValidationResult(FixPortal.FixAtdl.Validation.ValidationResult.ResultType.Invalid, "This has literal braces {NULL} and Nullable{Int32}");
+        var result = new FixPortal.FixAtdl.Validation.ValidationResult(
+            FixPortal.FixAtdl.Validation.ValidationResult.ResultType.Invalid,
+            "This has literal braces {NULL} and Nullable{Int32}"
+        );
         result.ErrorText.Should().Be("This has literal braces {NULL} and Nullable{Int32}");
     }
 
     [Fact]
     public void RegionCountries_are_read_only()
     {
-        FixPortal.FixAtdl.Model.Reference.Regions.TheAmericasCountries.Should().BeAssignableTo<System.Collections.Frozen.FrozenSet<FixPortal.FixAtdl.Model.Reference.IsoCountryCode>>();
-        FixPortal.FixAtdl.Model.Reference.Regions.EuropeMiddleEastAfricaCountries.Should().BeAssignableTo<System.Collections.Frozen.FrozenSet<FixPortal.FixAtdl.Model.Reference.IsoCountryCode>>();
-        FixPortal.FixAtdl.Model.Reference.Regions.AsiaPacificJapanCountries.Should().BeAssignableTo<System.Collections.Frozen.FrozenSet<FixPortal.FixAtdl.Model.Reference.IsoCountryCode>>();
+        FixPortal
+            .FixAtdl.Model.Reference.Regions.TheAmericasCountries.Should()
+            .BeAssignableTo<System.Collections.Frozen.FrozenSet<FixPortal.FixAtdl.Model.Reference.IsoCountryCode>>();
+        FixPortal
+            .FixAtdl.Model.Reference.Regions.EuropeMiddleEastAfricaCountries.Should()
+            .BeAssignableTo<System.Collections.Frozen.FrozenSet<FixPortal.FixAtdl.Model.Reference.IsoCountryCode>>();
+        FixPortal
+            .FixAtdl.Model.Reference.Regions.AsiaPacificJapanCountries.Should()
+            .BeAssignableTo<System.Collections.Frozen.FrozenSet<FixPortal.FixAtdl.Model.Reference.IsoCountryCode>>();
 
-        var americasColl = (System.Collections.Generic.ICollection<FixPortal.FixAtdl.Model.Reference.IsoCountryCode>)FixPortal.FixAtdl.Model.Reference.Regions.TheAmericasCountries;
+        var americasColl =
+            (System.Collections.Generic.ICollection<FixPortal.FixAtdl.Model.Reference.IsoCountryCode>)
+                FixPortal.FixAtdl.Model.Reference.Regions.TheAmericasCountries;
         Action addAct = () => americasColl.Add(FixPortal.FixAtdl.Model.Reference.IsoCountryCode.US);
         addAct.Should().Throw<NotSupportedException>();
     }

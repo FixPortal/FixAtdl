@@ -55,7 +55,10 @@ public class StrategyEditCollection : Collection<StrategyEdit_t>
     {
         foreach (StrategyEdit_t strategyEdit in this)
         {
-            (strategyEdit as IResolvable<Strategy_t, IParameter>).Resolve(owningStrategy, owningStrategy.Parameters);
+            (strategyEdit as IResolvable<Strategy_t, IParameter>).Resolve(
+                owningStrategy,
+                owningStrategy.Parameters
+            );
         }
     }
 }

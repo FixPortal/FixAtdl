@@ -17,4 +17,3 @@ public static class Atdl
     /// </summary>
     public const string NullValue = "{NULL}";
 }
-

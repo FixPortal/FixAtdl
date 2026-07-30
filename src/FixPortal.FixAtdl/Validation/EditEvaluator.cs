@@ -19,7 +19,8 @@ namespace FixPortal.FixAtdl.Validation;
 /// <summary>
 /// Provides shared edit-evaluation behavior for state rules and strategy edits.
 /// </summary>
-public abstract class EditEvaluator<T> : IResolvable<Strategy_t, T> where T : class, IValueProvider
+public abstract class EditEvaluator<T> : IResolvable<Strategy_t, T>
+    where T : class, IValueProvider
 {
     /// <summary>
     /// Gets the set of field sources referenced by the active edit or edit reference.
@@ -38,7 +39,11 @@ public abstract class EditEvaluator<T> : IResolvable<Strategy_t, T> where T : cl
                 return EditRef.Sources;
             }
 
-            throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.NeitherEditNorEditRefSetOnObject, GetType().Name);
+            throw ThrowHelper.New<InvalidOperationException>(
+                this,
+                ErrorMessages.NeitherEditNorEditRefSetOnObject,
+                GetType().Name
+            );
         }
     }
 
@@ -59,7 +64,11 @@ public abstract class EditEvaluator<T> : IResolvable<Strategy_t, T> where T : cl
                 return EditRef.CurrentState;
             }
 
-            throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.NeitherEditNorEditRefSetOnObject, GetType().Name);
+            throw ThrowHelper.New<InvalidOperationException>(
+                this,
+                ErrorMessages.NeitherEditNorEditRefSetOnObject,
+                GetType().Name
+            );
         }
     }
 
@@ -69,12 +78,15 @@ public abstract class EditEvaluator<T> : IResolvable<Strategy_t, T> where T : cl
     public EditRef_t<T> EditRef
     {
         get;
-
         set
         {
             if (Edit != null)
             {
-                throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.BothEditAndEditRefSetOnObject, GetType().Name);
+                throw ThrowHelper.New<InvalidOperationException>(
+                    this,
+                    ErrorMessages.BothEditAndEditRefSetOnObject,
+                    GetType().Name
+                );
             }
 
             field = value;
@@ -87,12 +99,15 @@ public abstract class EditEvaluator<T> : IResolvable<Strategy_t, T> where T : cl
     public Edit_t<T> Edit
     {
         get;
-
         set
         {
             if (EditRef != null)
             {
-                throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.BothEditAndEditRefSetOnObject, GetType().Name);
+                throw ThrowHelper.New<InvalidOperationException>(
+                    this,
+                    ErrorMessages.BothEditAndEditRefSetOnObject,
+                    GetType().Name
+                );
             }
 
             field = value;
@@ -116,7 +131,11 @@ public abstract class EditEvaluator<T> : IResolvable<Strategy_t, T> where T : cl
         }
         else
         {
-            throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.NeitherEditNorEditRefSetOnObject, GetType().Name);
+            throw ThrowHelper.New<InvalidOperationException>(
+                this,
+                ErrorMessages.NeitherEditNorEditRefSetOnObject,
+                GetType().Name
+            );
         }
     }
 
@@ -135,7 +154,11 @@ public abstract class EditEvaluator<T> : IResolvable<Strategy_t, T> where T : cl
         }
         else
         {
-            throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.NeitherEditNorEditRefSetOnObject, GetType().Name);
+            throw ThrowHelper.New<InvalidOperationException>(
+                this,
+                ErrorMessages.NeitherEditNorEditRefSetOnObject,
+                GetType().Name
+            );
         }
     }
 
@@ -147,11 +170,18 @@ public abstract class EditEvaluator<T> : IResolvable<Strategy_t, T> where T : cl
     /// </summary>
     /// <param name="strategy">The strategy providing resolution context.</param>
     /// <param name="sourceCollection">The value source collection used to resolve field references.</param>
-    void IResolvable<Strategy_t, T>.Resolve(Strategy_t strategy, ISimpleDictionary<T> sourceCollection)
+    void IResolvable<Strategy_t, T>.Resolve(
+        Strategy_t strategy,
+        ISimpleDictionary<T> sourceCollection
+    )
     {
         if (Edit == null && EditRef == null)
         {
-            throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.NeitherEditNorEditRefSetOnObject, GetType().Name);
+            throw ThrowHelper.New<InvalidOperationException>(
+                this,
+                ErrorMessages.NeitherEditNorEditRefSetOnObject,
+                GetType().Name
+            );
         }
 
         if (Edit != null)

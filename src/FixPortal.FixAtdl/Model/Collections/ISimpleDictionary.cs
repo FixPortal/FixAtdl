@@ -27,4 +27,3 @@ public interface ISimpleDictionary<out T>
     /// <returns>True if an item with the supplied key is present; false otherwise.</returns>
     bool Contains(string key);
 }
-

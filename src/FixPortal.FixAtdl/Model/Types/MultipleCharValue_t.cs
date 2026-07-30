@@ -19,4 +19,3 @@ public class MultipleCharValue_t : String_t
     /// <value>true to instruct the OMS to invert; false otherwise.</value>
     public bool? InvertOnWire { get; set; }
 }
-

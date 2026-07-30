@@ -25,7 +25,7 @@ public enum SourceType
     /// <summary>
     /// The value is taken from a previously cached object.
     /// </summary>
-    NamedPredecessor
+    NamedPredecessor,
 }
 
 /// <summary>

@@ -29,7 +29,9 @@ public class ClockTimeProviderTests
 
         clock.LoadInitValue(FixFieldValueProvider.Empty);
 
-        clock.ToDateTime(null!, CultureInfo.InvariantCulture)
-            .Should().Be(new DateTime(2026, 1, 1, expectedHourUtc, 0, 0, DateTimeKind.Utc));
+        clock
+            .ToDateTime(null!, CultureInfo.InvariantCulture)
+            .Should()
+            .Be(new DateTime(2026, 1, 1, expectedHourUtc, 0, 0, DateTimeKind.Utc));
     }
 }

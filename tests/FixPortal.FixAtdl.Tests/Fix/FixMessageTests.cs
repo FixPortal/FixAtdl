@@ -277,7 +277,11 @@ public class FixMessageTests
     // multiplyBy100=true: the wire already carries the whole number 75; no scaling is applied so the
     // control still shows 75. (Confirms the wire->control direction is correct, not inverted.)
     [InlineData(true, "75", "75")]
-    public void FixFieldValueProvider_scales_percentage_init_value_to_whole_percent(bool multiplyBy100, string wireValue, string expected)
+    public void FixFieldValueProvider_scales_percentage_init_value_to_whole_percent(
+        bool multiplyBy100,
+        string wireValue,
+        string expected
+    )
     {
         FixTagValuesCollection fixValues = [];
         fixValues.Add(35, wireValue);

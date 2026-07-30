@@ -20,6 +20,5 @@ public enum Inclusion_t
     /// <summary>
     /// Exclude.
     /// </summary>
-    Exclude
+    Exclude,
 }
-

@@ -17,7 +17,10 @@ public class StrategiesParserRejectionTests
     [Fact]
     public async Task Parse_malformed_xml_throws_xml_exception()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/malformed.xml.txt", TestContext.Current.CancellationToken);
+        var xml = await FixtureFiles.ReadAllTextAsync(
+            "Fixtures/malformed.xml.txt",
+            TestContext.Current.CancellationToken
+        );
         var act = () => Load(xml);
         act.Should().Throw<XmlException>();
     }
@@ -25,7 +28,10 @@ public class StrategiesParserRejectionTests
     [Fact]
     public async Task Parse_schema_invalid_xml_throws_or_records_validation_error()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/invalid-schema.xml", TestContext.Current.CancellationToken);
+        var xml = await FixtureFiles.ReadAllTextAsync(
+            "Fixtures/invalid-schema.xml",
+            TestContext.Current.CancellationToken
+        );
         var act = () => Load(xml);
         act.Should().Throw<FixAtdlException>();
     }
@@ -47,7 +53,9 @@ public class StrategiesParserRejectionTests
             </Strategies>
             """;
         var act = () => Load(xml);
-        act.Should().Throw<FixAtdlException>().WithMessage("RepeatingGroup elements are not supported.");
+        act.Should()
+            .Throw<FixAtdlException>()
+            .WithMessage("RepeatingGroup elements are not supported.");
     }
 
     [Fact]
@@ -75,7 +83,8 @@ public class StrategiesParserRejectionTests
     {
         // Construct a deeply nested XML document
         var sb = new StringBuilder();
-        sb.AppendLine("""
+        sb.AppendLine(
+            """
             <?xml version="1.0" encoding="utf-8"?>
             <Strategies xmlns="http://www.fixprotocol.org/FIXatdl-1-1/Core"
                         xmlns:lay="http://www.fixprotocol.org/FIXatdl-1-1/Layout"
@@ -83,7 +92,8 @@ public class StrategiesParserRejectionTests
                         strategyIdentifierTag="958">
                 <Strategy name="TestRecursion" version="1" wireValue="TestRecursion" uiRep="TestRecursion" providerID="DEMO" lclMktTz="Europe/London">
                     <lay:StrategyLayout>
-            """);
+            """
+        );
 
         const int depth = 130;
         for (int i = 0; i < depth; i++)
@@ -95,11 +105,13 @@ public class StrategiesParserRejectionTests
             sb.AppendLine("        </lay:StrategyPanel>");
         }
 
-        sb.AppendLine("""
+        sb.AppendLine(
+            """
                     </lay:StrategyLayout>
                 </Strategy>
             </Strategies>
-            """);
+            """
+        );
 
         var act = () => Load(sb.ToString());
         act.Should().Throw<FixAtdlException>().WithMessage("*exceeded maximum depth limit*");

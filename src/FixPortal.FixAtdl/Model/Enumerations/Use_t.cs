@@ -22,4 +22,3 @@ public enum Use_t
     /// </summary>
     Optional,
 }
-

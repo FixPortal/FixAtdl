@@ -15,7 +15,10 @@ public class ThrowHelperTests
         // first and the message second; ThrowHelper must surface the real parameter name here,
         // not only the historical synthetic placeholder name.
         ArgumentOutOfRangeException ex = ThrowHelper.NewWithParamName<ArgumentOutOfRangeException>(
-            source: null, paramName: "tenorOffset", message: "out of range");
+            source: null,
+            paramName: "tenorOffset",
+            message: "out of range"
+        );
 
         ex.ParamName.Should().Be("tenorOffset");
     }
@@ -24,7 +27,10 @@ public class ThrowHelperTests
     public void New_without_param_name_defaults_to_Value_for_argument_exceptions()
     {
         // Back-compat: the plain New<T> path keeps the historical synthetic "Value" name.
-        ArgumentOutOfRangeException ex = ThrowHelper.New<ArgumentOutOfRangeException>(null, "out of range");
+        ArgumentOutOfRangeException ex = ThrowHelper.New<ArgumentOutOfRangeException>(
+            null,
+            "out of range"
+        );
 
         ex.ParamName.Should().Be("Value");
     }

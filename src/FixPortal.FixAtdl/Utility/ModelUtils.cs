@@ -32,7 +32,13 @@ public static class ModelUtils
         // Include the CONCRETE visitor type in the key, not just the declared visitorType: two
         // implementations of the same visitor interface would otherwise collide on one cache entry and
         // the second would invoke the first's MethodInfo, throwing a TargetException (F3).
-        string searchString = string.Format(CultureInfo.InvariantCulture, "{0}:{1}:{2}", visitorType.FullName, visitor.GetType().FullName, targetParamType.FullName);
+        string searchString = string.Format(
+            CultureInfo.InvariantCulture,
+            "{0}:{1}:{2}",
+            visitorType.FullName,
+            visitor.GetType().FullName,
+            targetParamType.FullName
+        );
 
         MethodInfo? methodInfo;
 
@@ -68,5 +74,4 @@ public static class ModelUtils
 
         return true;
     }
-
 }

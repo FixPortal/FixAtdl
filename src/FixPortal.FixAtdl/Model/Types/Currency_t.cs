@@ -33,7 +33,10 @@ public class Currency_t : EnumTypeBase<IsoCurrencyCode>
     {
         if (isRequired && value == null)
         {
-            return new ValidationResult(ValidationResult.ResultType.Missing, ErrorMessages.NonOptionalParameterNotSupplied2);
+            return new ValidationResult(
+                ValidationResult.ResultType.Missing,
+                ErrorMessages.NonOptionalParameterNotSupplied2
+            );
         }
 
         return ValidationResult.ValidResult;
@@ -49,12 +52,22 @@ public class Currency_t : EnumTypeBase<IsoCurrencyCode>
     {
         if (value == "None")
         {
-            throw Diagnostics.ThrowHelper.New<System.ArgumentException>(this, Resources.ErrorMessages.InvalidValueEnumParseFailure, value, nameof(IsoCurrencyCode));
+            throw Diagnostics.ThrowHelper.New<System.ArgumentException>(
+                this,
+                Resources.ErrorMessages.InvalidValueEnumParseFailure,
+                value,
+                nameof(IsoCurrencyCode)
+            );
         }
         IsoCurrencyCode parsed = value.ParseAsEnum<IsoCurrencyCode>();
         if (parsed == IsoCurrencyCode.None)
         {
-            throw Diagnostics.ThrowHelper.New<System.ArgumentException>(this, Resources.ErrorMessages.InvalidValueEnumParseFailure, value, nameof(IsoCurrencyCode));
+            throw Diagnostics.ThrowHelper.New<System.ArgumentException>(
+                this,
+                Resources.ErrorMessages.InvalidValueEnumParseFailure,
+                value,
+                nameof(IsoCurrencyCode)
+            );
         }
         return parsed;
     }
@@ -66,7 +79,9 @@ public class Currency_t : EnumTypeBase<IsoCurrencyCode>
     /// <returns>If input value is not null, returns value converted to a string; null otherwise.</returns>
     protected override string? ConvertToWireValueFormat(IsoCurrencyCode? value)
     {
-        return value != null && value != IsoCurrencyCode.None ? Enum.GetName(typeof(IsoCurrencyCode), value) : null;
+        return value != null && value != IsoCurrencyCode.None
+            ? Enum.GetName(typeof(IsoCurrencyCode), value)
+            : null;
     }
 
     /// <summary>
@@ -77,7 +92,10 @@ public class Currency_t : EnumTypeBase<IsoCurrencyCode>
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override IsoCurrencyCode? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
+    protected override IsoCurrencyCode? ConvertToNativeType(
+        IParameter hostParameter,
+        IParameterConvertible value
+    )
     {
         string wireValue = value.ToString(hostParameter);
 
@@ -95,4 +113,3 @@ public class Currency_t : EnumTypeBase<IsoCurrencyCode>
 
     #endregion
 }
-

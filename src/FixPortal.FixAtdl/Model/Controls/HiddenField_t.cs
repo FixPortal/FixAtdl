@@ -19,7 +19,5 @@ public class HiddenField_t : TextControlBase
     /// </summary>
     /// <param name="id">ID for this control.</param>
     public HiddenField_t(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 }

@@ -23,7 +23,8 @@ namespace FixPortal.FixAtdl.Model.Elements;
 /// </summary>
 /// <typeparam name="T">Valid FIXatdl type <see cref="FixPortal.FixAtdl.Model.Types"/></typeparam>
 /// <example>To create a parameter with underlying type Amt_t, use <c>new Parameter_t&lt;Amt_t&gt;</c>.</example>
-public class Parameter_t<T> : IParameter where T : IParameterType, new()
+public class Parameter_t<T> : IParameter
+    where T : IParameterType, new()
 {
     /// <summary>
     /// The underlying value of this parameter.
@@ -87,10 +88,10 @@ public class Parameter_t<T> : IParameter where T : IParameterType, new()
     /// </summary>
     public bool HasEnumPairs => EnumPairs.Count != 0;
 
-    /// <summary>Gets or sets the FIX tag for this parameter, i.e., the tag that will hold the value of the 
-    /// parameter. Required when parameter value is intended to be transported over the wire.  If fixTag is not 
-    /// provided then the Strategies-level attribute, tag957Support, must be set to true, indicating that the 
-    /// order recipient expects to receive algo parameters in the StrategyParameterGrp repeating group beginning 
+    /// <summary>Gets or sets the FIX tag for this parameter, i.e., the tag that will hold the value of the
+    /// parameter. Required when parameter value is intended to be transported over the wire.  If fixTag is not
+    /// provided then the Strategies-level attribute, tag957Support, must be set to true, indicating that the
+    /// order recipient expects to receive algo parameters in the StrategyParameterGrp repeating group beginning
     /// at tag 957.  <b>NB Atdl4net does not currently support usage of the StrategyParameterGrp element.</b></summary>
     /// <value>The FIX tag to use.</value>
     public FixTag? FixTag { get; set; }
@@ -101,19 +102,19 @@ public class Parameter_t<T> : IParameter where T : IParameterType, new()
     public bool? MutableOnCxlRpl { get; set; }
 
     /// <summary>The name of this parameter.</summary>
-    /// <remarks>No two parameters of any strategy may have the same name. The name may be used as a unique key when referenced 
-    /// from the other sub-schemas. Names must begin with an alpha character followed only by alpha-numeric characters 
+    /// <remarks>No two parameters of any strategy may have the same name. The name may be used as a unique key when referenced
+    /// from the other sub-schemas. Names must begin with an alpha character followed only by alpha-numeric characters
     /// and must not contain whitespace characters.</remarks>
     public string Name { get; set; }
 
     /// <summary>Indicates how to interpret those tags that were populated in an original order but are not populated in
-    /// a subsequent cancel/replace of the order message. If this value is true then revert to the value of the original 
+    /// a subsequent cancel/replace of the order message. If this value is true then revert to the value of the original
     /// order, otherwise a null value or the parameter’s default value (Control/@initValue) is to be used or if none is
     /// specified, the parameter is to be omitted.  The default value for this field is false.<br/>
     /// </summary>
     /// <remarks>Although revertOnCxlRpl and mutableOnCxlRpl might appear to be mutually exclusive, this is not strictly
     /// the case, and as the default value for mutableOnCxlRpl is 'true', it is recommended practice to explicitly include
-    /// mutableOnCxlRpl="false" if the option revertOnCxlRpl="true" is set for a given parameter (assuming of course this 
+    /// mutableOnCxlRpl="false" if the option revertOnCxlRpl="true" is set for a given parameter (assuming of course this
     /// is the intended behaviour).</remarks>
     public bool? RevertOnCxlRpl { get; set; }
 
@@ -133,12 +134,11 @@ public class Parameter_t<T> : IParameter where T : IParameterType, new()
     /// </summary>
     public bool IsSet => _value.IsSet;
 
-
     /// <summary>
-    /// Gets the value of this parameter as seen by the Control_t that references it.  May be null if the 
+    /// Gets the value of this parameter as seen by the Control_t that references it.  May be null if the
     /// parameter has no value, for example if it has explicitly been set via a state rule to {NULL}.
     /// </summary>
-    /// <remarks>An <see cref="IControlConvertible"/> is returned enabling the parameter value to be converted into any 
+    /// <remarks>An <see cref="IControlConvertible"/> is returned enabling the parameter value to be converted into any
     /// desired type, provided that the underlying value supports that type.</remarks>
     public IControlConvertible GetValueForControl()
     {
@@ -161,14 +161,25 @@ public class Parameter_t<T> : IParameter where T : IParameterType, new()
             // Update the text in the ValidationResult to include this parameter's name
             if (result.IsMissing)
             {
-                return new ValidationResult(ValidationResult.ResultType.Missing, ErrorMessages.NonOptionalParameterNotSupplied, Name);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Missing,
+                    ErrorMessages.NonOptionalParameterNotSupplied,
+                    Name
+                );
             }
 
             return result;
         }
         catch (FixAtdlException ex)
         {
-            throw ThrowHelper.Rethrow(this, ex, ErrorMessages.UnsuccessfulSetParameterOperation, Name, control.Id, ex.Message);
+            throw ThrowHelper.Rethrow(
+                this,
+                ex,
+                ErrorMessages.UnsuccessfulSetParameterOperation,
+                Name,
+                control.Id,
+                ex.Message
+            );
         }
     }
 
@@ -178,13 +189,16 @@ public class Parameter_t<T> : IParameter where T : IParameterType, new()
     public string? WireValue
     {
         get => _value.GetWireValue(this);
-
         set
         {
             // Wire value of null is not allowed (as it is equivalent to writing FIX tag=<SOH>)
             if (value == null)
             {
-                throw ThrowHelper.NewWithParamName<ArgumentNullException>(this, nameof(value), ErrorMessages.IllegalUseOfNullError);
+                throw ThrowHelper.NewWithParamName<ArgumentNullException>(
+                    this,
+                    nameof(value),
+                    ErrorMessages.IllegalUseOfNullError
+                );
             }
 
             _value.SetWireValue(this, value);

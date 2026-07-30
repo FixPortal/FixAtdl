@@ -20,9 +20,7 @@ public class CheckBoxList_t : ListControlBase, IOrientableControl
     /// </summary>
     /// <param name="id">ID for this control.</param>
     public CheckBoxList_t(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 
     #region IOrientableControl Members
 

@@ -139,7 +139,10 @@ public class FixPrimitivesTests
     {
         // NOTE: AssumeUniversal in FixDateTime converts UTC to local time before returning,
         // so the date/time components depend on the host timezone. Only assert year/month/minute.
-        FixDateTime.TryParse("20260530-14:45:00", CultureInfo.InvariantCulture, out var dt).Should().BeTrue();
+        FixDateTime
+            .TryParse("20260530-14:45:00", CultureInfo.InvariantCulture, out var dt)
+            .Should()
+            .BeTrue();
         dt.Year.Should().Be(2026);
         dt.Month.Should().Be(5);
         dt.Minute.Should().Be(45);

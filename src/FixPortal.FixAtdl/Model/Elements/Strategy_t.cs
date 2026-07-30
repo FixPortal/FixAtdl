@@ -17,7 +17,6 @@ namespace FixPortal.FixAtdl.Model.Elements;
 /// </summary>
 public class Strategy_t : IParentable<Strategies_t>
 {
-
     /// <summary>
     /// Initializes a new <see cref="Strategy_t"/> instance.
     /// </summary>
@@ -59,16 +58,16 @@ public class Strategy_t : IParentable<Strategies_t>
     public string ImageLocation { get; set; } = null!;
 
     /// <summary>
-    /// This element defines the markets/exchanges (by ISO 10383 MIC Code) to which the strategy is applicable. If no 
-    /// Markets element is defined then the strategy is applicable for ALL markets. If a market is defined and has its 
-    /// 'inclusion' attribute set to "Include", then it is implied that the strategy is applicable for ONLY that market.  
-    /// If a market is defined and is set to "Exclude", then it is implied that the strategy is applicable for all 
+    /// This element defines the markets/exchanges (by ISO 10383 MIC Code) to which the strategy is applicable. If no
+    /// Markets element is defined then the strategy is applicable for ALL markets. If a market is defined and has its
+    /// 'inclusion' attribute set to "Include", then it is implied that the strategy is applicable for ONLY that market.
+    /// If a market is defined and is set to "Exclude", then it is implied that the strategy is applicable for all
     /// markets EXCEPT that market.<br/>
-    /// Include takes precedence over Exclude - for example, if XNAS is defined and set to "Include" and XLON is defined 
-    /// and set to "Exclude" then all other markets will also be excluded since the "Include" on XNAS takes precedence 
-    /// over the "Exclude" on XLON.  In this example, the definition of XLON as "Exclude" is unnecessary.  Markets are used 
-    /// in conjunction with regions and countries to define the scope of the strategy.  Markets take precedence over 
-    /// regions and countries.  For example, if AsiaPacificJapan is defined as "Exclude" but the Fukuoka Stock Exchange 
+    /// Include takes precedence over Exclude - for example, if XNAS is defined and set to "Include" and XLON is defined
+    /// and set to "Exclude" then all other markets will also be excluded since the "Include" on XNAS takes precedence
+    /// over the "Exclude" on XLON.  In this example, the definition of XLON as "Exclude" is unnecessary.  Markets are used
+    /// in conjunction with regions and countries to define the scope of the strategy.  Markets take precedence over
+    /// regions and countries.  For example, if AsiaPacificJapan is defined as "Exclude" but the Fukuoka Stock Exchange
     /// (XFKA) is defined as an included market, the strategy will be applicable for all markets in The Americas and EMEA,
     /// as well as only the Fukuoka Stock Exchange in the APAC region.
     /// </summary>
@@ -106,23 +105,23 @@ public class Strategy_t : IParentable<Strategies_t>
 
     /// <summary>
     /// Gets/sets the group of Parameter elements that are intended for use with multi-leg or basket strategies.
-    /// Parameters contained within a RepeatingGroup element are intended to have their tag=value pairs populated 
-    /// in either the ListOrdGrp repeating group of a New Order List message or the LegOrdGrp repeating group of a 
-    /// New Order Multileg message.  Parameters not contained within a RepeatingGroup element have their values 
+    /// Parameters contained within a RepeatingGroup element are intended to have their tag=value pairs populated
+    /// in either the ListOrdGrp repeating group of a New Order List message or the LegOrdGrp repeating group of a
+    /// New Order Multileg message.  Parameters not contained within a RepeatingGroup element have their values
     /// populated in the main body of a message.
     /// </summary>
     public RepeatingGroup_t RepeatingGroup { get; set; } = null!;
 
     /// <summary>
-    /// Gets the list of security types (by SecurityType (tag 167)) for which this Strategy is valid. The absence 
+    /// Gets the list of security types (by SecurityType (tag 167)) for which this Strategy is valid. The absence
     /// of any security types implies that the strategy is valid for all security types.
     /// </summary>
     public SecurityTypeCollection SecurityTypes { get; } = [];
 
     /// <summary>
-    /// Gets/sets the prefix portion of a URL used to access the order or draft at the target 
-    /// e.g. https://xyz.com/algo/dashboard?SenderCompID= - an OMS can append to this the specific SenderCompID 
-    /// string, an ampersand "ClOrdID=" and the specific ClOrdID-string. Trader hits this full URL to communicate 
+    /// Gets/sets the prefix portion of a URL used to access the order or draft at the target
+    /// e.g. https://xyz.com/algo/dashboard?SenderCompID= - an OMS can append to this the specific SenderCompID
+    /// string, an ampersand "ClOrdID=" and the specific ClOrdID-string. Trader hits this full URL to communicate
     /// regarding the order or draft.  See additional documentation.
     /// </summary>
     public string SentOrderLink { get; set; } = null!;
@@ -144,13 +143,13 @@ public class Strategy_t : IParentable<Strategies_t>
     public NumInGroup? TotalLegs { get; set; }
 
     /// <summary>
-    /// Gets/sets a field that denotes the number of repeating orders in a NewOrder-List message or a basket of 
+    /// Gets/sets a field that denotes the number of repeating orders in a NewOrder-List message or a basket of
     /// NewOrder-Single messages.
     /// </summary>
     public NumInGroup? TotalOrders { get; set; }
 
     /// <summary>
-    /// Gets/sets the name of the strategy as rendered in the user interface (UI). If not provided then the "name" attribute should 
+    /// Gets/sets the name of the strategy as rendered in the user interface (UI). If not provided then the "name" attribute should
     /// be used. (This is the value rendered on the UI when the user is presented with a choice of algorithms.)
     /// </summary>
     public string UiRep { get; set; } = null!;
@@ -191,7 +190,10 @@ public class Strategy_t : IParentable<Strategies_t>
     /// <param name="controlInitValueProvider"><see cref="FixFieldValueProvider"/> providing the FIX values to initialize from.</param>
     /// <param name="resetExistingValues">Set to true if each parameter value is to be reset if its value is specified in
     /// inputValues; set to false to leave the parameter value unchanged.</param>
-    public void LoadParameterValues(FixFieldValueProvider controlInitValueProvider, bool resetExistingValues)
+    public void LoadParameterValues(
+        FixFieldValueProvider controlInitValueProvider,
+        bool resetExistingValues
+    )
     {
         Parameters.LoadInitialValues(controlInitValueProvider.FixValues, resetExistingValues);
     }
@@ -207,14 +209,19 @@ public class Strategy_t : IParentable<Strategies_t>
     /// <summary>
     /// Evaluate all the <see cref="StrategyEdit_t">StrategyEdit</see>s for this strategy.
     /// </summary>
-    /// <param name="inputValueProvider">Provider that providers access to any additional FIX field values that may 
+    /// <param name="inputValueProvider">Provider that providers access to any additional FIX field values that may
     /// be required in the Edit evaluation.</param>
     /// <param name="shortCircuit">If true, this method returns as soon as any error is found; if false, all StrategyEdits
     /// are evaluated before the method returns.</param>
-    public bool EvaluateAllStrategyEdits(IInitialFixValueProvider inputValueProvider, bool shortCircuit)
+    public bool EvaluateAllStrategyEdits(
+        IInitialFixValueProvider inputValueProvider,
+        bool shortCircuit
+    )
     {
-        FixFieldValueProvider additionalValues = inputValueProvider == null ?
-            FixFieldValueProvider.Empty : new FixFieldValueProvider(inputValueProvider, Parameters);
+        FixFieldValueProvider additionalValues =
+            inputValueProvider == null
+                ? FixFieldValueProvider.Empty
+                : new FixFieldValueProvider(inputValueProvider, Parameters);
 
         return StrategyEdits.EvaluateAll(additionalValues, shortCircuit);
     }
@@ -225,7 +232,10 @@ public class Strategy_t : IParentable<Strategies_t>
     /// <param name="shortCircuit">If true, this method returns as soon as any error is found; if false, an attempt is made to update all parameter
     /// values before the method returns.</param>
     /// <param name="validationResults">If one or more validations fail, this parameter contains a list of ValidationResults; null otherwise.</param>
-    public bool TryUpdateParameterValuesFromControls(bool shortCircuit, out IList<ValidationResult>? validationResults)
+    public bool TryUpdateParameterValuesFromControls(
+        bool shortCircuit,
+        out IList<ValidationResult>? validationResults
+    )
     {
         return Controls.TryUpdateParameterValues(Parameters, shortCircuit, out validationResults);
     }
@@ -240,7 +250,6 @@ public class Strategy_t : IParentable<Strategies_t>
 
         UpdateControlValuesFromParameters();
     }
-
 
     #region IParentable<Strategies_t> Members
 

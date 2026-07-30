@@ -81,7 +81,9 @@ public class RegionCollection : KeyedCollection<Region, Region_t>
         {
             // Filter explicitly (first matching country wins, preserving enumeration order) rather than a
             // foreach+if implicit filter — also clears CodeQL cs/linq-missed-where.
-            Country_t? countryEntry = region.Countries.FirstOrDefault(c => c.CountryCode == country);
+            Country_t? countryEntry = region.Countries.FirstOrDefault(c =>
+                c.CountryCode == country
+            );
 
             if (countryEntry != null)
             {

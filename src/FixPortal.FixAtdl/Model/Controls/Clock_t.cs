@@ -39,9 +39,7 @@ public class Clock_t : InitializableControl<InitValueClock?>
     /// </summary>
     /// <param name="id">ID for this control.</param>
     public Clock_t(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 
     /// <summary>The IANA/Olson zone in which initValue is represented. Required when initValue is supplied.
     /// Applicable when xsi:type is Clock_t. Null when not supplied in the ATDL.</summary>
@@ -95,8 +93,16 @@ public class Clock_t : InitializableControl<InitValueClock?>
         // silently treating anything that is not 1 as 0 (#4).
         if (InitValueMode is not (null or 0 or 1))
         {
-            throw ThrowHelper.New<InvalidFieldValueException>(this, ErrorMessages.InitControlValueError,
-                Id, string.Format(CultureInfo.InvariantCulture, "initValueMode '{0}' is invalid; expected 0 or 1", InitValueMode));
+            throw ThrowHelper.New<InvalidFieldValueException>(
+                this,
+                ErrorMessages.InitControlValueError,
+                Id,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "initValueMode '{0}' is invalid; expected 0 or 1",
+                    InitValueMode
+                )
+            );
         }
 
         if (InitValue == null)
@@ -109,16 +115,28 @@ public class Clock_t : InitializableControl<InitValueClock?>
         // conversion is undefined; fail fast rather than emit a wrong instant (C1).
         if (string.IsNullOrEmpty(LocalMktTz))
         {
-            throw ThrowHelper.New<InvalidFieldValueException>(this, ErrorMessages.InitControlValueError,
-                Id, "localMktTz is required when initValue is supplied on a Clock_t control");
+            throw ThrowHelper.New<InvalidFieldValueException>(
+                this,
+                ErrorMessages.InitControlValueError,
+                Id,
+                "localMktTz is required when initValue is supplied on a Clock_t control"
+            );
         }
 
         DateTimeZone? zone = TimeZoneProvider.GetZoneOrNull(LocalMktTz);
 
         if (zone == null)
         {
-            throw ThrowHelper.New<InvalidFieldValueException>(this, ErrorMessages.InitControlValueError,
-                Id, string.Format(CultureInfo.InvariantCulture, "localMktTz '{0}' is not a recognised IANA time zone", LocalMktTz));
+            throw ThrowHelper.New<InvalidFieldValueException>(
+                this,
+                ErrorMessages.InitControlValueError,
+                Id,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "localMktTz '{0}' is not a recognised IANA time zone",
+                    LocalMktTz
+                )
+            );
         }
 
         Instant nowInstant = Clock.GetCurrentInstant();
@@ -181,8 +199,16 @@ public class Clock_t : InitializableControl<InitValueClock?>
             }
             else
             {
-                throw ThrowHelper.New<InvalidFieldValueException>(this, ErrorMessages.InitControlValueError,
-                    Id, string.Format(CultureInfo.InvariantCulture, "'{0}' is not a valid value for this control", value));
+                throw ThrowHelper.New<InvalidFieldValueException>(
+                    this,
+                    ErrorMessages.InitControlValueError,
+                    Id,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "'{0}' is not a valid value for this control",
+                        value
+                    )
+                );
             }
         }
         else
@@ -191,8 +217,12 @@ public class Clock_t : InitializableControl<InitValueClock?>
             {
                 DateTime dateTime => ToInstant(dateTime),
                 null => null,
-                _ => throw ThrowHelper.New<InternalErrorException>(this, InternalErrors.UnexpectedArgumentType,
-                    newValue.GetType().FullName, "System.String, System.DateTime"),
+                _ => throw ThrowHelper.New<InternalErrorException>(
+                    this,
+                    InternalErrors.UnexpectedArgumentType,
+                    newValue.GetType().FullName,
+                    "System.String, System.DateTime"
+                ),
             };
         }
     }
@@ -212,7 +242,13 @@ public class Clock_t : InitializableControl<InitValueClock?>
     /// <returns>One of true, false or null which is equivalent to the value of this instance.</returns>
     public override bool? ToBoolean(IParameter targetParameter)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedControlValueConversion, _value, "Boolean", Id);
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedControlValueConversion,
+            _value,
+            "Boolean",
+            Id
+        );
     }
 
     /// <summary>
@@ -223,7 +259,13 @@ public class Clock_t : InitializableControl<InitValueClock?>
     /// <returns>A nullable decimal equivalent to the value of this instance.</returns>
     public override decimal? ToDecimal(IParameter targetParameter, IFormatProvider provider)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedControlValueConversion, _value, "Decimal", Id);
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedControlValueConversion,
+            _value,
+            "Decimal",
+            Id
+        );
     }
 
     /// <summary>
@@ -234,7 +276,13 @@ public class Clock_t : InitializableControl<InitValueClock?>
     /// <returns>A nullable 32-bit signed integer equivalent to the value of this instance.</returns>
     public override int? ToInt32(IParameter targetParameter, IFormatProvider provider)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedControlValueConversion, _value, "Int32", Id);
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedControlValueConversion,
+            _value,
+            "Int32",
+            Id
+        );
     }
 
     /// <summary>
@@ -245,7 +293,13 @@ public class Clock_t : InitializableControl<InitValueClock?>
     /// <returns>A nullable 32-bit unsigned integer equivalent to the value of this instance.</returns>
     public override uint? ToUInt32(IParameter targetParameter, IFormatProvider provider)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedControlValueConversion, _value, "UInt32", Id);
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedControlValueConversion,
+            _value,
+            "UInt32",
+            Id
+        );
     }
 
     /// <summary>
@@ -255,7 +309,13 @@ public class Clock_t : InitializableControl<InitValueClock?>
     /// <returns>A nullable char value equivalent to the value of this instance. May be null.</returns>
     public override char? ToChar(IParameter targetParameter)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedControlValueConversion, _value, "Char", Id);
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedControlValueConversion,
+            _value,
+            "Char",
+            Id
+        );
     }
 
     /// <summary>
@@ -274,7 +334,8 @@ public class Clock_t : InitializableControl<InitValueClock?>
 
         // Emit milliseconds only when present, so whole-second values keep the compact seconds form
         // while sub-second precision is no longer silently dropped (batch 5, Phase-A follow-up).
-        string format = utc.Millisecond == 0 ? FixDateTimeFormat.FixDateTime : FixDateTimeFormat.FixDateTimeMs;
+        string format =
+            utc.Millisecond == 0 ? FixDateTimeFormat.FixDateTime : FixDateTimeFormat.FixDateTimeMs;
 
         return utc.ToString(format, CultureInfo.InvariantCulture);
     }
@@ -323,8 +384,16 @@ public class Clock_t : InitializableControl<InitValueClock?>
 
             if (zone == null)
             {
-                throw ThrowHelper.New<InvalidFieldValueException>(this, ErrorMessages.InitControlValueError,
-                    Id, string.Format(CultureInfo.InvariantCulture, "localMktTz '{0}' is not a recognised IANA time zone", LocalMktTz));
+                throw ThrowHelper.New<InvalidFieldValueException>(
+                    this,
+                    ErrorMessages.InitControlValueError,
+                    Id,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "localMktTz '{0}' is not a recognised IANA time zone",
+                        LocalMktTz
+                    )
+                );
             }
 
             return _value.Value.InZone(zone).ToDateTimeUnspecified();
@@ -376,8 +445,11 @@ public class Clock_t : InitializableControl<InitValueClock?>
             }
         }
 
-        string paramInfo = parameter != null ? $" bound to parameter '{parameter.Name}'" : string.Empty;
-        throw ThrowHelper.New<ArgumentException>(this,
-            $"DateTimeKind.Unspecified is not supported to avoid timezone ambiguity; Kind must be Utc or Local. Control '{Id}'{paramInfo} has no localMktTz set.");
+        string paramInfo =
+            parameter != null ? $" bound to parameter '{parameter.Name}'" : string.Empty;
+        throw ThrowHelper.New<ArgumentException>(
+            this,
+            $"DateTimeKind.Unspecified is not supported to avoid timezone ambiguity; Kind must be Utc or Local. Control '{Id}'{paramInfo} has no localMktTz set."
+        );
     }
 }

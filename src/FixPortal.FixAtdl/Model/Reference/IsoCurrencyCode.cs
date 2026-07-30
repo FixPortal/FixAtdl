@@ -548,6 +548,5 @@ public enum IsoCurrencyCode
     SLE,
 
     /// <summary>South Sudanese Pound (South Sudan)</summary>
-    SSP
+    SSP,
 }
-

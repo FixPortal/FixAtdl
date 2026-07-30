@@ -25,15 +25,21 @@ public abstract class NonZeroPositiveIntegerTypeBase : NonNegativeIntegerTypeBas
     {
         if (value != null && (uint)value < 1)
         {
-            return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.NonZeroPositiveIntRequired, value);
+            return new ValidationResult(
+                ValidationResult.ResultType.Invalid,
+                ErrorMessages.NonZeroPositiveIntRequired,
+                value
+            );
         }
 
         if (isRequired && value == null)
         {
-            return new ValidationResult(ValidationResult.ResultType.Missing, ErrorMessages.NonOptionalParameterNotSupplied2);
+            return new ValidationResult(
+                ValidationResult.ResultType.Missing,
+                ErrorMessages.NonOptionalParameterNotSupplied2
+            );
         }
 
         return ValidationResult.ValidResult;
     }
 }
-

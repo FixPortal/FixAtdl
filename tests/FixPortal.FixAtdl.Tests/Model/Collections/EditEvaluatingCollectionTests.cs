@@ -47,7 +47,8 @@ public class EditEvaluatingCollectionTests
         Strategy_t twap,
         string field,
         Operator_t op,
-        string value)
+        string value
+    )
     {
         var edit = new Edit_t<IParameter>
         {
@@ -94,7 +95,7 @@ public class EditEvaluatingCollectionTests
 
         var collection = new EditEvaluatingCollection<IParameter>
         {
-            LogicOperator = LogicOperator_t.And
+            LogicOperator = LogicOperator_t.And,
         };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.LessThan, "100"));
@@ -113,7 +114,7 @@ public class EditEvaluatingCollectionTests
 
         var collection = new EditEvaluatingCollection<IParameter>
         {
-            LogicOperator = LogicOperator_t.And
+            LogicOperator = LogicOperator_t.And,
         };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.LessThan, "100"));
@@ -132,7 +133,7 @@ public class EditEvaluatingCollectionTests
 
         var collection = new EditEvaluatingCollection<IParameter>
         {
-            LogicOperator = LogicOperator_t.And
+            LogicOperator = LogicOperator_t.And,
         };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
 
@@ -158,7 +159,7 @@ public class EditEvaluatingCollectionTests
 
         var collection = new EditEvaluatingCollection<IParameter>
         {
-            LogicOperator = LogicOperator_t.Or
+            LogicOperator = LogicOperator_t.Or,
         };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "200"));
@@ -177,7 +178,7 @@ public class EditEvaluatingCollectionTests
 
         var collection = new EditEvaluatingCollection<IParameter>
         {
-            LogicOperator = LogicOperator_t.Or
+            LogicOperator = LogicOperator_t.Or,
         };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
 
@@ -199,7 +200,7 @@ public class EditEvaluatingCollectionTests
 
         var collection = new EditEvaluatingCollection<IParameter>
         {
-            LogicOperator = LogicOperator_t.Or
+            LogicOperator = LogicOperator_t.Or,
         };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "200"));
@@ -222,7 +223,7 @@ public class EditEvaluatingCollectionTests
 
         var collection = new EditEvaluatingCollection<IParameter>
         {
-            LogicOperator = LogicOperator_t.Not
+            LogicOperator = LogicOperator_t.Not,
         };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
 
@@ -240,7 +241,7 @@ public class EditEvaluatingCollectionTests
 
         var collection = new EditEvaluatingCollection<IParameter>
         {
-            LogicOperator = LogicOperator_t.Not
+            LogicOperator = LogicOperator_t.Not,
         };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
 
@@ -262,7 +263,7 @@ public class EditEvaluatingCollectionTests
 
         var collection = new EditEvaluatingCollection<IParameter>
         {
-            LogicOperator = LogicOperator_t.Xor
+            LogicOperator = LogicOperator_t.Xor,
         };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "100"));
@@ -281,7 +282,7 @@ public class EditEvaluatingCollectionTests
 
         var collection = new EditEvaluatingCollection<IParameter>
         {
-            LogicOperator = LogicOperator_t.Xor
+            LogicOperator = LogicOperator_t.Xor,
         };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "100"));
@@ -300,7 +301,7 @@ public class EditEvaluatingCollectionTests
 
         var collection = new EditEvaluatingCollection<IParameter>
         {
-            LogicOperator = LogicOperator_t.Xor
+            LogicOperator = LogicOperator_t.Xor,
         };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "100"));
@@ -319,7 +320,7 @@ public class EditEvaluatingCollectionTests
 
         var collection = new EditEvaluatingCollection<IParameter>
         {
-            LogicOperator = LogicOperator_t.Xor
+            LogicOperator = LogicOperator_t.Xor,
         };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "50"));
@@ -342,7 +343,7 @@ public class EditEvaluatingCollectionTests
 
         var collection = new EditEvaluatingCollection<IParameter>
         {
-            LogicOperator = LogicOperator_t.And
+            LogicOperator = LogicOperator_t.And,
         };
 
         var edit = MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0");

@@ -20,9 +20,7 @@ public class RadioButtonList_t : ListControlBase, IOrientableControl
     /// </summary>
     /// <param name="id">ID for this control.</param>
     public RadioButtonList_t(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 
     #region IOrientableControl Members
 

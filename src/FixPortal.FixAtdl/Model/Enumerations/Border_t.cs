@@ -21,6 +21,5 @@ public enum Border_t
     /// <summary>
     /// A line border is to be shown.
     /// </summary>
-    Line
+    Line,
 }
-

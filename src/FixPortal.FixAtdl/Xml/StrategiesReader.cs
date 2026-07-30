@@ -75,7 +75,10 @@ public class StrategiesReader
 
         using (XmlReader reader = XmlReader.Create(path, _readerSettings))
         {
-            document = XDocument.Load(reader, LoadOptions.SetLineInfo | LoadOptions.PreserveWhitespace);
+            document = XDocument.Load(
+                reader,
+                LoadOptions.SetLineInfo | LoadOptions.PreserveWhitespace
+            );
         }
 
         Strategies_t strategies = LoadStrategies(document);
@@ -104,7 +107,10 @@ public class StrategiesReader
 
         using (XmlReader reader = XmlReader.Create(stream, _readerSettings))
         {
-            document = XDocument.Load(reader, LoadOptions.SetLineInfo | LoadOptions.PreserveWhitespace);
+            document = XDocument.Load(
+                reader,
+                LoadOptions.SetLineInfo | LoadOptions.PreserveWhitespace
+            );
         }
 
         Strategies_t strategies = LoadStrategies(document);
@@ -128,10 +134,17 @@ public class StrategiesReader
 
         if (element.Descendants(AtdlNamespaces.core + "RepeatingGroup").Any())
         {
-            throw ThrowHelper.New<FixAtdlException>(this, "RepeatingGroup elements are not supported.");
+            throw ThrowHelper.New<FixAtdlException>(
+                this,
+                "RepeatingGroup elements are not supported."
+            );
         }
 
-        ElementFactory factory = new(SchemaDefinitions.Strategies_t, typeof(Strategy_t), _loggerFactory);
+        ElementFactory factory = new(
+            SchemaDefinitions.Strategies_t,
+            typeof(Strategy_t),
+            _loggerFactory
+        );
 
         // Counter is local to this call (not instance state), so concurrent Load calls on the same
         // StrategiesReader instance cannot corrupt each other's StrategyLoadedEventArgs.Index.

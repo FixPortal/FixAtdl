@@ -40,9 +40,16 @@ public class GenericTypeElementDefinition : ElementDefinition
     /// <param name="commonAttributes">The attribute mappings common to all inner types.</param>
     /// <param name="attributeDictionary">The inner-type-specific attribute mappings.</param>
     /// <param name="children">The child element mappings.</param>
-    public GenericTypeElementDefinition(XName elementName, Type outerType, XName attributeForInnerType,
-        string innerTypeNamespace, ConstructorParameter[] constructorParameters, ElementAttribute[] commonAttributes,
-        Dictionary<Type, ElementAttribute[]> attributeDictionary, ChildElementDefinition[] children)
+    public GenericTypeElementDefinition(
+        XName elementName,
+        Type outerType,
+        XName attributeForInnerType,
+        string innerTypeNamespace,
+        ConstructorParameter[] constructorParameters,
+        ElementAttribute[] commonAttributes,
+        Dictionary<Type, ElementAttribute[]> attributeDictionary,
+        ChildElementDefinition[] children
+    )
         : base(elementName, outerType, constructorParameters, commonAttributes, children)
     {
         AttributeForInnerType = attributeForInnerType;

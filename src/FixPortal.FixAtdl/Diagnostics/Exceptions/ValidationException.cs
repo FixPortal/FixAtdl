@@ -19,9 +19,7 @@ public class ValidationException : FixAtdlException
     /// </summary>
     /// <param name="message"></param>
     public ValidationException(string message)
-        : base(message)
-    {
-    }
+        : base(message) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ValidationException"/> class.
@@ -29,9 +27,5 @@ public class ValidationException : FixAtdlException
     /// <param name="message">The message.</param>
     /// <param name="innerException">The inner exception.</param>
     public ValidationException(string message, Exception innerException)
-        : base(message, innerException)
-    {
-    }
-
+        : base(message, innerException) { }
 }
-

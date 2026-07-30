@@ -50,7 +50,11 @@ public class StateRule_t : EditEvaluator<Control_t>, IParentable<Control_t>
 
         if (Enabled != null)
         {
-            sb.AppendFormat(CultureInfo.InvariantCulture, ", enabled=\"{0}\"", Enabled.Value.ToString().ToLowerInvariant());
+            sb.AppendFormat(
+                CultureInfo.InvariantCulture,
+                ", enabled=\"{0}\"",
+                Enabled.Value.ToString().ToLowerInvariant()
+            );
         }
 
         if (Value != null)
@@ -60,7 +64,11 @@ public class StateRule_t : EditEvaluator<Control_t>, IParentable<Control_t>
 
         if (Visible != null)
         {
-            sb.AppendFormat(CultureInfo.InvariantCulture, ", visible=\"{0}\"", Visible.Value.ToString().ToLowerInvariant());
+            sb.AppendFormat(
+                CultureInfo.InvariantCulture,
+                ", visible=\"{0}\"",
+                Visible.Value.ToString().ToLowerInvariant()
+            );
         }
 
         sb.Append(')');

@@ -175,11 +175,7 @@ public class BinaryControlTests
     [Fact]
     public void CheckBox_has_enumerated_state_when_enum_refs_set()
     {
-        var control = new CheckBox_t("chk")
-        {
-            CheckedEnumRef = "Y",
-            UncheckedEnumRef = "N"
-        };
+        var control = new CheckBox_t("chk") { CheckedEnumRef = "Y", UncheckedEnumRef = "N" };
         control.HasEnumeratedState.Should().BeTrue();
     }
 
@@ -471,10 +467,7 @@ public class ListControlTests
         var ctrl = MakeDropDown("A");
         ctrl.LoadInitValue(FixFieldValueProvider.Empty);
 
-        var newState = new EnumState(["A", "B", "C"])
-        {
-            ["C"] = true
-        };
+        var newState = new EnumState(["A", "B", "C"]) { ["C"] = true };
         ctrl.SetValue(newState);
 
         var state = (EnumState)ctrl.GetCurrentValue();
@@ -521,10 +514,7 @@ public class EnumStateTests
     [Fact]
     public void EnumState_indexer_set_and_get()
     {
-        var state = new EnumState(["A", "B"])
-        {
-            ["A"] = true
-        };
+        var state = new EnumState(["A", "B"]) { ["A"] = true };
         state["A"].Should().BeTrue();
         state["B"].Should().BeFalse();
     }
@@ -532,10 +522,7 @@ public class EnumStateTests
     [Fact]
     public void EnumState_copy_ctor_deep_clones()
     {
-        var original = new EnumState(["A", "B"])
-        {
-            ["A"] = true
-        };
+        var original = new EnumState(["A", "B"]) { ["A"] = true };
 
         var copy = new EnumState(original);
         copy["A"].Should().BeTrue();
@@ -562,10 +549,7 @@ public class EnumStateTests
     [Fact]
     public void EnumState_clear_all_resets_bits()
     {
-        var state = new EnumState(["A", "B"])
-        {
-            ["A"] = true
-        };
+        var state = new EnumState(["A", "B"]) { ["A"] = true };
         state.ClearAll();
         state["A"].Should().BeFalse();
     }
@@ -582,7 +566,10 @@ public class EnumStateTests
     public void EnumState_invalid_indexer_get_throws()
     {
         var state = new EnumState(["A"]);
-        var act = () => { _ = state["INVALID"]; };
+        var act = () =>
+        {
+            _ = state["INVALID"];
+        };
         act.Should().Throw<ArgumentException>();
     }
 
@@ -590,7 +577,10 @@ public class EnumStateTests
     public void EnumState_invalid_indexer_set_throws()
     {
         var state = new EnumState(["A"]);
-        var act = () => { state["INVALID"] = true; };
+        var act = () =>
+        {
+            state["INVALID"] = true;
+        };
         act.Should().Throw<ArgumentException>();
     }
 
@@ -604,10 +594,7 @@ public class EnumStateTests
     [Fact]
     public void EnumState_get_first_selected_enum_id_returns_id()
     {
-        var state = new EnumState(["A", "B", "C"])
-        {
-            ["B"] = true
-        };
+        var state = new EnumState(["A", "B", "C"]) { ["B"] = true };
         state.GetFirstSelectedEnumId().Should().Be("B");
     }
 
@@ -622,11 +609,7 @@ public class EnumStateTests
     [Fact]
     public void EnumState_non_enum_value_clears_bits()
     {
-        var state = new EnumState(["A", "B"])
-        {
-            ["A"] = true,
-            NonEnumValue = "custom"
-        };
+        var state = new EnumState(["A", "B"]) { ["A"] = true, NonEnumValue = "custom" };
         state["A"].Should().BeFalse();
         state.NonEnumValue.Should().Be("custom");
     }
@@ -636,10 +619,7 @@ public class EnumStateTests
     {
         // B-N1: free text then a list selection via the indexer must drop the stale text — otherwise
         // ToWireValue returns the NonEnumValue unconditionally and the selection is silently lost.
-        var state = new EnumState(["A", "B"])
-        {
-            NonEnumValue = "custom"
-        };
+        var state = new EnumState(["A", "B"]) { NonEnumValue = "custom" };
         state["A"] = true;
         state["A"].Should().BeTrue();
         state.NonEnumValue.Should().BeNull();
@@ -648,28 +628,16 @@ public class EnumStateTests
     [Fact]
     public void EnumState_equals_same_state()
     {
-        var a = new EnumState(["X", "Y"])
-        {
-            ["X"] = true
-        };
-        var b = new EnumState(["X", "Y"])
-        {
-            ["X"] = true
-        };
+        var a = new EnumState(["X", "Y"]) { ["X"] = true };
+        var b = new EnumState(["X", "Y"]) { ["X"] = true };
         a.Equals(b).Should().BeTrue();
     }
 
     [Fact]
     public void EnumState_not_equals_different_state()
     {
-        var a = new EnumState(["X", "Y"])
-        {
-            ["X"] = true
-        };
-        var b = new EnumState(["X", "Y"])
-        {
-            ["Y"] = true
-        };
+        var a = new EnumState(["X", "Y"]) { ["X"] = true };
+        var b = new EnumState(["X", "Y"]) { ["Y"] = true };
         a.Equals(b).Should().BeFalse();
     }
 
@@ -684,14 +652,8 @@ public class EnumStateTests
     [Fact]
     public void EnumState_get_hash_code_equal_states_same_hash()
     {
-        var a = new EnumState(["X", "Y"])
-        {
-            ["X"] = true
-        };
-        var b = new EnumState(["X", "Y"])
-        {
-            ["X"] = true
-        };
+        var a = new EnumState(["X", "Y"]) { ["X"] = true };
+        var b = new EnumState(["X", "Y"]) { ["X"] = true };
         a.GetHashCode().Should().Be(b.GetHashCode());
     }
 
@@ -724,10 +686,7 @@ public class EnumStateTests
     [Fact]
     public void EnumState_copy_method_deep_clones()
     {
-        var original = new EnumState(["A", "B"])
-        {
-            ["B"] = true
-        };
+        var original = new EnumState(["A", "B"]) { ["B"] = true };
         var copy = original.Copy();
         copy["B"].Should().BeTrue();
         copy["A"] = true;
@@ -738,10 +697,7 @@ public class EnumStateTests
     public void EnumState_update_from_copies_state()
     {
         var target = new EnumState(["A", "B"]);
-        var source = new EnumState(["A", "B"])
-        {
-            ["A"] = true
-        };
+        var source = new EnumState(["A", "B"]) { ["A"] = true };
 
         target.UpdateFrom(source);
         target["A"].Should().BeTrue();
@@ -751,10 +707,7 @@ public class EnumStateTests
     [Fact]
     public void EnumState_to_string_formats_correctly()
     {
-        var state = new EnumState(["A", "B"])
-        {
-            ["A"] = true
-        };
+        var state = new EnumState(["A", "B"]) { ["A"] = true };
         var s = state.ToString();
         s.Should().Contain("A=true");
         s.Should().Contain("B=false");
@@ -770,10 +723,7 @@ public class EnumStateTests
     [Fact]
     public void EnumState_get_first_selected_index_returns_correct_index()
     {
-        var state = new EnumState(["A", "B", "C"])
-        {
-            ["C"] = true
-        };
+        var state = new EnumState(["A", "B", "C"]) { ["C"] = true };
         state.GetFirstSelectedEnumIdIndex().Should().Be(2);
     }
 
@@ -787,10 +737,7 @@ public class EnumStateTests
     [Fact]
     public void EnumState_has_selection_is_true_when_a_bit_is_set()
     {
-        var state = new EnumState(["A", "B", "C"])
-        {
-            ["B"] = true
-        };
+        var state = new EnumState(["A", "B", "C"]) { ["B"] = true };
         state.HasSelection.Should().BeTrue();
     }
 
@@ -828,7 +775,9 @@ public class ClockControlTests
         clock.LoadInitValue(FixFieldValueProvider.Empty);
         // Etc/UTC: local display == 09:00 on the FakeClock's "today" (2026-06-01).
         // GetCurrentValue returns ToDateTimeUnspecified, so match its Kind.
-        ((DateTime)clock.GetCurrentValue()).Should().Be(new DateTime(2026, 6, 1, 9, 0, 0, DateTimeKind.Unspecified));
+        ((DateTime)clock.GetCurrentValue())
+            .Should()
+            .Be(new DateTime(2026, 6, 1, 9, 0, 0, DateTimeKind.Unspecified));
     }
 
     [Fact]
@@ -843,7 +792,9 @@ public class ClockControlTests
         };
         clock.LoadInitValue(FixFieldValueProvider.Empty);
         // GetCurrentValue returns ToDateTimeUnspecified, so match its Kind.
-        ((DateTime)clock.GetCurrentValue()).Should().Be(new DateTime(2026, 6, 1, 9, 0, 0, DateTimeKind.Unspecified));
+        ((DateTime)clock.GetCurrentValue())
+            .Should()
+            .Be(new DateTime(2026, 6, 1, 9, 0, 0, DateTimeKind.Unspecified));
     }
 
     [Fact]
@@ -926,7 +877,9 @@ public class ClockControlTests
 
         clock.LoadInitValue(provider);
 
-        ((DateTime?)clock.GetCurrentValue()).Should().Be(new DateTime(2026, 6, 1, 8, 0, 0, DateTimeKind.Utc));
+        ((DateTime?)clock.GetCurrentValue())
+            .Should()
+            .Be(new DateTime(2026, 6, 1, 8, 0, 0, DateTimeKind.Utc));
     }
 
     [Fact]

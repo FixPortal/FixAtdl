@@ -32,18 +32,18 @@ public class Boolean_t : AtdlValueType<bool>, IControlConvertible
     /// <summary>
     /// Applicable only when xsi:type is Boolean_t.
     /// This attribute is targeted for deprecation.
-    /// To achieve the same functionality, it is recommended that a Char_t or String_t type parameter be used instead 
+    /// To achieve the same functionality, it is recommended that a Char_t or String_t type parameter be used instead
     /// of a Boolean_t. The parameter should have two EnumPairs defined with one defining the false wire-value and the
     /// other defining the true wire-value. The parameter should be bound to a CheckBox control. The CheckBox control
     /// should define the parameters checkedEnumRef and uncheckedEnumRef to refer to the enumIDs of the parameter.
     /// See the section “A Sample FIXatdl Document” in this document for an example. (See the section “A Sample FIXatdl
-    /// Document” in this document for an example. Examine the Parameter “AllowDarkPoolExec” and Control “DPOption” 
+    /// Document” in this document for an example. Examine the Parameter “AllowDarkPoolExec” and Control “DPOption”
     /// for details.)
     /// The deprecated use is described as follows:
-    /// Defines the value with which to populate the FIX message when the boolean parameter is True. Overrides the 
+    /// Defines the value with which to populate the FIX message when the boolean parameter is True. Overrides the
     /// standard FIX boolean value of “Y”. I.e. if this attribute is not provided then the order-sending application
     /// must use “Y”.
-    /// If it is desired that the FIX message is not to be populated with this tag when the value of the parameter 
+    /// If it is desired that the FIX message is not to be populated with this tag when the value of the parameter
     /// is true, then trueWireValue should be defined as “{NULL}”.
     /// </summary>
     public string? TrueWireValue { get; set; }
@@ -61,7 +61,10 @@ public class Boolean_t : AtdlValueType<bool>, IControlConvertible
     {
         if (isRequired && value == null)
         {
-            return new ValidationResult(ValidationResult.ResultType.Missing, ErrorMessages.NonOptionalParameterNotSupplied2);
+            return new ValidationResult(
+                ValidationResult.ResultType.Missing,
+                ErrorMessages.NonOptionalParameterNotSupplied2
+            );
         }
 
         return ValidationResult.ValidResult;
@@ -93,7 +96,13 @@ public class Boolean_t : AtdlValueType<bool>, IControlConvertible
             return false;
         }
 
-        throw ThrowHelper.New<InvalidFieldValueException>(this, ErrorMessages.InvalidBooleanValue, value, trueValue, falseValue);
+        throw ThrowHelper.New<InvalidFieldValueException>(
+            this,
+            ErrorMessages.InvalidBooleanValue,
+            value,
+            trueValue,
+            falseValue
+        );
     }
 
     /// <summary>
@@ -110,12 +119,17 @@ public class Boolean_t : AtdlValueType<bool>, IControlConvertible
 
         bool actualValue = (bool)value;
 
-        if (actualValue && TrueWireValue == Atdl.NullValue || !actualValue && FalseWireValue == Atdl.NullValue)
+        if (
+            actualValue && TrueWireValue == Atdl.NullValue
+            || !actualValue && FalseWireValue == Atdl.NullValue
+        )
         {
             return null;
         }
 
-        return actualValue ? TrueWireValue ?? DefaultTrueValue : FalseWireValue ?? DefaultFalseValue;
+        return actualValue
+            ? TrueWireValue ?? DefaultTrueValue
+            : FalseWireValue ?? DefaultFalseValue;
     }
 
     /// <summary>
@@ -126,7 +140,10 @@ public class Boolean_t : AtdlValueType<bool>, IControlConvertible
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override bool? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
+    protected override bool? ConvertToNativeType(
+        IParameter hostParameter,
+        IParameterConvertible value
+    )
     {
         return value.ToBoolean(hostParameter);
     }
@@ -171,7 +188,12 @@ public class Boolean_t : AtdlValueType<bool>, IControlConvertible
     /// <returns>A nullable decimal equivalent to the value of this instance.</returns>
     public decimal? ToDecimal()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Decimal");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Decimal"
+        );
     }
 
     /// <summary>
@@ -180,7 +202,12 @@ public class Boolean_t : AtdlValueType<bool>, IControlConvertible
     /// <returns>A nullable DateTime equivalent to the value of this instance.</returns>
     public DateTime? ToDateTime()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "DateTime");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "DateTime"
+        );
     }
 
     /// <summary>
@@ -189,7 +216,12 @@ public class Boolean_t : AtdlValueType<bool>, IControlConvertible
     /// <returns>A valid EnumState, assuming the source value can be correctly converted.</returns>
     public EnumState ToEnumState(EnumPairCollection enumPairs)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Enumerated Type");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Enumerated Type"
+        );
     }
 
     #endregion

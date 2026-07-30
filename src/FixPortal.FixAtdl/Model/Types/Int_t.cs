@@ -17,7 +17,7 @@ using ThrowHelper = FixPortal.FixAtdl.Diagnostics.ThrowHelper;
 namespace FixPortal.FixAtdl.Model.Types;
 
 /// <summary>
-/// 'Sequence of digits without commas or decimals and optional sign character (ASCII characters "-" and "0" - "9" ). 
+/// 'Sequence of digits without commas or decimals and optional sign character (ASCII characters "-" and "0" - "9" ).
 /// The sign character utilizes one byte (i.e. positive int is "99999" while negative int is "-99999"). Note that int
 /// values may contain leading zeros (e.g. "00023" = "23").'
 /// </summary>
@@ -51,17 +51,30 @@ public class Int_t : AtdlValueType<int>, IControlConvertible
         {
             if (MaxValue != null && (int)value > MaxValue)
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MaxValueExceeded, value, MaxValue);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.MaxValueExceeded,
+                    value,
+                    MaxValue
+                );
             }
 
             if (MinValue != null && (int)value < MinValue)
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MinValueNotMet, value, MinValue);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.MinValueNotMet,
+                    value,
+                    MinValue
+                );
             }
         }
         else if (isRequired)
         {
-            return new ValidationResult(ValidationResult.ResultType.Missing, ErrorMessages.NonOptionalParameterNotSupplied2);
+            return new ValidationResult(
+                ValidationResult.ResultType.Missing,
+                ErrorMessages.NonOptionalParameterNotSupplied2
+            );
         }
 
         return ValidationResult.ValidResult;
@@ -107,7 +120,10 @@ public class Int_t : AtdlValueType<int>, IControlConvertible
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override int? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
+    protected override int? ConvertToNativeType(
+        IParameter hostParameter,
+        IParameterConvertible value
+    )
     {
         return value.ToInt32(hostParameter, CultureInfo.InvariantCulture);
     }
@@ -131,7 +147,12 @@ public class Int_t : AtdlValueType<int>, IControlConvertible
     /// <returns>One of true, false or null which is equivalent to the value of this instance.</returns>
     public bool? ToBoolean()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Boolean");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Boolean"
+        );
     }
 
     /// <summary>
@@ -161,7 +182,12 @@ public class Int_t : AtdlValueType<int>, IControlConvertible
     /// <returns>A nullable DateTime equivalent to the value of this instance.</returns>
     public DateTime? ToDateTime()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "DateTime");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "DateTime"
+        );
     }
 
     /// <summary>

@@ -37,7 +37,7 @@ public class SupplementalCollectionTests
     {
         var items = new ListItemCollection
         {
-            new ListItem_t { EnumId = "BUY",  UiRep = "Buy" },
+            new ListItem_t { EnumId = "BUY", UiRep = "Buy" },
             new ListItem_t { EnumId = "SELL", UiRep = "Sell" },
         };
 
@@ -107,10 +107,7 @@ public class SupplementalCollectionTests
     [Fact]
     public void EditRefCollection_HasEditRef_after_add()
     {
-        EditRefCollection<IParameter> refs =
-        [
-            new EditRef_t<IParameter>("editA"),
-        ];
+        EditRefCollection<IParameter> refs = [new EditRef_t<IParameter>("editA")];
 
         refs.HasEditRef("editA").Should().BeTrue();
         refs.HasEditRef("editB").Should().BeFalse();
@@ -155,7 +152,8 @@ public class SupplementalCollectionTests
 
         // The pass/fail outcome is fixture-dependent; the value of this test is that the
         // EvaluateAll code path runs to completion without throwing on resolved edits.
-        var act = () => twap.StrategyEdits.EvaluateAll(FixFieldValueProvider.Empty, shortCircuit: false);
+        var act = () =>
+            twap.StrategyEdits.EvaluateAll(FixFieldValueProvider.Empty, shortCircuit: false);
         act.Should().NotThrow();
     }
 
@@ -169,7 +167,7 @@ public class SupplementalCollectionTests
         {
             Field = "Participation",
             Operator = Operator_t.Equal,
-            Value = "50" // will evaluate to false
+            Value = "50", // will evaluate to false
         };
         ((IResolvable<Strategy_t, IParameter>)edit).Resolve(twap, twap.Parameters);
 
@@ -190,12 +188,16 @@ public class SupplementalCollectionTests
         {
             Field = "Participation",
             Operator = Operator_t.Equal,
-            Value = "50" // will be false
+            Value = "50", // will be false
         };
         ((IResolvable<Strategy_t, IParameter>)edit1).Resolve(twap, twap.Parameters);
 
         var strategyEdit1 = new StrategyEdit_t { Edit = edit1, ErrorMessage = "Failed" };
-        var strategyEdit2 = new StrategyEdit_t { Edit = new Edit_t<IParameter>(), ErrorMessage = "Throws" };
+        var strategyEdit2 = new StrategyEdit_t
+        {
+            Edit = new Edit_t<IParameter>(),
+            ErrorMessage = "Throws",
+        };
 
         var collection = new StrategyEditCollection { strategyEdit1, strategyEdit2 };
 

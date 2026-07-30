@@ -27,10 +27,10 @@ namespace FixPortal.FixAtdl.Model.Elements;
 public class Edit_t
 {
     /// <summary>
-    /// Gets/sets the first field name for comparison. When the edit is used within a StateRule, this field 
-    /// must refer to the ID of a Control. When the edit is used within a StrategyEdit, this field must refer 
+    /// Gets/sets the first field name for comparison. When the edit is used within a StateRule, this field
+    /// must refer to the ID of a Control. When the edit is used within a StrategyEdit, this field must refer
     /// to either the name of a parameter or a standard FIX field name. When referring to a standard FIX tag
-    /// then the name must be pre-pended with the string "FIX_", e.g. "FIX_OrderQty". Required the Operator is 
+    /// then the name must be pre-pended with the string "FIX_", e.g. "FIX_OrderQty". Required the Operator is
     /// not null.
     /// </summary>
     public string Field { get; set; } = null!;
@@ -80,7 +80,8 @@ public class Edit_t
 /// <summary>
 /// Represents a FIXatdl Edit_t when implemented within a StateRule_t or StrategyEdit_t element.
 /// </summary>
-public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, IValueProvider
+public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
+    where T : class, IValueProvider
 {
     // Use FixPortal.FixAtdl.Validation namespace rather than FixPortal.FixAtdl.Model.Elements for debugging purposes
     private static readonly bool isPartOfStrategyEdit = typeof(T) == typeof(IParameter);
@@ -145,7 +146,9 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
 
         // Guard the trailing ", " trim: an empty edit leaves the buffer as just "(", so text[..^2]
         // would throw ArgumentOutOfRangeException.
-        return text.Length > 1 ? string.Format(CultureInfo.InvariantCulture, "{0})", text[..^2]) : "()";
+        return text.Length > 1
+            ? string.Format(CultureInfo.InvariantCulture, "{0})", text[..^2])
+            : "()";
     }
 
     /// <summary>
@@ -213,10 +216,10 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
     /// <summary>
     /// Gets/sets the optional fixed value to be used as the right hand side of the evaluation.
     /// </summary>
-    /// <remarks>From the spec:<br/><br/>"When Edit is a descendant of a StateRule element, Value refers to the 
-    /// value of the control referred by Field. If the control referred by Field has enumerated values then Value 
+    /// <remarks>From the spec:<br/><br/>"When Edit is a descendant of a StateRule element, Value refers to the
+    /// value of the control referred by Field. If the control referred by Field has enumerated values then Value
     /// refers to the enumID of one of the control's ListItem elements.<br/>
-    /// When Edit is a descendant of a StrategyEdit element, Value refers to the wireValue of the parameter 
+    /// When Edit is a descendant of a StrategyEdit element, Value refers to the wireValue of the parameter
     /// referred by Field."</remarks>
     public string Value { get; set; } = null!;
 
@@ -235,7 +238,8 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
     /// </summary>
     public LogicOperator_t? LogicOperator
     {
-        get => Edits.LogicOperator; set => Edits.LogicOperator = value;
+        get => Edits.LogicOperator;
+        set => Edits.LogicOperator = value;
     }
 
     /// <summary>
@@ -250,7 +254,10 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
                 return _fieldSource.GetCurrentValue();
             }
 
-            throw ThrowHelper.New<InvalidOperationException>(this, "Edit attempted to access FieldValue but requisite control was not set.");
+            throw ThrowHelper.New<InvalidOperationException>(
+                this,
+                "Edit attempted to access FieldValue but requisite control was not set."
+            );
         }
     }
 
@@ -266,7 +273,10 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
                 return _field2Source.GetCurrentValue();
             }
 
-            throw ThrowHelper.New<InvalidOperationException>(this, "Edit attempted to access Field2Value but requisite control was not set.");
+            throw ThrowHelper.New<InvalidOperationException>(
+                this,
+                "Edit attempted to access Field2Value but requisite control was not set."
+            );
         }
     }
 
@@ -291,7 +301,10 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
             CurrentState = Operator switch
             {
                 Operator_t.Exist or Operator_t.NotExist => EvaluateExists(lhs),
-                Operator_t.Equal or Operator_t.NotEqual => EvaluateEquality(lhs, GetRhsValue(additionalValues, lhs)),
+                Operator_t.Equal or Operator_t.NotEqual => EvaluateEquality(
+                    lhs,
+                    GetRhsValue(additionalValues, lhs)
+                ),
                 _ => EvaluateInequalityComparison(lhs, GetRhsValue(additionalValues, lhs)),
             };
         }
@@ -303,7 +316,10 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
         }
         else
         {
-            throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.MissingOperatorsOnEdit);
+            throw ThrowHelper.New<InvalidOperationException>(
+                this,
+                ErrorMessages.MissingOperatorsOnEdit
+            );
         }
     }
 
@@ -316,7 +332,8 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
         // A list control returns a never-null EnumState; "nothing selected" is an all-false EnumState
         // (not null and not ""), so it must be treated as absent here or EX/NX would always be wrong
         // for list controls. Scalar/text/clock controls already return null when unset.
-        bool empty = value == null
+        bool empty =
+            value == null
             || value as string == string.Empty
             || value is EnumState enumState && !enumState.HasSelection;
 
@@ -359,9 +376,18 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
         object? normRhs = NormaliseValue(rhs);
 
         // Operands of non-comparable or mismatched runtime types cannot be ordered
-        if (normLhs is not IComparable comparable || normRhs is not IComparable || comparable.GetType() != normRhs.GetType())
+        if (
+            normLhs is not IComparable comparable
+            || normRhs is not IComparable
+            || comparable.GetType() != normRhs.GetType()
+        )
         {
-            throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.UnsupportedComparisonOperation, lhs, rhs);
+            throw ThrowHelper.New<InvalidOperationException>(
+                this,
+                ErrorMessages.UnsupportedComparisonOperation,
+                lhs,
+                rhs
+            );
         }
 
         int compareResult = comparable.CompareTo(normRhs);
@@ -372,7 +398,7 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
             Operator_t.GreaterThanOrEqual => compareResult >= 0,
             Operator_t.LessThan => compareResult < 0,
             Operator_t.LessThanOrEqual => compareResult <= 0,
-            _ => false
+            _ => false,
         };
 
         return finalResult;
@@ -395,7 +421,8 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
         // since "{NULL}" is not a valid EnumID.
         if (rhs as string == Atdl.NullValue)
         {
-            return lhs is EnumState lhsEnumStateForNullCheck && !lhsEnumStateForNullCheck.HasSelection;
+            return lhs is EnumState lhsEnumStateForNullCheck
+                && !lhsEnumStateForNullCheck.HasSelection;
         }
 
         if (lhs is EnumState lhsEnumState)
@@ -414,7 +441,10 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
         }
 
         return lhs is IComparable comparableLhs && rhs is IComparable comparableRhs
-            ? (comparableLhs.GetType() == comparableRhs.GetType() && comparableLhs.CompareTo(comparableRhs) == 0)
+            ? (
+                comparableLhs.GetType() == comparableRhs.GetType()
+                && comparableLhs.CompareTo(comparableRhs) == 0
+            )
             : lhs.Equals(rhs);
     }
 
@@ -466,17 +496,32 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
             return fieldValue;
         }
 
-        return decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal number) ? number : value;
+        return decimal.TryParse(
+            value,
+            NumberStyles.Number,
+            CultureInfo.InvariantCulture,
+            out decimal number
+        )
+            ? number
+            : value;
     }
 
     private static bool IsNumericType(Type type)
     {
         return Type.GetTypeCode(type) switch
         {
-            TypeCode.Byte or TypeCode.SByte or TypeCode.UInt16 or TypeCode.Int16 or
-            TypeCode.UInt32 or TypeCode.Int32 or TypeCode.UInt64 or TypeCode.Int64 or
-            TypeCode.Decimal or TypeCode.Double or TypeCode.Single => true,
-            _ => false
+            TypeCode.Byte
+            or TypeCode.SByte
+            or TypeCode.UInt16
+            or TypeCode.Int16
+            or TypeCode.UInt32
+            or TypeCode.Int32
+            or TypeCode.UInt64
+            or TypeCode.Int64
+            or TypeCode.Decimal
+            or TypeCode.Double
+            or TypeCode.Single => true,
+            _ => false,
         };
     }
 
@@ -489,17 +534,30 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
 
         if (val is double d && (double.IsNaN(d) || double.IsInfinity(d)))
         {
-            throw ThrowHelper.New<InvalidOperationException>(null, "Cannot compare NaN or Infinity values.");
+            throw ThrowHelper.New<InvalidOperationException>(
+                null,
+                "Cannot compare NaN or Infinity values."
+            );
         }
 
         if (val is float f && (float.IsNaN(f) || float.IsInfinity(f)))
         {
-            throw ThrowHelper.New<InvalidOperationException>(null, "Cannot compare NaN or Infinity values.");
+            throw ThrowHelper.New<InvalidOperationException>(
+                null,
+                "Cannot compare NaN or Infinity values."
+            );
         }
 
         if (val is string str)
         {
-            return decimal.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal dec) ? dec : str;
+            return decimal.TryParse(
+                str,
+                NumberStyles.Number,
+                CultureInfo.InvariantCulture,
+                out decimal dec
+            )
+                ? dec
+                : str;
         }
 
         if (IsNumericType(val.GetType()))
@@ -510,7 +568,12 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
             }
             catch (Exception ex)
             {
-                throw ThrowHelper.New<InvalidOperationException>(null, ex, "Numeric conversion failed for comparison value: {0}", val);
+                throw ThrowHelper.New<InvalidOperationException>(
+                    null,
+                    ex,
+                    "Numeric conversion failed for comparison value: {0}",
+                    val
+                );
             }
         }
 
@@ -522,12 +585,22 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
         // We don't currently support comparisons for type 'Data_t' which is represented by a char[].
         if (lhs is char[] chars)
         {
-            throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.UnsupportedComparisonOperation, Value, new string(chars));
+            throw ThrowHelper.New<InvalidOperationException>(
+                this,
+                ErrorMessages.UnsupportedComparisonOperation,
+                Value,
+                new string(chars)
+            );
         }
 
         if (rhs is char[] rhs1)
         {
-            throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.UnsupportedComparisonOperation, Value, new string(rhs1));
+            throw ThrowHelper.New<InvalidOperationException>(
+                this,
+                ErrorMessages.UnsupportedComparisonOperation,
+                Value,
+                new string(rhs1)
+            );
         }
     }
 
@@ -542,7 +615,14 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
         result = gotValue switch
         {
             false => null,
-            _ => decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal number) ? number : value,
+            _ => decimal.TryParse(
+                value,
+                NumberStyles.Number,
+                CultureInfo.InvariantCulture,
+                out decimal number
+            )
+                ? number
+                : value,
         };
 
         return result!;
@@ -554,7 +634,10 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
     /// Resolves all interdependencies e.g. edits to edit refs, control values to edits, etc.  Called once
     /// all strategies have been loaded as there may be dependencies on EditRefs at the global level.
     /// </summary>
-    void IResolvable<Strategy_t, T>.Resolve(Strategy_t strategy, ISimpleDictionary<T> sourceCollection)
+    void IResolvable<Strategy_t, T>.Resolve(
+        Strategy_t strategy,
+        ISimpleDictionary<T> sourceCollection
+    )
     {
         ValidateInvariants();
 
@@ -575,30 +658,46 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, I
     {
         if (Value != null && Field2 != null)
         {
-            throw ThrowHelper.New<InconsistentStrategyException>(this, ErrorMessages.EditValueAndField2BothSet,
-                string.IsNullOrEmpty(Id) ? "(unnamed)" : Id);
+            throw ThrowHelper.New<InconsistentStrategyException>(
+                this,
+                ErrorMessages.EditValueAndField2BothSet,
+                string.IsNullOrEmpty(Id) ? "(unnamed)" : Id
+            );
         }
 
         if (Operator != null && string.IsNullOrEmpty(Field))
         {
-            throw ThrowHelper.New<InconsistentStrategyException>(this,
+            throw ThrowHelper.New<InconsistentStrategyException>(
+                this,
                 "An Edit (Id '{0}') has an operator specified but is missing the 'field' attribute.",
-                string.IsNullOrEmpty(Id) ? "(unnamed)" : Id);
+                string.IsNullOrEmpty(Id) ? "(unnamed)" : Id
+            );
         }
 
         if (Operator != null && (LogicOperator != null || Edits.Count > 0))
         {
-            throw ThrowHelper.New<InconsistentStrategyException>(this,
+            throw ThrowHelper.New<InconsistentStrategyException>(
+                this,
                 "An Edit (Id '{0}') has both comparison operator and child edits/logicOperator configured.",
-                string.IsNullOrEmpty(Id) ? "(unnamed)" : Id);
+                string.IsNullOrEmpty(Id) ? "(unnamed)" : Id
+            );
         }
     }
 
-    private T ResolveField(string fieldName, string propertyName, ISimpleDictionary<T> sourceCollection)
+    private T ResolveField(
+        string fieldName,
+        string propertyName,
+        ISimpleDictionary<T> sourceCollection
+    )
     {
         return sourceCollection.Contains(fieldName)
             ? sourceCollection[fieldName]
-            : throw ThrowHelper.New<ReferencedObjectNotFoundException>(this, ErrorMessages.EditRefFieldControlNotFound, fieldName, propertyName);
+            : throw ThrowHelper.New<ReferencedObjectNotFoundException>(
+                this,
+                ErrorMessages.EditRefFieldControlNotFound,
+                fieldName,
+                propertyName
+            );
     }
 
     #endregion IResolvable<Strategy_t> Members

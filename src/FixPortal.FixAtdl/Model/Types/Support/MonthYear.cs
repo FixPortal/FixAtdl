@@ -36,7 +36,13 @@ public struct MonthYear : IComparable
             _ => string.Empty,
         };
 
-        return string.Format(CultureInfo.InvariantCulture, "{0:0000}{1:00}{2}", Year, Month, suffix);
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "{0:0000}{1:00}{2}",
+            Year,
+            Month,
+            suffix
+        );
     }
 
     /// <summary>
@@ -45,7 +51,11 @@ public struct MonthYear : IComparable
     /// <param name="lhs">Left hand side value.</param>
     /// <param name="rhs">Right hand side value.</param>
     /// <returns>True if the day, month and year values of the two operands are the same; false otherwise.</returns>
-    public static bool operator ==(MonthYear lhs, MonthYear rhs) => lhs.Year == rhs.Year && lhs.Month == rhs.Month && lhs.Day == rhs.Day && lhs.Week == rhs.Week;
+    public static bool operator ==(MonthYear lhs, MonthYear rhs) =>
+        lhs.Year == rhs.Year
+        && lhs.Month == rhs.Month
+        && lhs.Day == rhs.Day
+        && lhs.Week == rhs.Week;
 
     /// <summary>
     /// Compares two MonthYear values for inequality.
@@ -156,15 +166,27 @@ public struct MonthYear : IComparable
 
             // Reject calendar-impossible days (e.g. 20260230 = 30 Feb). Year 0 has no Gregorian
             // calendar, so DateTime.DaysInMonth cannot be consulted and the day check is skipped.
-            if (result.Day != null && result.Year >= 1 && result.Day.Value > DateTime.DaysInMonth(result.Year, result.Month))
+            if (
+                result.Day != null
+                && result.Year >= 1
+                && result.Day.Value > DateTime.DaysInMonth(result.Year, result.Month)
+            )
             {
-                throw ThrowHelper.New<ArgumentException>(ExceptionContext, ErrorMessages.InvalidMonthYearValue, value);
+                throw ThrowHelper.New<ArgumentException>(
+                    ExceptionContext,
+                    ErrorMessages.InvalidMonthYearValue,
+                    value
+                );
             }
 
             return result;
         }
 
-        throw ThrowHelper.New<ArgumentException>(ExceptionContext, ErrorMessages.InvalidMonthYearValue, value);
+        throw ThrowHelper.New<ArgumentException>(
+            ExceptionContext,
+            ErrorMessages.InvalidMonthYearValue,
+            value
+        );
     }
 
     private static ushort ValidateRange(string value, int lowerBound, int upperBound)
@@ -178,19 +200,28 @@ public struct MonthYear : IComparable
                 return numValue;
             }
 
-            throw ThrowHelper.New<ArgumentException>(ExceptionContext, ErrorMessages.InvalidMonthYearValue, value);
+            throw ThrowHelper.New<ArgumentException>(
+                ExceptionContext,
+                ErrorMessages.InvalidMonthYearValue,
+                value
+            );
         }
         catch (Exception ex) when (ex is FormatException or OverflowException)
         {
-            throw ThrowHelper.New<ArgumentException>(ExceptionContext, ex, ErrorMessages.InvalidMonthYearValue, value);
+            throw ThrowHelper.New<ArgumentException>(
+                ExceptionContext,
+                ex,
+                ErrorMessages.InvalidMonthYearValue,
+                value
+            );
         }
     }
 
     #region IComparable Members
 
     /// <summary>
-    /// Compares the current instance with another object of the same type and returns an integer that indicates 
-    /// whether the current instance precedes, follows, or occurs in the same position in the sort order as the 
+    /// Compares the current instance with another object of the same type and returns an integer that indicates
+    /// whether the current instance precedes, follows, or occurs in the same position in the sort order as the
     /// other object.
     /// </summary>
     /// <param name="obj">An object to compare with this instance.</param>
@@ -210,7 +241,12 @@ public struct MonthYear : IComparable
 
         if (obj is not MonthYear rhs)
         {
-            throw ThrowHelper.New<ArgumentException>(this, InternalErrors.UnexpectedArgumentType, obj.GetType().FullName!, typeof(MonthYear).FullName!);
+            throw ThrowHelper.New<ArgumentException>(
+                this,
+                InternalErrors.UnexpectedArgumentType,
+                obj.GetType().FullName!,
+                typeof(MonthYear).FullName!
+            );
         }
 
         if (rhs == this)

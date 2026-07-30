@@ -56,7 +56,8 @@ public class StrategyPanel_t : IParentable<StrategyPanel_t>, IDisposable, IStrat
     /// Initializes a new root <see cref="StrategyPanel_t"/>.
     /// </summary>
     /// <param name="owner">The owning strategy.</param>
-    public StrategyPanel_t(Strategy_t owner) : this(owner, null) { }
+    public StrategyPanel_t(Strategy_t owner)
+        : this(owner, null) { }
 
     /// <summary>
     /// Initializes a new <see cref="StrategyPanel_t"/>.
@@ -162,7 +163,8 @@ public class StrategyPanel_t : IParentable<StrategyPanel_t>, IDisposable, IStrat
 
     StrategyPanel_t IParentable<StrategyPanel_t>.Parent
     {
-        get => _owningStrategyPanel!; set => _owningStrategyPanel = value;
+        get => _owningStrategyPanel!;
+        set => _owningStrategyPanel = value;
     }
 
     #endregion

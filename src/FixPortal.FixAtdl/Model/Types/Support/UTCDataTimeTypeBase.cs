@@ -37,7 +37,9 @@ public abstract class UTCDateTimeTypeBase : DateTimeTypeBase
     /// AssumeUniversal-only parse, which produced a Kind=Local value (M1).
     /// </summary>
     protected override DateTimeStyles WireParseStyles =>
-        DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal;
+        DateTimeStyles.AllowWhiteSpaces
+        | DateTimeStyles.AssumeUniversal
+        | DateTimeStyles.AdjustToUniversal;
 
     /// <summary>
     /// Converts the supplied value to a string, as might be used on the FIX wire.
@@ -54,9 +56,10 @@ public abstract class UTCDateTimeTypeBase : DateTimeTypeBase
         DateTime adjustedValue = GetAdjustedValue(value)!.Value;
 
         string[] formats = GetDateTimeFormatStrings();
-        string format = (adjustedValue.Ticks % TimeSpan.TicksPerSecond != 0 && formats.Length > 1)
-            ? formats[1]
-            : formats[0];
+        string format =
+            (adjustedValue.Ticks % TimeSpan.TicksPerSecond != 0 && formats.Length > 1)
+                ? formats[1]
+                : formats[0];
 
         return adjustedValue.ToString(format, CultureInfo.InvariantCulture);
     }

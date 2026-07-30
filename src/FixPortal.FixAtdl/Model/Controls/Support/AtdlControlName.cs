@@ -58,4 +58,3 @@ public static class AtdlControlName
     /// <summary>TextField_t type.</summary>
     public const string TextField_t = "TextField_t";
 }
-

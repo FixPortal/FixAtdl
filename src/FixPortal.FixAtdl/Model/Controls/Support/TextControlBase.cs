@@ -35,9 +35,7 @@ public abstract class TextControlBase : InitializableControl<string>
     /// </summary>
     /// <param name="id">ID for this control.</param>
     protected TextControlBase(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 
     #region InitializableControl<T> Overrides
 
@@ -77,8 +75,12 @@ public abstract class TextControlBase : InitializableControl<string>
         {
             string value => value == Atdl.NullValue ? null : value,
             null => null,
-            _ => throw ThrowHelper.New<InternalErrorException>(this, InternalErrors.UnexpectedArgumentType,
-                newValue.GetType().FullName!, "System.String")
+            _ => throw ThrowHelper.New<InternalErrorException>(
+                this,
+                InternalErrors.UnexpectedArgumentType,
+                newValue.GetType().FullName!,
+                "System.String"
+            ),
         };
     }
 
@@ -122,13 +124,18 @@ public abstract class TextControlBase : InitializableControl<string>
             return null;
         }
 
-
         if (bool.TryParse(_value, out bool result))
         {
             return result;
         }
 
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.InvalidBooleanValue, _value, bool.TrueString.ToLower(), bool.FalseString.ToLower());
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.InvalidBooleanValue,
+            _value,
+            bool.TrueString.ToLower(),
+            bool.FalseString.ToLower()
+        );
     }
 
     /// <summary>
@@ -139,7 +146,6 @@ public abstract class TextControlBase : InitializableControl<string>
     /// <returns>A nullable decimal equivalent to the value of this instance.</returns>
     public override decimal? ToDecimal(IParameter targetParameter, IFormatProvider provider)
     {
-
         return TryConvertToDecimal(_value, out decimal result) ? result : null;
     }
 
@@ -151,7 +157,6 @@ public abstract class TextControlBase : InitializableControl<string>
     /// <returns>A nullable 32-bit signed integer equivalent to the value of this instance.</returns>
     public override int? ToInt32(IParameter targetParameter, IFormatProvider provider)
     {
-
         return TryConvertToInt(_value, out int result) ? result : null;
     }
 
@@ -163,7 +168,6 @@ public abstract class TextControlBase : InitializableControl<string>
     /// <returns>A nullable 32-bit unsigned integer equivalent to the value of this instance.</returns>
     public override uint? ToUInt32(IParameter targetParameter, IFormatProvider provider)
     {
-
         return TryConvertToUint(_value, out uint result) ? result : null;
     }
 
@@ -200,10 +204,13 @@ public abstract class TextControlBase : InitializableControl<string>
             return null;
         }
 
-
         if (!FixDateTime.TryParse(_value, provider, out DateTime result))
         {
-            throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.InvalidDateOrTimeValue, _value);
+            throw ThrowHelper.New<InvalidCastException>(
+                this,
+                ErrorMessages.InvalidDateOrTimeValue,
+                _value
+            );
         }
 
         return result;

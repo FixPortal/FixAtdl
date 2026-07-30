@@ -18,9 +18,7 @@ public class InvalidPropertyOnObjectException : FixAtdlException
     /// </summary>
     /// <param name="message">The message.</param>
     public InvalidPropertyOnObjectException(string message)
-        : base(message)
-    {
-    }
+        : base(message) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InvalidPropertyOnObjectException"/> class.
@@ -28,8 +26,5 @@ public class InvalidPropertyOnObjectException : FixAtdlException
     /// <param name="message">The message.</param>
     /// <param name="innerException">The inner exception.</param>
     public InvalidPropertyOnObjectException(string message, Exception innerException)
-        : base(message, innerException)
-    {
-    }
+        : base(message, innerException) { }
 }
-

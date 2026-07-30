@@ -19,7 +19,6 @@ namespace FixPortal.FixAtdl.Model.Elements;
 /// </summary>
 public class Strategies_t : IEnumerable<Strategy_t>
 {
-
     /// <summary>
     /// Initializes a new <see cref="Strategies_t"/> instance.
     /// </summary>
@@ -44,17 +43,17 @@ public class Strategies_t : IEnumerable<Strategy_t>
     public string ImageLocation { get; set; } = null!;
 
     /// <summary>The tag within the FIX order message to be populated with a value identifying the chosen strategy.
-    /// E.g. if strategyIdentifierTag is 5001 and the chosen strategy is identified by the value 'VWAP' then the 
+    /// E.g. if strategyIdentifierTag is 5001 and the chosen strategy is identified by the value 'VWAP' then the
     /// FIX order message would contain the tag-value pair 5001=VWAP.</summary>
     public FixTag StrategyIdentifierTag { get; set; }
 
     /// <summary>The tag within the FIX order message to be populated with a value identifying the version of a chosen
-    /// strategy. For example, if versionIdentifierTag is 5002 and the version of the chosen strategy is '2.01' then 
+    /// strategy. For example, if versionIdentifierTag is 5002 and the version of the chosen strategy is '2.01' then
     /// the FIX order message would contain the tag-value pair 5001=2.01</summary>
     public FixTag? VersionIdentifierTag { get; set; }
 
     /// <summary>Indicates whether the order recipient can receive algorithmic parameters in the StrategyParametersGrp
-    /// component block, a repeating group starting at tag 957. If this mode of parameter transport is not supported 
+    /// component block, a repeating group starting at tag 957. If this mode of parameter transport is not supported
     /// then the fixTag attribute of all Parameter elements is required.</summary>
     /// <remarks>Default value: false.</remarks>
     public bool? Tag957Support { get; set; }
@@ -93,16 +92,26 @@ public class Strategies_t : IEnumerable<Strategy_t>
             // Match the boolean parameters by concrete type rather than the string literal "Boolean_t" +
             // reflected "Value" property: the typed pattern is compile-time checked (no silent no-op if a
             // name drifts) and yields Boolean_t directly (E-G3).
-            foreach (Parameter_t<Boolean_t> booleanParameter in strategy.Parameters.OfType<Parameter_t<Boolean_t>>())
+            foreach (
+                Parameter_t<Boolean_t> booleanParameter in strategy.Parameters.OfType<
+                    Parameter_t<Boolean_t>
+                >()
+            )
             {
                 Boolean_t booleanType = booleanParameter.Value;
                 string trueVal = booleanType.TrueWireValue ?? "Y";
                 string falseVal = booleanType.FalseWireValue ?? "N";
                 if (trueVal == falseVal)
                 {
-                    throw ThrowHelper.New<ArgumentException>(this, string.Format(CultureInfo.InvariantCulture,
-                        "Parameter '{0}': trueWireValue and falseWireValue cannot be equal (both resolve to '{1}').",
-                        booleanParameter.Name, trueVal));
+                    throw ThrowHelper.New<ArgumentException>(
+                        this,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Parameter '{0}': trueWireValue and falseWireValue cannot be equal (both resolve to '{1}').",
+                            booleanParameter.Name,
+                            trueVal
+                        )
+                    );
                 }
             }
 

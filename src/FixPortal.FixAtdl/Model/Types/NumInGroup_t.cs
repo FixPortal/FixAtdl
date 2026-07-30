@@ -17,4 +17,3 @@ namespace FixPortal.FixAtdl.Model.Types;
 /// <i>'int field representing the number of entries in a repeating group. Value must be positive.'</i>
 /// </remarks>
 public class NumInGroup_t : NonZeroPositiveIntegerTypeBase;
-

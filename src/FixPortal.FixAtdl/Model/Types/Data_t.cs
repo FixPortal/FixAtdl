@@ -17,7 +17,7 @@ namespace FixPortal.FixAtdl.Model.Types;
 
 /// <summary>
 /// Represents a string field containing raw data with no format or content restrictions. Data fields are always immediately preceded
-/// by a length field. The length field should specify the number of bytes of the value of the data field (up to but not 
+/// by a length field. The length field should specify the number of bytes of the value of the data field (up to but not
 /// including the terminating SOH).
 /// Caution: the value of one of these fields may contain the delimiter (SOH) character. Note that the value specified for
 /// this field should be followed by the delimiter (SOH) character as all fields are terminated with an "SOH".
@@ -50,17 +50,30 @@ public class Data_t : AtdlReferenceType<char[]>, IControlConvertible
         {
             if (MaxLength != null && value.Length > MaxLength)
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MaxLengthExceeded, value, MaxLength);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.MaxLengthExceeded,
+                    value,
+                    MaxLength
+                );
             }
 
             if (MinLength != null && value.Length < MinLength)
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MinLengthNotMet, value, MinLength);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.MinLengthNotMet,
+                    value,
+                    MinLength
+                );
             }
         }
         else if (isRequired)
         {
-            return new ValidationResult(ValidationResult.ResultType.Missing, ErrorMessages.NonOptionalParameterNotSupplied2);
+            return new ValidationResult(
+                ValidationResult.ResultType.Missing,
+                ErrorMessages.NonOptionalParameterNotSupplied2
+            );
         }
 
         return ValidationResult.ValidResult;
@@ -93,7 +106,10 @@ public class Data_t : AtdlReferenceType<char[]>, IControlConvertible
     /// <param name="hostParameter">Parameter that this value belongs to.</param>
     /// <param name="value">Value to convert, may be null.</param>
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
-    protected override char[]? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
+    protected override char[]? ConvertToNativeType(
+        IParameter hostParameter,
+        IParameterConvertible value
+    )
     {
         string? result = value.ToString(hostParameter);
 
@@ -119,7 +135,12 @@ public class Data_t : AtdlReferenceType<char[]>, IControlConvertible
     /// <returns>One of true, false or null which is equivalent to the value of this instance.</returns>
     public bool? ToBoolean()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Boolean");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Boolean"
+        );
     }
 
     /// <summary>
@@ -140,7 +161,12 @@ public class Data_t : AtdlReferenceType<char[]>, IControlConvertible
     /// <returns>A nullable decimal equivalent to the value of this instance.</returns>
     public decimal? ToDecimal()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Decimal");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Decimal"
+        );
     }
 
     /// <summary>
@@ -149,7 +175,12 @@ public class Data_t : AtdlReferenceType<char[]>, IControlConvertible
     /// <returns>A nullable DateTime equivalent to the value of this instance.</returns>
     public DateTime? ToDateTime()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "DateTime");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "DateTime"
+        );
     }
 
     /// <summary>
@@ -161,9 +192,13 @@ public class Data_t : AtdlReferenceType<char[]>, IControlConvertible
     /// very large enumerations.</remarks>
     public EnumState ToEnumState(EnumPairCollection enumPairs)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Enumerated Type");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Enumerated Type"
+        );
     }
 
     #endregion
 }
-

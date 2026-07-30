@@ -12,8 +12,8 @@ using FixPortal.FixAtdl.Resources;
 namespace FixPortal.FixAtdl.Model.Types;
 
 /// <summary>
-/// 'string field representing Time-only represented in UTC (Universal Time Coordinated, also known as "GMT") in either HH:MM:SS 
-/// (whole seconds) or HH:MM:SS.sss (milliseconds) format, colons, and period required. This special-purpose field is paired with 
+/// 'string field representing Time-only represented in UTC (Universal Time Coordinated, also known as "GMT") in either HH:MM:SS
+/// (whole seconds) or HH:MM:SS.sss (milliseconds) format, colons, and period required. This special-purpose field is paired with
 /// UTCDateOnly to form a proper UTCTimestamp for bandwidth-sensitive messages.
 /// Valid values:
 /// HH = 00-23, MM = 00-60 (60 only if UTC leap second), SS = 00-59. (without milliseconds)
@@ -21,7 +21,11 @@ namespace FixPortal.FixAtdl.Model.Types;
 /// </summary>
 public class UTCTimeOnly_t : UTCDateTimeTypeBase
 {
-    private static readonly string[] _formatStrings = [FixDateTimeFormat.FixTimeOnly, FixDateTimeFormat.FixTimeOnlyMs];
+    private static readonly string[] _formatStrings =
+    [
+        FixDateTimeFormat.FixTimeOnly,
+        FixDateTimeFormat.FixTimeOnlyMs,
+    ];
 
     /// <inheritdoc />
     internal override bool IsTimeOnlyType => true;
@@ -62,7 +66,15 @@ public class UTCTimeOnly_t : UTCDateTimeTypeBase
         }
 
         DateTime result = parsed.Value;
-        return new DateTime(1, 1, 1, result.Hour, result.Minute, result.Second, result.Millisecond, result.Kind)
-            .AddTicks(result.Ticks % TimeSpan.TicksPerMillisecond);
+        return new DateTime(
+            1,
+            1,
+            1,
+            result.Hour,
+            result.Minute,
+            result.Second,
+            result.Millisecond,
+            result.Kind
+        ).AddTicks(result.Ticks % TimeSpan.TicksPerMillisecond);
     }
 }

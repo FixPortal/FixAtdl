@@ -7,7 +7,10 @@ internal static class FixtureFiles
         return File.ReadAllText(GetPath(relativePath));
     }
 
-    public static Task<string> ReadAllTextAsync(string relativePath, CancellationToken cancellationToken = default)
+    public static Task<string> ReadAllTextAsync(
+        string relativePath,
+        CancellationToken cancellationToken = default
+    )
     {
         return File.ReadAllTextAsync(GetPath(relativePath), cancellationToken);
     }
@@ -25,7 +28,8 @@ internal static class FixtureFiles
         {
             throw new ArgumentException(
                 $"Fixture path must be relative to the test base directory, but was rooted: '{relativePath}'.",
-                nameof(relativePath));
+                nameof(relativePath)
+            );
         }
 
         return Path.Combine(AppContext.BaseDirectory, normalizedPath);

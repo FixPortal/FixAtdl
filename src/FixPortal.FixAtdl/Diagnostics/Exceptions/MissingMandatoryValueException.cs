@@ -18,9 +18,7 @@ public class MissingMandatoryValueException : FixAtdlException
     /// </summary>
     /// <param name="message"></param>
     public MissingMandatoryValueException(string message)
-        : base(message)
-    {
-    }
+        : base(message) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MissingMandatoryValueException"/> class.
@@ -28,8 +26,5 @@ public class MissingMandatoryValueException : FixAtdlException
     /// <param name="message">The message.</param>
     /// <param name="innerException">The inner exception.</param>
     public MissingMandatoryValueException(string message, Exception innerException)
-        : base(message, innerException)
-    {
-    }
+        : base(message, innerException) { }
 }
-

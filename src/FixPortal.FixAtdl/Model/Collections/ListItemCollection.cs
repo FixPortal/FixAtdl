@@ -46,8 +46,13 @@ public class ListItemCollection : KeyedCollection<string, ListItem_t>
         }
         catch (ArgumentException ex)
         {
-            throw ThrowHelper.New<DuplicateKeyException>(this, ex, ErrorMessages.AttemptToAddDuplicateKey,
-                item.EnumId, "ListItems");
+            throw ThrowHelper.New<DuplicateKeyException>(
+                this,
+                ex,
+                ErrorMessages.AttemptToAddDuplicateKey,
+                item.EnumId,
+                "ListItems"
+            );
         }
     }
 

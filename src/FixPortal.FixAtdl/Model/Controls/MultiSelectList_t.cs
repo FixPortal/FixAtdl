@@ -19,7 +19,5 @@ public class MultiSelectList_t : ListControlBase
     /// </summary>
     /// <param name="id">ID for this control.</param>
     public MultiSelectList_t(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 }

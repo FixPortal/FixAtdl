@@ -17,11 +17,11 @@ namespace FixPortal.FixAtdl.Model.Types.Support;
 public interface IParameterType
 {
     /// <summary>
-    /// Gets the value of this parameter as seen by the Control_t that references it.  May be null if the 
+    /// Gets the value of this parameter as seen by the Control_t that references it.  May be null if the
     /// parameter has no value, for example if it has explicitly been set via a state rule to {NULL}.
     /// </summary>
     /// <param name="hostParameter"><see cref="IParameter"/> that hosts the value.</param>
-    /// <remarks>An <see cref="IControlConvertible"/> is returned enabling the parameter value to be converted into any 
+    /// <remarks>An <see cref="IControlConvertible"/> is returned enabling the parameter value to be converted into any
     /// desired type, provided that the underlying value supports that type.</remarks>
     IControlConvertible GetValueForControl(IParameter hostParameter);
 
@@ -30,7 +30,7 @@ public interface IParameterType
     /// </summary>
     /// <param name="hostParameter"><see cref="IParameter"/> that hosts the value.</param>
     /// <param name="value">Control value that implements <see cref="IParameterConvertible"/>.</param>
-    /// <remarks>An <see cref="IParameterConvertible"/> is passed in enabling the control value to be converted into any 
+    /// <remarks>An <see cref="IParameterConvertible"/> is passed in enabling the control value to be converted into any
     /// desired type, provided that the value supports conversion to that type.</remarks>
     ValidationResult SetValueFromControl(IParameter hostParameter, IParameterConvertible value);
 
@@ -53,7 +53,7 @@ public interface IParameterType
     string? GetWireValue(IParameter hostParameter);
 
     /// <summary>
-    /// Gets the value of this parameter type in its native (i.e., raw) form, such as int, char, string, etc. 
+    /// Gets the value of this parameter type in its native (i.e., raw) form, such as int, char, string, etc.
     /// </summary>
     /// <param name="applyWireValueFormat">If set to true, the value returned is adjusted to be in the 'format'
     /// it would be if sent on the FIX wire.  For example, for Float_t parameters, setting this value to true

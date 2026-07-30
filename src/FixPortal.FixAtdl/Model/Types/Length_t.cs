@@ -14,4 +14,3 @@ namespace FixPortal.FixAtdl.Model.Types;
 /// </summary>
 /// <remarks>The FIX contract requires a positive (non-zero) value, hence the non-zero base.</remarks>
 public class Length_t : NonZeroPositiveIntegerTypeBase;
-

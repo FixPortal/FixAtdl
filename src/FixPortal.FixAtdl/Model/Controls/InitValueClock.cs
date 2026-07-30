@@ -67,28 +67,38 @@ public sealed class InitValueClock
         // Try each pattern set in turn and take the first that parses. Select is lazy and
         // FirstOrDefault short-circuits, so no pattern past the first match is evaluated. A
         // ParseResult is a reference type, so a null result means "no pattern matched".
-        ParseResult<LocalTime>? timeMatch = TimePatterns.Select(pattern => pattern.Parse(raw)).FirstOrDefault(result => result.Success);
+        ParseResult<LocalTime>? timeMatch = TimePatterns
+            .Select(pattern => pattern.Parse(raw))
+            .FirstOrDefault(result => result.Success);
         if (timeMatch is not null)
         {
             TimeOfDay = timeMatch.Value;
             return;
         }
 
-        ParseResult<OffsetTime>? offsetTimeMatch = OffsetTimePatterns.Select(pattern => pattern.Parse(raw)).FirstOrDefault(result => result.Success);
+        ParseResult<OffsetTime>? offsetTimeMatch = OffsetTimePatterns
+            .Select(pattern => pattern.Parse(raw))
+            .FirstOrDefault(result => result.Success);
         if (offsetTimeMatch is not null)
         {
             TimeOfDay = offsetTimeMatch.Value.TimeOfDay;
             return;
         }
 
-        ParseResult<LocalDateTime>? dateTimeMatch = DateTimePatterns.Select(pattern => pattern.Parse(raw)).FirstOrDefault(result => result.Success);
+        ParseResult<LocalDateTime>? dateTimeMatch = DateTimePatterns
+            .Select(pattern => pattern.Parse(raw))
+            .FirstOrDefault(result => result.Success);
         if (dateTimeMatch is not null)
         {
             DateTime = dateTimeMatch.Value;
             return;
         }
 
-        throw ThrowHelper.New<InvalidFieldValueException>(ExceptionContext, ErrorMessages.InvalidDateOrTimeValue, raw);
+        throw ThrowHelper.New<InvalidFieldValueException>(
+            ExceptionContext,
+            ErrorMessages.InvalidDateOrTimeValue,
+            raw
+        );
     }
 
     /// <summary>The raw initValue text, retained for diagnostics.</summary>

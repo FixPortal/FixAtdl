@@ -65,8 +65,9 @@ public class ClockDeserializationTests
     {
         var strategies = Load(ClockStrategyXml);
 
-        var clock = strategies.Strategies[0].StrategyLayout.StrategyPanel.Controls
-            .OfType<Clock_t>()
+        var clock = strategies
+            .Strategies[0]
+            .StrategyLayout.StrategyPanel.Controls.OfType<Clock_t>()
             .Single();
 
         // Inject a fixed clock so a time-only initValue is anchored to a deterministic market date.
@@ -79,8 +80,10 @@ public class ClockDeserializationTests
         clock.LoadInitValue(FixFieldValueProvider.Empty);
 
         // 08:00 Berlin in January is CET (UTC+1) => 07:00Z.
-        clock.ToDateTime(null!, CultureInfo.InvariantCulture)
-            .Should().Be(new DateTime(2026, 1, 15, 7, 0, 0, DateTimeKind.Utc));
+        clock
+            .ToDateTime(null!, CultureInfo.InvariantCulture)
+            .Should()
+            .Be(new DateTime(2026, 1, 15, 7, 0, 0, DateTimeKind.Utc));
     }
 
     [Fact]
@@ -88,8 +91,9 @@ public class ClockDeserializationTests
     {
         var strategies = Load(ClockStrategyXmlMode1);
 
-        var clock = strategies.Strategies[0].StrategyLayout.StrategyPanel.Controls
-            .OfType<Clock_t>()
+        var clock = strategies
+            .Strategies[0]
+            .StrategyLayout.StrategyPanel.Controls.OfType<Clock_t>()
             .Single();
 
         // "now" = 09:30Z (10:30 Berlin/CET), which is after initValue 08:00 Berlin (07:00Z).
@@ -98,7 +102,9 @@ public class ClockDeserializationTests
 
         clock.LoadInitValue(FixFieldValueProvider.Empty);
 
-        clock.ToDateTime(null!, CultureInfo.InvariantCulture)
-            .Should().Be(new DateTime(2026, 1, 15, 9, 30, 0, DateTimeKind.Utc));
+        clock
+            .ToDateTime(null!, CultureInfo.InvariantCulture)
+            .Should()
+            .Be(new DateTime(2026, 1, 15, 9, 30, 0, DateTimeKind.Utc));
     }
 }

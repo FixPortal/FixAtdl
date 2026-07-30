@@ -17,7 +17,7 @@ using FixPortal.FixAtdl.Utility;
 namespace FixPortal.FixAtdl.Model.Collections;
 
 /// <summary>
-/// Collection used to store typed instances of Edit_t, either for validating parameters via StrategyEdit, or 
+/// Collection used to store typed instances of Edit_t, either for validating parameters via StrategyEdit, or
 /// for implementing StateRules using control values.  This collection also provides the ability to evaluate the Edits that
 /// it contains.
 /// </summary>
@@ -54,16 +54,6 @@ public class EditEvaluatingCollection<T> : Collection<IEdit<T>>, IResolvable<Str
     }
 
     /// <summary>
-    /// Inserts an item into the collection.
-    /// </summary>
-    /// <param name="index">The zero-based index at which item should be inserted.</param>
-    /// <param name="item">The object to insert.</param>
-    protected override void InsertItem(int index, IEdit<T> item)
-    {
-        base.InsertItem(index, item);
-    }
-
-    /// <summary>
     /// Evaluates this instance based on current field values and any additional FIX field values that this
     /// EditEvaluatingCollection references.
     /// </summary>
@@ -72,7 +62,10 @@ public class EditEvaluatingCollection<T> : Collection<IEdit<T>>, IResolvable<Str
     {
         if (LogicOperator == null)
         {
-            throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.MissingLogicalOperatorOnSetOfEdits);
+            throw ThrowHelper.New<InvalidOperationException>(
+                this,
+                ErrorMessages.MissingLogicalOperatorOnSetOfEdits
+            );
         }
 
         // An empty collection never enters the loop below, so `newState` keeps its initial value.
@@ -96,7 +89,12 @@ public class EditEvaluatingCollection<T> : Collection<IEdit<T>>, IResolvable<Str
         CurrentState = newState;
     }
 
-    private static bool ApplyOperator(LogicOperator_t logicOperator, bool itemState, ref bool newState, ref int xorCount)
+    private static bool ApplyOperator(
+        LogicOperator_t logicOperator,
+        bool itemState,
+        ref bool newState,
+        ref int xorCount
+    )
     {
         switch (logicOperator)
         {
@@ -134,11 +132,16 @@ public class EditEvaluatingCollection<T> : Collection<IEdit<T>>, IResolvable<Str
     // No unbind: Resolve only forwards to each child's Resolve (idempotent), establishing no binding to
     // tear down. The model is rebuilt fresh per parse, and the IBindable<T> mechanism this question
     // referred to was unused and has been removed.
-    void IResolvable<Strategy_t, T>.Resolve(Strategy_t strategy, ISimpleDictionary<T> sourceCollection)
+    void IResolvable<Strategy_t, T>.Resolve(
+        Strategy_t strategy,
+        ISimpleDictionary<T> sourceCollection
+    )
     {
         // Add accepts any IEdit<T>; OfType resolves only the resolvable ones, avoiding a cast with !
         // (and the NRE risk) on a non-resolvable edit.
-        foreach (IResolvable<Strategy_t, T> resolvable in Items.OfType<IResolvable<Strategy_t, T>>())
+        foreach (
+            IResolvable<Strategy_t, T> resolvable in Items.OfType<IResolvable<Strategy_t, T>>()
+        )
         {
             resolvable.Resolve(strategy, sourceCollection);
         }

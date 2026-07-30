@@ -37,10 +37,18 @@ public static class FixDateTime
         // only the fallback can parse still yields a canonical Kind=Utc result. Previously the fallback
         // omitted AssumeUniversal/AdjustToUniversal, so its result Kind drifted to Unspecified (or Local
         // when the input carried an offset) — inconsistent with the exact path's documented UTC contract.
-        const DateTimeStyles styles = DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal;
+        const DateTimeStyles styles =
+            DateTimeStyles.AllowWhiteSpaces
+            | DateTimeStyles.AssumeUniversal
+            | DateTimeStyles.AdjustToUniversal;
 
-        return DateTime.TryParseExact(value, FixDateTimeFormat.FormatsArray, provider, styles, out result) ||
-            DateTime.TryParse(value, provider, styles, out result);
+        return DateTime.TryParseExact(
+                value,
+                FixDateTimeFormat.FormatsArray,
+                provider,
+                styles,
+                out result
+            ) || DateTime.TryParse(value, provider, styles, out result);
     }
 
     /// <summary>
@@ -52,13 +60,16 @@ public static class FixDateTime
     /// <returns>If successful, the DateTime equivalent representation of the supplied string.</returns>
     public static DateTime Parse(string value, IFormatProvider provider)
     {
-
         if (TryParse(value, provider, out DateTime result))
         {
             return result;
         }
 
-        throw ThrowHelper.New<InvalidCastException>(ExceptionContext, ErrorMessages.DataConversionError1, value, "DateTime");
+        throw ThrowHelper.New<InvalidCastException>(
+            ExceptionContext,
+            ErrorMessages.DataConversionError1,
+            value,
+            "DateTime"
+        );
     }
 }
-

@@ -20,9 +20,5 @@ public enum StandardContainerMethod
     /// <summary>
     /// The item should be assigned as the container.
     /// </summary>
-    Assign
+    Assign,
 }
-
-
-
-

@@ -19,7 +19,10 @@ public class ParameterCollectionTests
 
     private static async Task<ParameterCollection> LoadTwapParametersAsync()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
+        var xml = await FixtureFiles.ReadAllTextAsync(
+            "Fixtures/twap.xml",
+            TestContext.Current.CancellationToken
+        );
         return Load(xml).Strategies[0].Parameters;
     }
 
@@ -60,18 +63,31 @@ public class ParameterCollectionTests
     public void Get_output_values_omits_unset_and_untagged_parameters()
     {
         ParameterCollection parameters = [];
-        var included = new Parameter_t<String_t>("Included") { FixTag = 168, WireValue = "20260101-09:30:00" };
-        var unsetOptional = new Parameter_t<String_t>("UnsetOptional") { FixTag = 126, Use = Use_t.Optional };
+        var included = new Parameter_t<String_t>("Included")
+        {
+            FixTag = 168,
+            WireValue = "20260101-09:30:00",
+        };
+        var unsetOptional = new Parameter_t<String_t>("UnsetOptional")
+        {
+            FixTag = 126,
+            Use = Use_t.Optional,
+        };
         var localOnly = new Parameter_t<String_t>("LocalOnly") { WireValue = "internal" };
 
         parameters.Add(included);
         parameters.Add(unsetOptional);
         parameters.Add(localOnly);
 
-        var values = parameters.GetOutputValues().ToDictionary(pair => (int)pair.Key, pair => pair.Value);
+        var values = parameters
+            .GetOutputValues()
+            .ToDictionary(pair => (int)pair.Key, pair => pair.Value);
 
-        values.Should().ContainSingle()
-            .Which.Should().Be(new KeyValuePair<int, string>(168, "20260101-09:30:00"));
+        values
+            .Should()
+            .ContainSingle()
+            .Which.Should()
+            .Be(new KeyValuePair<int, string>(168, "20260101-09:30:00"));
     }
 
     [Fact]

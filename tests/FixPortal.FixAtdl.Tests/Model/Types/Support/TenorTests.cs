@@ -15,29 +15,29 @@ public class TenorTests
     [InlineData("D5")]
     [InlineData("D1")]
     [InlineData("D365")]
-    public void Parse_roundtrips_day_tenors(string wire)
-        => Tenor.Parse(wire).ToString().Should().Be(wire);
+    public void Parse_roundtrips_day_tenors(string wire) =>
+        Tenor.Parse(wire).ToString().Should().Be(wire);
 
     [Theory]
     [InlineData("W1")]
     [InlineData("W13")]
     [InlineData("W52")]
-    public void Parse_roundtrips_week_tenors(string wire)
-        => Tenor.Parse(wire).ToString().Should().Be(wire);
+    public void Parse_roundtrips_week_tenors(string wire) =>
+        Tenor.Parse(wire).ToString().Should().Be(wire);
 
     [Theory]
     [InlineData("M1")]
     [InlineData("M3")]
     [InlineData("M12")]
-    public void Parse_roundtrips_month_tenors(string wire)
-        => Tenor.Parse(wire).ToString().Should().Be(wire);
+    public void Parse_roundtrips_month_tenors(string wire) =>
+        Tenor.Parse(wire).ToString().Should().Be(wire);
 
     [Theory]
     [InlineData("Y1")]
     [InlineData("Y2")]
     [InlineData("Y10")]
-    public void Parse_roundtrips_year_tenors(string wire)
-        => Tenor.Parse(wire).ToString().Should().Be(wire);
+    public void Parse_roundtrips_year_tenors(string wire) =>
+        Tenor.Parse(wire).ToString().Should().Be(wire);
 
     // ──────────────────────────────────────────────────────────────────────────
     // Equality and comparison
@@ -70,15 +70,18 @@ public class TenorTests
         // than throwing: D7 (~7 days) < M1 (~30 days).
         var days = Tenor.Parse("D7");
         var months = Tenor.Parse("M1");
-        Action act1 = () => { _ = days < months; };
+        Action act1 = () =>
+        {
+            _ = days < months;
+        };
         act1.Should().NotThrow();
         (days < months).Should().BeTrue();
         (months > days).Should().BeTrue();
     }
 
     [Fact]
-    public void Tenor_CompareTo_null_returns_positive()
-        => Tenor.Parse("M3").CompareTo(null).Should().BePositive();
+    public void Tenor_CompareTo_null_returns_positive() =>
+        Tenor.Parse("M3").CompareTo(null).Should().BePositive();
 
     // ──────────────────────────────────────────────────────────────────────────
     // Invalid inputs → ArgumentException
@@ -147,12 +150,17 @@ public class TenorTests
     public void Cross_unit_ordering_does_not_throw_and_uses_approximate_magnitude()
     {
         var d40 = Tenor.Parse("D40"); // ~40 days
-        var m1 = Tenor.Parse("M1");   // ~30 days
+        var m1 = Tenor.Parse("M1"); // ~30 days
 
         // Exact equality is still unit-sensitive (different unit/offset => not equal)...
-        (d40 == m1).Should().BeFalse();
+        (d40 == m1)
+            .Should()
+            .BeFalse();
         // ...but ordering is total and compares by approximate calendar-day magnitude.
-        Action act1 = () => { _ = d40 < m1; };
+        Action act1 = () =>
+        {
+            _ = d40 < m1;
+        };
         act1.Should().NotThrow();
         (d40 > m1).Should().BeTrue();
     }

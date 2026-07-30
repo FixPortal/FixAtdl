@@ -19,7 +19,5 @@ public class TextField_t : TextControlBase
     /// </summary>
     /// <param name="id">ID for this control.</param>
     public TextField_t(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 }

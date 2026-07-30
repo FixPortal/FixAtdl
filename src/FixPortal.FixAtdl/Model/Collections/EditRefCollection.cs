@@ -15,7 +15,8 @@ namespace FixPortal.FixAtdl.Model.Collections;
 /// Collection used to store typed instances of EditRef_t.
 /// </summary>
 /// <typeparam name="T">Type.</typeparam>
-public class EditRefCollection<T> : KeyedCollection<string, EditRef_t<T>> where T : class, IValueProvider
+public class EditRefCollection<T> : KeyedCollection<string, EditRef_t<T>>
+    where T : class, IValueProvider
 {
     private readonly EditEvaluatingCollection<T>? _evaluatingCollection;
 
@@ -23,9 +24,7 @@ public class EditRefCollection<T> : KeyedCollection<string, EditRef_t<T>> where 
     /// Initializes a new instance of the <see cref="EditRefCollection{T}"/> class.
     /// </summary>
     public EditRefCollection()
-        : this(null)
-    {
-    }
+        : this(null) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EditRefCollection{T}"/> class.
@@ -130,4 +129,3 @@ public class EditRefCollection<T> : KeyedCollection<string, EditRef_t<T>> where 
         return item.Id;
     }
 }
-

@@ -13,7 +13,7 @@ using FixPortal.FixAtdl.Resources;
 namespace FixPortal.FixAtdl.Model.Types;
 
 /// <summary>
-/// 'string field representing Date represented in UTC (Universal Time Coordinated, also known as "GMT") in YYYYMMDD format. This 
+/// 'string field representing Date represented in UTC (Universal Time Coordinated, also known as "GMT") in YYYYMMDD format. This
 /// special-purpose field is paired with UTCTimeOnly to form a proper UTCTimestamp for bandwidth-sensitive messages.
 /// Valid values: YYYY = 0000-9999, MM = 01-12, DD = 01-31.'
 /// </summary>
@@ -41,7 +41,9 @@ public class UTCDateOnly_t : DateTimeTypeBase
     /// AssumeUniversal | AdjustToUniversal sets Kind=Utc for a date-only value.
     /// </summary>
     protected override DateTimeStyles WireParseStyles =>
-        DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal;
+        DateTimeStyles.AllowWhiteSpaces
+        | DateTimeStyles.AssumeUniversal
+        | DateTimeStyles.AdjustToUniversal;
 
     /// <summary>
     /// Gets the human-readable type name for use in error messages shown to the user.
@@ -52,4 +54,3 @@ public class UTCDateOnly_t : DateTimeTypeBase
         return HumanReadableTypeNames.DateType;
     }
 }
-

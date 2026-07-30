@@ -17,7 +17,7 @@ using FixPortal.FixAtdl.Validation;
 namespace FixPortal.FixAtdl.Model.Types;
 
 /// <summary>
-/// Represents a single character value, which can include any alphanumeric character or punctuation except the delimiter. All char 
+/// Represents a single character value, which can include any alphanumeric character or punctuation except the delimiter. All char
 /// fields are case sensitive (i.e. m != M).
 /// </summary>
 /// <remarks>Arguably this type of value should be stored as a byte rather than char, as FIX is an ASCII protocol.  However,
@@ -39,12 +39,19 @@ public class Char_t : AtdlValueType<char>, IControlConvertible
         // would corrupt framing when emitted via FixMessage.ToFix, so reject it here.
         if (value == FixMessage.SOH)
         {
-            return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.ValueContainsDelimiter, "char");
+            return new ValidationResult(
+                ValidationResult.ResultType.Invalid,
+                ErrorMessages.ValueContainsDelimiter,
+                "char"
+            );
         }
 
         if (isRequired && value == null)
         {
-            return new ValidationResult(ValidationResult.ResultType.Missing, ErrorMessages.NonOptionalParameterNotSupplied2);
+            return new ValidationResult(
+                ValidationResult.ResultType.Missing,
+                ErrorMessages.NonOptionalParameterNotSupplied2
+            );
         }
 
         return ValidationResult.ValidResult;
@@ -60,14 +67,20 @@ public class Char_t : AtdlValueType<char>, IControlConvertible
     {
         if (string.IsNullOrEmpty(value))
         {
-            throw ThrowHelper.New<ArgumentException>(this, ErrorMessages.InvalidNullOrEmptyStringValue);
+            throw ThrowHelper.New<ArgumentException>(
+                this,
+                ErrorMessages.InvalidNullOrEmptyStringValue
+            );
         }
 
         // A Char value is exactly one character. Previously only null/empty was rejected, so a
         // multi-character wire value such as "AB" was silently truncated to its first character.
         if (value.Length != 1)
         {
-            throw ThrowHelper.New<ArgumentException>(this, $"A Char value must be exactly one character; received '{value}'.");
+            throw ThrowHelper.New<ArgumentException>(
+                this,
+                $"A Char value must be exactly one character; received '{value}'."
+            );
         }
 
         return value[0];
@@ -83,7 +96,6 @@ public class Char_t : AtdlValueType<char>, IControlConvertible
         return value?.ToString();
     }
 
-
     /// <summary>
     /// Converts the supplied value to the type parameter type (T?) for this class.
     /// </summary>
@@ -92,7 +104,10 @@ public class Char_t : AtdlValueType<char>, IControlConvertible
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override char? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
+    protected override char? ConvertToNativeType(
+        IParameter hostParameter,
+        IParameterConvertible value
+    )
     {
         return value.ToChar(hostParameter);
     }
@@ -116,7 +131,12 @@ public class Char_t : AtdlValueType<char>, IControlConvertible
     /// <returns>One of true, false or null which is equivalent to the value of this instance.</returns>
     public bool? ToBoolean()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Boolean");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Boolean"
+        );
     }
 
     /// <summary>
@@ -135,7 +155,12 @@ public class Char_t : AtdlValueType<char>, IControlConvertible
     /// <returns>A nullable decimal equivalent to the value of this instance.</returns>
     public decimal? ToDecimal()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Decimal");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Decimal"
+        );
     }
 
     /// <summary>
@@ -144,7 +169,12 @@ public class Char_t : AtdlValueType<char>, IControlConvertible
     /// <returns>A nullable DateTime equivalent to the value of this instance.</returns>
     public DateTime? ToDateTime()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "DateTime");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "DateTime"
+        );
     }
 
     /// <summary>
@@ -165,4 +195,3 @@ public class Char_t : AtdlValueType<char>, IControlConvertible
 
     #endregion
 }
-

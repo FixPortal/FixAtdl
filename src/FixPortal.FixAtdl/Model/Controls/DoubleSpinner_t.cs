@@ -20,15 +20,13 @@ public class DoubleSpinner_t : NumericControlBase
     /// </summary>
     /// <param name="id">ID for this control.</param>
     public DoubleSpinner_t(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 
     /// <summary>Limits the granularity of the inner spinner of a double spinner control. Useful in spinner objects to enforce
     ///  odd-lot and sub-penny restrictions.  Applicable when xsi:type is DoubleSpinner_t.</summary>
     public decimal? InnerIncrement { get; set; }
 
-    /// <summary>For double spinner control, defines how to determine the increment for the inner set of spinners. Applicable 
+    /// <summary>For double spinner control, defines how to determine the increment for the inner set of spinners. Applicable
     /// when xsi:type is DoubleSpinner_t only.</summary>
     public IncrementPolicy_t? InnerIncrementPolicy { get; set; }
 
@@ -36,7 +34,7 @@ public class DoubleSpinner_t : NumericControlBase
     ///  odd-lot and sub-penny restrictions.  Applicable when xsi:type is DoubleSpinner_t.</summary>
     public decimal? OuterIncrement { get; set; }
 
-    /// <summary>For double spinner control, defines how to determine the increment for the outer set of spinners. Applicable 
+    /// <summary>For double spinner control, defines how to determine the increment for the outer set of spinners. Applicable
     /// when xsi:type is DoubleSpinner_t only.</summary>
     public IncrementPolicy_t? OuterIncrementPolicy { get; set; }
 }

@@ -19,9 +19,7 @@ public class Label_t : TextControlBase
     /// </summary>
     /// <param name="id">ID for this control.</param>
     public Label_t(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 
     /// <summary>
     /// Loads this control with any supplied InitValue. If InitValue is not supplied, then control value will

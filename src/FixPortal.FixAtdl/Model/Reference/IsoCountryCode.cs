@@ -756,6 +756,5 @@ public enum IsoCountryCode
     ZM,
 
     /// <summary>Zimbabwe.</summary>
-    ZW
+    ZW,
 }
-

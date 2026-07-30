@@ -35,9 +35,16 @@ public class EditEvaluatorTests
     [InlineData(Operator_t.GreaterThanOrEqual, "100", "100", true)]
     [InlineData(Operator_t.LessThanOrEqual, "100", "100", true)]
     public async Task Single_edit_on_parameter_evaluates_comparison_correctly(
-        Operator_t op, string paramValue, string editValue, bool expected)
+        Operator_t op,
+        string paramValue,
+        string editValue,
+        bool expected
+    )
     {
-        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
+        var xml = await FixtureFiles.ReadAllTextAsync(
+            "Fixtures/twap.xml",
+            TestContext.Current.CancellationToken
+        );
         var twap = LoadTwap(xml);
 
         // Wire up: set a numeric wire value on the Participation parameter (tag 7700).
@@ -47,7 +54,7 @@ public class EditEvaluatorTests
         {
             Field = "Participation",
             Operator = op,
-            Value = editValue
+            Value = editValue,
         };
 
         // Resolve the edit against the strategy so _fieldSource is populated.

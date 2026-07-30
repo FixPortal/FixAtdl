@@ -33,7 +33,10 @@ public class Language_t : EnumTypeBase<IsoLanguageCode>
     {
         if (isRequired && value == null)
         {
-            return new ValidationResult(ValidationResult.ResultType.Missing, ErrorMessages.NonOptionalParameterNotSupplied2);
+            return new ValidationResult(
+                ValidationResult.ResultType.Missing,
+                ErrorMessages.NonOptionalParameterNotSupplied2
+            );
         }
 
         return ValidationResult.ValidResult;
@@ -49,12 +52,22 @@ public class Language_t : EnumTypeBase<IsoLanguageCode>
     {
         if (value == "None")
         {
-            throw Diagnostics.ThrowHelper.New<System.ArgumentException>(this, Resources.ErrorMessages.InvalidValueEnumParseFailure, value, nameof(IsoLanguageCode));
+            throw Diagnostics.ThrowHelper.New<System.ArgumentException>(
+                this,
+                Resources.ErrorMessages.InvalidValueEnumParseFailure,
+                value,
+                nameof(IsoLanguageCode)
+            );
         }
         IsoLanguageCode parsed = value.ParseAsEnum<IsoLanguageCode>();
         if (parsed == IsoLanguageCode.None)
         {
-            throw Diagnostics.ThrowHelper.New<System.ArgumentException>(this, Resources.ErrorMessages.InvalidValueEnumParseFailure, value, nameof(IsoLanguageCode));
+            throw Diagnostics.ThrowHelper.New<System.ArgumentException>(
+                this,
+                Resources.ErrorMessages.InvalidValueEnumParseFailure,
+                value,
+                nameof(IsoLanguageCode)
+            );
         }
         return parsed;
     }
@@ -66,7 +79,9 @@ public class Language_t : EnumTypeBase<IsoLanguageCode>
     /// <returns>If input value is not null, returns value converted to a string; null otherwise.</returns>
     protected override string? ConvertToWireValueFormat(IsoLanguageCode? value)
     {
-        return value != null && value != IsoLanguageCode.None ? Enum.GetName(typeof(IsoLanguageCode), value) : null;
+        return value != null && value != IsoLanguageCode.None
+            ? Enum.GetName(typeof(IsoLanguageCode), value)
+            : null;
     }
 
     /// <summary>
@@ -77,7 +92,10 @@ public class Language_t : EnumTypeBase<IsoLanguageCode>
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override IsoLanguageCode? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
+    protected override IsoLanguageCode? ConvertToNativeType(
+        IParameter hostParameter,
+        IParameterConvertible value
+    )
     {
         string wireValue = value.ToString(hostParameter);
 
@@ -95,4 +113,3 @@ public class Language_t : EnumTypeBase<IsoLanguageCode>
 
     #endregion
 }
-

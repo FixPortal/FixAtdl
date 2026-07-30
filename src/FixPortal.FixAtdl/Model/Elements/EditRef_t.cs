@@ -20,7 +20,8 @@ namespace FixPortal.FixAtdl.Model.Elements;
 /// <summary>
 /// Represents a FIXatdl EditRef_t.
 /// </summary>
-public class EditRef_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class, IValueProvider
+public class EditRef_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
+    where T : class, IValueProvider
 {
     // Use FixPortal.FixAtdl.Validation namespace rather than FixPortal.FixAtdl.Model.Elements for debugging purposes
     private Edit_t<T> _referencedEdit = null!;
@@ -29,8 +30,12 @@ public class EditRef_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class
     /// The resolved referenced edit. Accessing this before <see cref="IResolvable{Strategy_t,T}.Resolve"/>
     /// has linked the EditRef surfaces a clear diagnostic rather than a bare NullReferenceException.
     /// </summary>
-    private Edit_t<T> ReferencedEdit => _referencedEdit
-        ?? throw ThrowHelper.New<InternalErrorException>(this, $"EditRef '{Id}' has not been resolved; Resolve must be called before the referenced edit is accessed.");
+    private Edit_t<T> ReferencedEdit =>
+        _referencedEdit
+        ?? throw ThrowHelper.New<InternalErrorException>(
+            this,
+            $"EditRef '{Id}' has not been resolved; Resolve must be called before the referenced edit is accessed."
+        );
 
     /// <summary>
     /// Initializes a new <see cref="EditRef_t{T}"/>.
@@ -79,31 +84,36 @@ public class EditRef_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class
     /// <inheritdoc />
     public string Field
     {
-        get => ReferencedEdit.Field; set => ReferencedEdit.Field = value;
+        get => ReferencedEdit.Field;
+        set => ReferencedEdit.Field = value;
     }
 
     /// <inheritdoc />
     public string Field2
     {
-        get => ReferencedEdit.Field2; set => ReferencedEdit.Field2 = value;
+        get => ReferencedEdit.Field2;
+        set => ReferencedEdit.Field2 = value;
     }
 
     /// <inheritdoc />
     public Operator_t? Operator
     {
-        get => ReferencedEdit.Operator; set => ReferencedEdit.Operator = value;
+        get => ReferencedEdit.Operator;
+        set => ReferencedEdit.Operator = value;
     }
 
     /// <inheritdoc />
     public LogicOperator_t? LogicOperator
     {
-        get => ReferencedEdit.LogicOperator; set => ReferencedEdit.LogicOperator = value;
+        get => ReferencedEdit.LogicOperator;
+        set => ReferencedEdit.LogicOperator = value;
     }
 
     /// <inheritdoc />
     public string Value
     {
-        get => ReferencedEdit.Value; set => ReferencedEdit.Value = value;
+        get => ReferencedEdit.Value;
+        set => ReferencedEdit.Value = value;
     }
 
     /// <inheritdoc />
@@ -125,7 +135,10 @@ public class EditRef_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class
 
     #region IResolvable<Strategy_t> Members
 
-    void IResolvable<Strategy_t, T>.Resolve(Strategy_t strategy, ISimpleDictionary<T> sourceCollection)
+    void IResolvable<Strategy_t, T>.Resolve(
+        Strategy_t strategy,
+        ISimpleDictionary<T> sourceCollection
+    )
     {
         if (strategy.Edits.Contains(Id))
         {
@@ -135,9 +148,14 @@ public class EditRef_t<T> : IEdit<T>, IResolvable<Strategy_t, T> where T : class
         {
             Strategies_t strategies = strategy.Parent;
 
-            _referencedEdit = strategies != null && strategies.Edits.Contains(Id)
-                ? strategies.Edits.Clone<T>(Id)
-                : throw ThrowHelper.New<ReferencedObjectNotFoundException>(this, ErrorMessages.EditRefResolutionFailure, Id);
+            _referencedEdit =
+                strategies != null && strategies.Edits.Contains(Id)
+                    ? strategies.Edits.Clone<T>(Id)
+                    : throw ThrowHelper.New<ReferencedObjectNotFoundException>(
+                        this,
+                        ErrorMessages.EditRefResolutionFailure,
+                        Id
+                    );
         }
 
         (_referencedEdit as IResolvable<Strategy_t, T>).Resolve(strategy, sourceCollection);

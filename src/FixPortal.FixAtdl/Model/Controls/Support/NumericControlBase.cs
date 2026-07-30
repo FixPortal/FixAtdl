@@ -32,9 +32,7 @@ public class NumericControlBase : InitializableControl<decimal?>
     /// </summary>
     /// <param name="id">ID for this control.</param>
     protected NumericControlBase(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 
     #region InitializableControl<T> Overrides
 
@@ -105,15 +103,30 @@ public class NumericControlBase : InitializableControl<decimal?>
             {
                 _value = null;
             }
-            else if (decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal parsed))
+            else if (
+                decimal.TryParse(
+                    value,
+                    NumberStyles.Number,
+                    CultureInfo.InvariantCulture,
+                    out decimal parsed
+                )
+            )
             {
                 // Accept a numeric string (symmetry with TextControlBase) rather than rejecting it.
                 _value = parsed;
             }
             else
             {
-                throw ThrowHelper.New<InvalidFieldValueException>(this, ErrorMessages.InitControlValueError,
-                    Id, string.Format(CultureInfo.InvariantCulture, "'{0}' is not a valid value for this control", value));
+                throw ThrowHelper.New<InvalidFieldValueException>(
+                    this,
+                    ErrorMessages.InitControlValueError,
+                    Id,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "'{0}' is not a valid value for this control",
+                        value
+                    )
+                );
             }
         }
         else
@@ -122,8 +135,12 @@ public class NumericControlBase : InitializableControl<decimal?>
             {
                 decimal d => d,
                 null => null,
-                _ => throw ThrowHelper.New<InternalErrorException>(this, InternalErrors.UnexpectedArgumentType,
-                    newValue.GetType().FullName, "System.String, System.Decimal"),
+                _ => throw ThrowHelper.New<InternalErrorException>(
+                    this,
+                    InternalErrors.UnexpectedArgumentType,
+                    newValue.GetType().FullName,
+                    "System.String, System.Decimal"
+                ),
             };
         }
     }
@@ -154,7 +171,13 @@ public class NumericControlBase : InitializableControl<decimal?>
     /// <returns>One of true, false or null which is equivalent to the value of this instance.</returns>
     public override bool? ToBoolean(IParameter targetParameter)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedControlValueConversion, _value, "Boolean", Id);
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedControlValueConversion,
+            _value,
+            "Boolean",
+            Id
+        );
     }
 
     /// <summary>
@@ -188,8 +211,14 @@ public class NumericControlBase : InitializableControl<decimal?>
         catch (OverflowException ex)
         {
             // Surface an out-of-range numeric as a domain error rather than a raw late OverflowException.
-            throw ThrowHelper.New<InvalidFieldValueException>(this, ex, ErrorMessages.UnsupportedControlValueConversion,
-                _value, "Int32", Id);
+            throw ThrowHelper.New<InvalidFieldValueException>(
+                this,
+                ex,
+                ErrorMessages.UnsupportedControlValueConversion,
+                _value,
+                "Int32",
+                Id
+            );
         }
     }
 
@@ -212,8 +241,14 @@ public class NumericControlBase : InitializableControl<decimal?>
         }
         catch (OverflowException ex)
         {
-            throw ThrowHelper.New<InvalidFieldValueException>(this, ex, ErrorMessages.UnsupportedControlValueConversion,
-                _value, "UInt32", Id);
+            throw ThrowHelper.New<InvalidFieldValueException>(
+                this,
+                ex,
+                ErrorMessages.UnsupportedControlValueConversion,
+                _value,
+                "UInt32",
+                Id
+            );
         }
     }
 
@@ -224,7 +259,13 @@ public class NumericControlBase : InitializableControl<decimal?>
     /// <returns>A nullable char value equivalent to the value of this instance.  May be null.</returns>
     public override char? ToChar(IParameter targetParameter)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedControlValueConversion, _value, "Char", Id);
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedControlValueConversion,
+            _value,
+            "Char",
+            Id
+        );
     }
 
     /// <summary>
@@ -245,7 +286,13 @@ public class NumericControlBase : InitializableControl<decimal?>
     /// <returns>A nullable DateTime equivalent to the value of this instance.</returns>
     public override DateTime? ToDateTime(IParameter targetParameter, IFormatProvider provider)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedControlValueConversion, _value, "DateTime", Id);
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedControlValueConversion,
+            _value,
+            "DateTime",
+            Id
+        );
     }
 
     /// <summary>

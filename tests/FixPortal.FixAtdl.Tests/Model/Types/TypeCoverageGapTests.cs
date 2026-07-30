@@ -23,7 +23,9 @@ public class TypeCoverageGapTests
     // Helper: build a minimal EnumPairCollection
     // ──────────────────────────────────────────────────────────────────────────
 
-    private static EnumPairCollection BuildEnumPairs(params (string enumId, string wireValue)[] pairs)
+    private static EnumPairCollection BuildEnumPairs(
+        params (string enumId, string wireValue)[] pairs
+    )
     {
         var col = new EnumPairCollection();
         foreach (var (enumId, wireValue) in pairs)
