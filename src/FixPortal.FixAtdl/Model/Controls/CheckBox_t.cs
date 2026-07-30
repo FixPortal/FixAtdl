@@ -19,7 +19,5 @@ public class CheckBox_t : BinaryControlBase
     /// </summary>
     /// <param name="id">ID for this control.</param>
     public CheckBox_t(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 }

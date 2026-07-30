@@ -87,7 +87,8 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
         if (isTimeOnly)
         {
             DateTime parsed = FixDateTime.Parse(text, CultureInfo.InvariantCulture);
-            DateTime normalised = parsed.Kind == DateTimeKind.Local ? parsed.ToUniversalTime() : parsed;
+            DateTime normalised =
+                parsed.Kind == DateTimeKind.Local ? parsed.ToUniversalTime() : parsed;
             TimeOnly timeOfDay = TimeOnly.FromDateTime(normalised);
             if (isMax)
             {
@@ -108,7 +109,8 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
             // UTC so a full-datetime bound's wall-clock matches the canonically-UTC value it is compared
             // against, keeping the comparison host-timezone-independent.
             DateTime parsed = FixDateTime.Parse(text, CultureInfo.InvariantCulture);
-            DateTime normalised = parsed.Kind == DateTimeKind.Local ? parsed.ToUniversalTime() : parsed;
+            DateTime normalised =
+                parsed.Kind == DateTimeKind.Local ? parsed.ToUniversalTime() : parsed;
             if (isMax)
             {
                 MaxValue = normalised;
@@ -153,7 +155,10 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
         {
             if (value == DateTime.MaxValue)
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.InvalidDateOrTimeValueUnknown);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.InvalidDateOrTimeValueUnknown
+                );
             }
 
             ValidationResult? boundViolation = CheckBounds((DateTime)value);
@@ -164,7 +169,10 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
         }
         else if (isRequired)
         {
-            return new ValidationResult(ValidationResult.ResultType.Missing, ErrorMessages.NonOptionalParameterNotSupplied2);
+            return new ValidationResult(
+                ValidationResult.ResultType.Missing,
+                ErrorMessages.NonOptionalParameterNotSupplied2
+            );
         }
 
         return ValidationResult.ValidResult;
@@ -179,7 +187,12 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
             DateTime normalisedMax = NormaliseToUtc(MaxValue.Value);
             if (normalisedVal > normalisedMax)
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MaxValueExceeded, value, MaxValue);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.MaxValueExceeded,
+                    value,
+                    MaxValue
+                );
             }
         }
 
@@ -188,7 +201,12 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
             DateTime normalisedMin = NormaliseToUtc(MinValue.Value);
             if (normalisedVal < normalisedMin)
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MinValueNotMet, value, MinValue);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.MinValueNotMet,
+                    value,
+                    MinValue
+                );
             }
         }
 
@@ -196,12 +214,22 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
 
         if (_maxTimeOfDay != null && valueTimeOfDay > _maxTimeOfDay)
         {
-            return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MaxValueExceeded, value, _maxTimeOfDay);
+            return new ValidationResult(
+                ValidationResult.ResultType.Invalid,
+                ErrorMessages.MaxValueExceeded,
+                value,
+                _maxTimeOfDay
+            );
         }
 
         if (_minTimeOfDay != null && valueTimeOfDay < _minTimeOfDay)
         {
-            return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MinValueNotMet, value, _minTimeOfDay);
+            return new ValidationResult(
+                ValidationResult.ResultType.Invalid,
+                ErrorMessages.MinValueNotMet,
+                value,
+                _minTimeOfDay
+            );
         }
 
         return null;
@@ -222,7 +250,7 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
 
     /// <summary>
     /// Converts the supplied value from string format (as might be used on the FIX wire) into the type of the type
-    /// parameter for this type.  
+    /// parameter for this type.
     /// </summary>
     /// <param name="value">Type to convert from string, cannot be null.</param>
     /// <returns>Value converted from a string if the conversion succeeded; otherwise an exception is thrown.</returns>
@@ -238,12 +266,24 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
 
         string[] formats = GetDateTimeFormatStrings();
 
-        if (DateTime.TryParseExact(value, formats, CultureInfo.InvariantCulture, WireParseStyles, out DateTime result))
+        if (
+            DateTime.TryParseExact(
+                value,
+                formats,
+                CultureInfo.InvariantCulture,
+                WireParseStyles,
+                out DateTime result
+            )
+        )
         {
             return result;
         }
 
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.InvalidDateOrTimeValue, value);
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.InvalidDateOrTimeValue,
+            value
+        );
     }
 
     /// <summary>
@@ -274,7 +314,10 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override DateTime? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
+    protected override DateTime? ConvertToNativeType(
+        IParameter hostParameter,
+        IParameterConvertible value
+    )
     {
         return value.ToDateTime(hostParameter, CultureInfo.InvariantCulture);
     }
@@ -289,7 +332,12 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
     /// <returns>One of true, false or null which is equivalent to the value of this instance.</returns>
     public bool? ToBoolean()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Boolean");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Boolean"
+        );
     }
 
     /// <summary>
@@ -310,7 +358,12 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
     /// <returns>A nullable decimal equivalent to the value of this instance.</returns>
     public decimal? ToDecimal()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Decimal");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Decimal"
+        );
     }
 
     /// <summary>
@@ -331,7 +384,12 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
     /// very large enumerations.</remarks>
     public EnumState ToEnumState(EnumPairCollection enumPairs)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Enumerated Type");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Enumerated Type"
+        );
     }
 
     #endregion

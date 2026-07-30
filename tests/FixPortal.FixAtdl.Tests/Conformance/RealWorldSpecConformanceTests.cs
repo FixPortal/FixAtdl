@@ -71,8 +71,9 @@ public class RealWorldSpecConformanceTests
 
     private static Clock_t StartTimeClock(Instant now)
     {
-        var clock = Load(TzClockFixture)["VWAP"].Controls
-            .OfType<Clock_t>().First(c => c.Id == "i_StartTime");
+        var clock = Load(TzClockFixture)["VWAP"]
+            .Controls.OfType<Clock_t>()
+            .First(c => c.Id == "i_StartTime");
         clock.Clock = new FakeClock(now);
         clock.InitValueMode = 0;
         clock.LoadInitValue(FixFieldValueProvider.Empty);
@@ -85,7 +86,8 @@ public class RealWorldSpecConformanceTests
         // 2026-01-15 CET (UTC+1): 08:00 Berlin -> 07:00Z.
         StartTimeClock(Instant.FromUtc(2026, 1, 15, 12, 0, 0))
             .ToDateTime(null!, CultureInfo.InvariantCulture)
-            .Should().Be(new DateTime(2026, 1, 15, 7, 0, 0, DateTimeKind.Utc));
+            .Should()
+            .Be(new DateTime(2026, 1, 15, 7, 0, 0, DateTimeKind.Utc));
     }
 
     [Fact]
@@ -94,13 +96,15 @@ public class RealWorldSpecConformanceTests
         // 2026-07-15 CEST (UTC+2): 08:00 Berlin -> 06:00Z.
         StartTimeClock(Instant.FromUtc(2026, 7, 15, 12, 0, 0))
             .ToDateTime(null!, CultureInfo.InvariantCulture)
-            .Should().Be(new DateTime(2026, 7, 15, 6, 0, 0, DateTimeKind.Utc));
+            .Should()
+            .Be(new DateTime(2026, 7, 15, 6, 0, 0, DateTimeKind.Utc));
     }
 
     [Fact]
     public void C2_time_only_maxValue_is_captured_as_text()
     {
-        var endTime = (Parameter_t<UTCTimestamp_t>)Load(TzClockFixture)["VWAP"].Parameters["p_EndTime"];
+        var endTime =
+            (Parameter_t<UTCTimestamp_t>)Load(TzClockFixture)["VWAP"].Parameters["p_EndTime"];
         endTime.Value.MaxValueText.Should().Be("23:59:59");
     }
 

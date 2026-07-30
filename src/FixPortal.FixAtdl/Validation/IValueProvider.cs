@@ -18,4 +18,3 @@ public interface IValueProvider
     /// <returns>Object's current value.</returns>
     object GetCurrentValue();
 }
-

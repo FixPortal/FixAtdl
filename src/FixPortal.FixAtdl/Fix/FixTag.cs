@@ -27,7 +27,11 @@ public readonly struct FixTag
     {
         if (value <= 0)
         {
-            throw ThrowHelper.New<ArgumentOutOfRangeException>(typeof(FixTag).FullName, ErrorMessages.NonZeroPositiveIntRequired, value);
+            throw ThrowHelper.New<ArgumentOutOfRangeException>(
+                typeof(FixTag).FullName,
+                ErrorMessages.NonZeroPositiveIntRequired,
+                value
+            );
         }
 
         _value = value;

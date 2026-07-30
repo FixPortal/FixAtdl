@@ -22,6 +22,5 @@ public enum LogicOperator_t
     Xor,
 
     /// <summary>Not</summary>
-    Not
+    Not,
 }
-

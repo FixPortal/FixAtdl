@@ -22,7 +22,7 @@ public struct Tenor : IComparable
         Day,
         Week,
         Month,
-        Year
+        Year,
     }
 
     private const string ExceptionContext = "Tenor";
@@ -68,7 +68,8 @@ public struct Tenor : IComparable
     /// <param name="lhs">Left hand side value.</param>
     /// <param name="rhs">Right hand side value.</param>
     /// <returns>True if both the tenor type and offset are equal; otherwise, false.</returns>
-    public static bool operator ==(Tenor lhs, Tenor rhs) => lhs.Offset == rhs.Offset && lhs.TenorType == rhs.TenorType;
+    public static bool operator ==(Tenor lhs, Tenor rhs) =>
+        lhs.Offset == rhs.Offset && lhs.TenorType == rhs.TenorType;
 
     /// <summary>
     /// Compares two tenor values for inequality.
@@ -76,7 +77,8 @@ public struct Tenor : IComparable
     /// <param name="lhs">Left hand side value.</param>
     /// <param name="rhs">Right hand side value.</param>
     /// <returns>True if the tenor values differ; otherwise, false.</returns>
-    public static bool operator !=(Tenor lhs, Tenor rhs) => lhs.Offset != rhs.Offset || lhs.TenorType != rhs.TenorType;
+    public static bool operator !=(Tenor lhs, Tenor rhs) =>
+        lhs.Offset != rhs.Offset || lhs.TenorType != rhs.TenorType;
 
     /// <summary>
     /// Determines whether the supplied object is equal to this tenor value.
@@ -120,7 +122,7 @@ public struct Tenor : IComparable
                 'W' => TenorTypeValue.Week,
                 'M' => TenorTypeValue.Month,
                 'Y' => TenorTypeValue.Year,
-                _ => result.TenorType
+                _ => result.TenorType,
             };
 
             string number = value[1..];
@@ -131,7 +133,11 @@ public struct Tenor : IComparable
 
                 if (result.Offset <= 0)
                 {
-                    throw ThrowHelper.New<ArgumentException>(ExceptionContext, ErrorMessages.InvalidTenorValue, value);
+                    throw ThrowHelper.New<ArgumentException>(
+                        ExceptionContext,
+                        ErrorMessages.InvalidTenorValue,
+                        value
+                    );
                 }
 
                 if (result.TenorType != TenorTypeValue.Invalid)
@@ -141,11 +147,20 @@ public struct Tenor : IComparable
             }
             catch (Exception ex) when (ex is FormatException or OverflowException)
             {
-                throw ThrowHelper.New<ArgumentException>(ExceptionContext, ex, ErrorMessages.InvalidTenorValue, value);
+                throw ThrowHelper.New<ArgumentException>(
+                    ExceptionContext,
+                    ex,
+                    ErrorMessages.InvalidTenorValue,
+                    value
+                );
             }
         }
 
-        throw ThrowHelper.New<ArgumentException>(ExceptionContext, ErrorMessages.InvalidTenorValue, value);
+        throw ThrowHelper.New<ArgumentException>(
+            ExceptionContext,
+            ErrorMessages.InvalidTenorValue,
+            value
+        );
     }
 
     /// <summary>
@@ -162,15 +177,17 @@ public struct Tenor : IComparable
             TenorTypeValue.Year => string.Format(CultureInfo.InvariantCulture, "Y{0}", Offset),
             // A default/unparsed Tenor (TenorType=Invalid) must not be silently serialized as the
             // syntactically-valid-but-wrong wire value "Y0"; surface it instead of corrupting the wire.
-            _ => throw new InvalidOperationException($"Cannot serialize a Tenor with an invalid tenor type (offset {Offset})."),
+            _ => throw new InvalidOperationException(
+                $"Cannot serialize a Tenor with an invalid tenor type (offset {Offset})."
+            ),
         };
     }
 
     #region IComparable Members
 
     /// <summary>
-    /// Compares the current instance with another object of the same type and returns an integer that indicates 
-    /// whether the current instance precedes, follows, or occurs in the same position in the sort order as the 
+    /// Compares the current instance with another object of the same type and returns an integer that indicates
+    /// whether the current instance precedes, follows, or occurs in the same position in the sort order as the
     /// other object.
     /// </summary>
     /// <param name="obj">An object to compare with this instance.</param>
@@ -190,7 +207,12 @@ public struct Tenor : IComparable
 
         if (obj is not Tenor rhs)
         {
-            throw ThrowHelper.New<ArgumentException>(this, InternalErrors.UnexpectedArgumentType, obj.GetType().FullName!, typeof(Tenor).FullName!);
+            throw ThrowHelper.New<ArgumentException>(
+                this,
+                InternalErrors.UnexpectedArgumentType,
+                obj.GetType().FullName!,
+                typeof(Tenor).FullName!
+            );
         }
 
         if (rhs == this)
@@ -235,12 +257,13 @@ public struct Tenor : IComparable
     }
 
     // Nominal calendar-day magnitude for cross-unit ordering only (W=7, M=30, Y=365 days).
-    private static long ApproximateDays(Tenor tenor) => tenor.TenorType switch
-    {
-        TenorTypeValue.Day => tenor.Offset,
-        TenorTypeValue.Week => tenor.Offset * 7L,
-        TenorTypeValue.Month => tenor.Offset * 30L,
-        TenorTypeValue.Year => tenor.Offset * 365L,
-        _ => 0L,
-    };
+    private static long ApproximateDays(Tenor tenor) =>
+        tenor.TenorType switch
+        {
+            TenorTypeValue.Day => tenor.Offset,
+            TenorTypeValue.Week => tenor.Offset * 7L,
+            TenorTypeValue.Month => tenor.Offset * 30L,
+            TenorTypeValue.Year => tenor.Offset * 365L,
+            _ => 0L,
+        };
 }

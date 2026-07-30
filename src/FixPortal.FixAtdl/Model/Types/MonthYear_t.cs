@@ -53,17 +53,30 @@ public class MonthYear_t : AtdlValueType<MonthYear>, IControlConvertible
         {
             if (MaxValue != null && value > MaxValue)
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MaxValueExceeded, value.ToString()!, MaxValue);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.MaxValueExceeded,
+                    value.ToString()!,
+                    MaxValue
+                );
             }
 
             if (MinValue != null && value < MinValue)
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MinValueNotMet, value.ToString()!, MinValue);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.MinValueNotMet,
+                    value.ToString()!,
+                    MinValue
+                );
             }
         }
         else if (isRequired)
         {
-            return new ValidationResult(ValidationResult.ResultType.Missing, ErrorMessages.NonOptionalParameterNotSupplied2);
+            return new ValidationResult(
+                ValidationResult.ResultType.Missing,
+                ErrorMessages.NonOptionalParameterNotSupplied2
+            );
         }
 
         return ValidationResult.ValidResult;
@@ -101,7 +114,10 @@ public class MonthYear_t : AtdlValueType<MonthYear>, IControlConvertible
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override MonthYear? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
+    protected override MonthYear? ConvertToNativeType(
+        IParameter hostParameter,
+        IParameterConvertible value
+    )
     {
         string monthYear = value.ToString(hostParameter);
 
@@ -127,7 +143,12 @@ public class MonthYear_t : AtdlValueType<MonthYear>, IControlConvertible
     /// <returns>One of true, false or null which is equivalent to the value of this instance.</returns>
     public bool? ToBoolean()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Boolean");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Boolean"
+        );
     }
 
     /// <summary>
@@ -148,7 +169,12 @@ public class MonthYear_t : AtdlValueType<MonthYear>, IControlConvertible
     /// <returns>A nullable decimal equivalent to the value of this instance.</returns>
     public decimal? ToDecimal()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Decimal");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Decimal"
+        );
     }
 
     /// <summary>
@@ -157,7 +183,12 @@ public class MonthYear_t : AtdlValueType<MonthYear>, IControlConvertible
     /// <returns>A nullable DateTime equivalent to the value of this instance.</returns>
     public DateTime? ToDateTime()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "DateTime");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "DateTime"
+        );
     }
 
     /// <summary>
@@ -176,4 +207,3 @@ public class MonthYear_t : AtdlValueType<MonthYear>, IControlConvertible
 
     #endregion
 }
-

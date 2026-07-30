@@ -16,77 +16,103 @@ namespace FixPortal.FixAtdl.Xml;
 public static class EnumDefinitions
 {
     /// <summary>Border_t enumeration.</summary>
-    public static readonly EnumDefinition Border_t = new(typeof(Border_t), new Dictionary<string, Enum>
+    public static readonly EnumDefinition Border_t = new(
+        typeof(Border_t),
+        new Dictionary<string, Enum>
         {
             { "None", Model.Enumerations.Border_t.None },
-            { "Line", Model.Enumerations.Border_t.Line}
-        });
+            { "Line", Model.Enumerations.Border_t.Line },
+        }
+    );
 
     /// <summary>Inclusion_t enumeration.</summary>
-    public static readonly EnumDefinition Inclusion_t = new(typeof(Inclusion_t), new Dictionary<string, Enum>
+    public static readonly EnumDefinition Inclusion_t = new(
+        typeof(Inclusion_t),
+        new Dictionary<string, Enum>
         {
             { "Include", Model.Enumerations.Inclusion_t.Include },
-            { "Exclude", Model.Enumerations.Inclusion_t.Exclude}
-        });
+            { "Exclude", Model.Enumerations.Inclusion_t.Exclude },
+        }
+    );
 
     /// <summary>IncrementPolicy_t enumeration.</summary>
-    public static readonly EnumDefinition IncrementPolicy_t = new(typeof(IncrementPolicy_t), new Dictionary<string, Enum>
+    public static readonly EnumDefinition IncrementPolicy_t = new(
+        typeof(IncrementPolicy_t),
+        new Dictionary<string, Enum>
         {
             { "Static", Model.Enumerations.IncrementPolicy_t.Static },
             { "LotSize", Model.Enumerations.IncrementPolicy_t.LotSize },
-            { "Tick", Model.Enumerations.IncrementPolicy_t.Tick}
-        });
+            { "Tick", Model.Enumerations.IncrementPolicy_t.Tick },
+        }
+    );
 
     /// <summary>InitPolicy_t enumeration.</summary>
-    public static readonly EnumDefinition InitPolicy_t = new(typeof(InitPolicy_t), new Dictionary<string, Enum>
+    public static readonly EnumDefinition InitPolicy_t = new(
+        typeof(InitPolicy_t),
+        new Dictionary<string, Enum>
         {
             { "UseValue", Model.Enumerations.InitPolicy_t.UseValue },
-            { "UseFixField", Model.Enumerations.InitPolicy_t.UseFixField}
-        });
+            { "UseFixField", Model.Enumerations.InitPolicy_t.UseFixField },
+        }
+    );
 
     /// <summary>LogicOperator_t enumeration.</summary>
-    public static readonly EnumDefinition LogicOperator_t = new(typeof(LogicOperator_t), new Dictionary<string, Enum>
+    public static readonly EnumDefinition LogicOperator_t = new(
+        typeof(LogicOperator_t),
+        new Dictionary<string, Enum>
         {
             { "AND", Model.Enumerations.LogicOperator_t.And },
-            { "OR", Model.Enumerations.LogicOperator_t.Or},
+            { "OR", Model.Enumerations.LogicOperator_t.Or },
             { "XOR", Model.Enumerations.LogicOperator_t.Xor },
-            { "NOT", Model.Enumerations.LogicOperator_t.Not}
-        });
+            { "NOT", Model.Enumerations.LogicOperator_t.Not },
+        }
+    );
 
     /// <summary>Operator_t enumeration.</summary>
-    public static readonly EnumDefinition Operator_t = new(typeof(Operator_t), new Dictionary<string, Enum>
+    public static readonly EnumDefinition Operator_t = new(
+        typeof(Operator_t),
+        new Dictionary<string, Enum>
         {
             { "EX", Model.Enumerations.Operator_t.Exist },
-            { "NX", Model.Enumerations.Operator_t.NotExist},
+            { "NX", Model.Enumerations.Operator_t.NotExist },
             { "EQ", Model.Enumerations.Operator_t.Equal },
-            { "LT", Model.Enumerations.Operator_t.LessThan},
+            { "LT", Model.Enumerations.Operator_t.LessThan },
             { "GT", Model.Enumerations.Operator_t.GreaterThan },
-            { "NE", Model.Enumerations.Operator_t.NotEqual},
+            { "NE", Model.Enumerations.Operator_t.NotEqual },
             { "LE", Model.Enumerations.Operator_t.LessThanOrEqual },
-            { "GE", Model.Enumerations.Operator_t.GreaterThanOrEqual}
-        });
+            { "GE", Model.Enumerations.Operator_t.GreaterThanOrEqual },
+        }
+    );
 
     /// <summary>Orientation_t enumeration.</summary>
-    public static readonly EnumDefinition Orientation_t = new(typeof(Orientation_t), new Dictionary<string, Enum>
+    public static readonly EnumDefinition Orientation_t = new(
+        typeof(Orientation_t),
+        new Dictionary<string, Enum>
         {
             { "HORIZONTAL", Model.Enumerations.Orientation_t.Horizontal },
-            { "VERTICAL", Model.Enumerations.Orientation_t.Vertical}
-        });
+            { "VERTICAL", Model.Enumerations.Orientation_t.Vertical },
+        }
+    );
 
     /// <summary>Region enumeration. The underlying enumeration has the [Flags] attribute.</summary>
-    public static readonly EnumDefinition Region = new(typeof(Region), new Dictionary<string, Enum>
+    public static readonly EnumDefinition Region = new(
+        typeof(Region),
+        new Dictionary<string, Enum>
         {
             { string.Empty, Model.Enumerations.Region.None },
-            { "TheAmericas", Model.Enumerations.Region.TheAmericas},
+            { "TheAmericas", Model.Enumerations.Region.TheAmericas },
             { "EuropeMiddleEastAfrica", Model.Enumerations.Region.EuropeMiddleEastAfrica },
-            { "AsiaPacificJapan", Model.Enumerations.Region.AsiaPacificJapan}
-        });
+            { "AsiaPacificJapan", Model.Enumerations.Region.AsiaPacificJapan },
+        }
+    );
 
     /// <summary>Use_t enumeration.</summary>
-    public static readonly EnumDefinition Use_t = new(typeof(Use_t), new Dictionary<string, Enum>
+    public static readonly EnumDefinition Use_t = new(
+        typeof(Use_t),
+        new Dictionary<string, Enum>
         {
             { "optional", Model.Enumerations.Use_t.Optional },
-            { "required", Model.Enumerations.Use_t.Required }
-        });
+            { "required", Model.Enumerations.Use_t.Required },
+        }
+    );
 }
-

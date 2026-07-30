@@ -21,9 +21,11 @@ namespace FixPortal.FixAtdl.Model.Elements;
 /// <summary>
 /// Base class for all concrete <see cref="Control_t"/> types.
 /// </summary>
-public abstract class Control_t : IParentable<StrategyPanel_t>, IValueProvider, IParameterConvertible
+public abstract class Control_t
+    : IParentable<StrategyPanel_t>,
+        IValueProvider,
+        IParameterConvertible
 {
-
     /// <summary>
     /// Initializes a new <see cref="Control_t"/> instance with the specified identifier as id.
     /// </summary>
@@ -50,14 +52,14 @@ public abstract class Control_t : IParentable<StrategyPanel_t>, IValueProvider, 
     /// the first would have index of 0, the second 1 and the third 2.</summary>
     public int Index { get; set; }
 
-    /// <summary>Indicates the initialization value is to be taken from this standard FIX field. Format: "FIX_" + FIXFieldName. 
+    /// <summary>Indicates the initialization value is to be taken from this standard FIX field. Format: "FIX_" + FIXFieldName.
     /// E.g. "FIX_OrderQty".  Required when initPolicy=”UseFixField”.</summary>
     public string InitFixField { get; set; } = null!;
 
     /// <summary>Describes how to initialize the control.  If the value of this attribute is undefined or equal to "UseValue" and
-    ///  initValue is defined then initialize with initValue.  If the value is equal to "UseFixField" then attempt to initialize 
-    /// with the value of the tag specified in initFixField. If the value is equal to "UseFixField" and it is not possible to 
-    /// access the value of the specified fix tag then revert to using initValue. If the value is equal to "UseFixField", the 
+    ///  initValue is defined then initialize with initValue.  If the value is equal to "UseFixField" then attempt to initialize
+    /// with the value of the tag specified in initFixField. If the value is equal to "UseFixField" and it is not possible to
+    /// access the value of the specified fix tag then revert to using initValue. If the value is equal to "UseFixField", the
     /// field is not accessible, and initValue is not defined, then do not initialize.</summary>
     public InitPolicy_t? InitPolicy { get; set; }
 
@@ -86,10 +88,10 @@ public abstract class Control_t : IParentable<StrategyPanel_t>, IValueProvider, 
     public StrategyPanel_t OwningStrategyPanel { get; private set; } = null!;
 
     /// <summary>
-    /// Sets the value of this control; either with a value of the appropriate type, or using the FIXatdl '{NULL}' 
+    /// Sets the value of this control; either with a value of the appropriate type, or using the FIXatdl '{NULL}'
     /// value.  This method is either called indirectly from the user interface, or by a StateRule.
     /// </summary>
-    /// <param name="newValue">Either a valid instance of the appropriate type or null (meaning do not send this 
+    /// <param name="newValue">Either a valid instance of the appropriate type or null (meaning do not send this
     /// value over FIX).  May also contain the FIXatdl '{NULL}' value as a string.</param>
     public abstract void SetValue(object newValue);
 
@@ -146,9 +148,9 @@ public abstract class Control_t : IParentable<StrategyPanel_t>, IValueProvider, 
     /// Loads the initial value for this control based on the InitPolicy, InitFixField and InitValue attributes.
     /// </summary>
     /// <param name="controlInitValueProvider">Value provider for initializing control values from InitFixField.</param>
-    /// <remarks>The spec states: 'If the value of the initPolicy attribute is undefined or equal to "UseValue" and the initValue attribute is 
-    /// defined then initialize with initValue.  If the value is equal to "UseFixField" then attempt to initialize with the value of 
-    /// the tag specified in the initFixField attribute. If the value is equal to "UseFixField" and it is not possible to access the 
+    /// <remarks>The spec states: 'If the value of the initPolicy attribute is undefined or equal to "UseValue" and the initValue attribute is
+    /// defined then initialize with initValue.  If the value is equal to "UseFixField" then attempt to initialize with the value of
+    /// the tag specified in the initFixField attribute. If the value is equal to "UseFixField" and it is not possible to access the
     /// value of the specified fix tag then revert to using initValue. If the value is equal to "UseFixField", the field is not accessible,
     /// and initValue is not defined, then do not initialize.</remarks>
     public abstract void LoadInitValue(FixFieldValueProvider controlInitValueProvider);
@@ -159,7 +161,8 @@ public abstract class Control_t : IParentable<StrategyPanel_t>, IValueProvider, 
 
     StrategyPanel_t IParentable<StrategyPanel_t>.Parent
     {
-        get => OwningStrategyPanel; set => OwningStrategyPanel = value;
+        get => OwningStrategyPanel;
+        set => OwningStrategyPanel = value;
     }
 
     #endregion
@@ -238,9 +241,16 @@ public abstract class Control_t : IParentable<StrategyPanel_t>, IValueProvider, 
         result = 0;
         bool hasValue = !string.IsNullOrEmpty(value);
 
-        if (hasValue && !int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out result))
+        if (
+            hasValue
+            && !int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out result)
+        )
         {
-            throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.InvalidNumericValue, value);
+            throw ThrowHelper.New<InvalidCastException>(
+                this,
+                ErrorMessages.InvalidNumericValue,
+                value
+            );
         }
 
         return hasValue;
@@ -258,9 +268,16 @@ public abstract class Control_t : IParentable<StrategyPanel_t>, IValueProvider, 
         result = 0;
         bool hasValue = !string.IsNullOrEmpty(value);
 
-        if (hasValue && !uint.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out result))
+        if (
+            hasValue
+            && !uint.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out result)
+        )
         {
-            throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.InvalidNumericValue, value);
+            throw ThrowHelper.New<InvalidCastException>(
+                this,
+                ErrorMessages.InvalidNumericValue,
+                value
+            );
         }
 
         return hasValue;
@@ -278,9 +295,21 @@ public abstract class Control_t : IParentable<StrategyPanel_t>, IValueProvider, 
         result = 0;
         bool hasValue = !string.IsNullOrEmpty(value);
 
-        if (hasValue && !decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out result))
+        if (
+            hasValue
+            && !decimal.TryParse(
+                value,
+                NumberStyles.Number,
+                CultureInfo.InvariantCulture,
+                out result
+            )
+        )
         {
-            throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.InvalidNumericValue, value);
+            throw ThrowHelper.New<InvalidCastException>(
+                this,
+                ErrorMessages.InvalidNumericValue,
+                value
+            );
         }
 
         return hasValue;
@@ -299,7 +328,11 @@ public abstract class Control_t : IParentable<StrategyPanel_t>, IValueProvider, 
 
         if (hasValue && value!.Length != 1)
         {
-            throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.InvalidCharValue, value);
+            throw ThrowHelper.New<InvalidCastException>(
+                this,
+                ErrorMessages.InvalidCharValue,
+                value
+            );
         }
 
         result = hasValue ? value![0] : char.MinValue;

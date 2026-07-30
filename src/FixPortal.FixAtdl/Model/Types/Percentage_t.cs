@@ -14,17 +14,17 @@ using FixPortal.FixAtdl.Validation;
 namespace FixPortal.FixAtdl.Model.Types;
 
 /// <summary>
-/// 'float field representing a percentage (e.g. 0.05 represents 5% and 0.9525 represents 95.25%). Note the number of 
+/// 'float field representing a percentage (e.g. 0.05 represents 5% and 0.9525 represents 95.25%). Note the number of
 /// decimal places may vary.'
 /// </summary>
 public class Percentage_t : Float_t
 {
     /// <summary>
     /// Applicable for xsi:type of Percentage_t. If true then percent values must be multiplied by 100 before being
-    /// sent on the wire. For example, if multiplyBy100 were false then the percentage, 75%, would be sent as 0.75 
+    /// sent on the wire. For example, if multiplyBy100 were false then the percentage, 75%, would be sent as 0.75
     /// on the wire. However, if multiplyBy100 were true then 75 would be sent on the wire.
     /// If not provided it should be interpreted as false.
-    /// Use of this attribute is not recommended. The motivation for this attribute is to maximize compatibility 
+    /// Use of this attribute is not recommended. The motivation for this attribute is to maximize compatibility
     /// with algorithmic interfaces that are non-compliant with FIX in regard to their handling of percentages. In
     /// these cases an integer parameter should be used instead of a percentage.
     /// </summary>
@@ -47,19 +47,30 @@ public class Percentage_t : Float_t
             // scale by 100 regardless of MultiplyBy100 (which governs only the wire representation).
             if (MaxValue != null && (decimal)value > MaxValue)
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MaxValueExceeded,
-                    RemoveTrailingZeroes(value * 100)!, RemoveTrailingZeroes(MaxValue.Value * 100)!);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.MaxValueExceeded,
+                    RemoveTrailingZeroes(value * 100)!,
+                    RemoveTrailingZeroes(MaxValue.Value * 100)!
+                );
             }
 
             if (MinValue != null && (decimal)value < MinValue)
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MinValueNotMet,
-                    RemoveTrailingZeroes(value * 100)!, RemoveTrailingZeroes(MinValue.Value * 100)!);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.MinValueNotMet,
+                    RemoveTrailingZeroes(value * 100)!,
+                    RemoveTrailingZeroes(MinValue.Value * 100)!
+                );
             }
         }
         else if (isRequired)
         {
-            return new ValidationResult(ValidationResult.ResultType.Missing, ErrorMessages.NonOptionalParameterNotSupplied2);
+            return new ValidationResult(
+                ValidationResult.ResultType.Missing,
+                ErrorMessages.NonOptionalParameterNotSupplied2
+            );
         }
 
         return ValidationResult.ValidResult;
@@ -87,8 +98,8 @@ public class Percentage_t : Float_t
 
     /// <summary>
     /// Converts the supplied value to a string, as might be used on the FIX wire.  If the supplied value is
-    /// null, this means the field is not to be included in the outgoing FIX message.  This implementation adjusts for the 
-    /// fact that percentage values are typically shown as whole numbers (5, 10, 15) on the user interface but sent over 
+    /// null, this means the field is not to be included in the outgoing FIX message.  This implementation adjusts for the
+    /// fact that percentage values are typically shown as whole numbers (5, 10, 15) on the user interface but sent over
     /// the FIX wire as decimals (0.05, 0.1, 0.15).
     /// </summary>
     /// <param name="value">Value to convert, may be null.</param>
@@ -100,15 +111,20 @@ public class Percentage_t : Float_t
             return null;
         }
 
-        decimal adjustedValue = MultiplyBy100 == true ? (decimal)RemoveTrailingZeroes(value * 100)! : (decimal)value;
+        decimal adjustedValue =
+            MultiplyBy100 == true ? (decimal)RemoveTrailingZeroes(value * 100)! : (decimal)value;
 
         if (Precision == null)
         {
             return adjustedValue.ToString(CultureInfo.InvariantCulture);
         }
 
-        int effectivePrecision = Math.Min(28, MultiplyBy100 == true ? Precision.Value : Precision.Value + 2);
-        return Round(adjustedValue, effectivePrecision)!.Value.ToString(CultureInfo.InvariantCulture);
+        int effectivePrecision = Math.Min(
+            28,
+            MultiplyBy100 == true ? Precision.Value : Precision.Value + 2
+        );
+        return Round(adjustedValue, effectivePrecision)!
+            .Value.ToString(CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -119,11 +135,14 @@ public class Percentage_t : Float_t
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).<br/><br/>
-    /// Unlike all other (non-enumerated) control/parameter relationships, Percentage_t does not have a 
-    /// one-to-one mapping with its associated control value as the control will typically contain a user-oriented 
-    /// format (e.g., 25) when the parameter must contain the true value (i.e., 0.25, assuming multiplyBy100 
+    /// Unlike all other (non-enumerated) control/parameter relationships, Percentage_t does not have a
+    /// one-to-one mapping with its associated control value as the control will typically contain a user-oriented
+    /// format (e.g., 25) when the parameter must contain the true value (i.e., 0.25, assuming multiplyBy100
     /// is not set to true).</remarks>
-    protected override decimal? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
+    protected override decimal? ConvertToNativeType(
+        IParameter hostParameter,
+        IParameterConvertible value
+    )
     {
         decimal? convertedValue = value.ToDecimal(hostParameter, CultureInfo.InvariantCulture);
 
@@ -131,7 +150,7 @@ public class Percentage_t : Float_t
     }
 
     /// <summary>
-    /// Gets the value of this parameter type in its native (i.e., raw) form, such as int, char, string, etc. 
+    /// Gets the value of this parameter type in its native (i.e., raw) form, such as int, char, string, etc.
     /// </summary>
     /// <param name="applyWireValueFormat">If set to true, the value returned is adjusted to be in the 'format'
     /// it would be if sent on the FIX wire.  In this case, we have to apply both Precision and the MultiplyBy100
@@ -143,11 +162,17 @@ public class Percentage_t : Float_t
 
         if (value != null && applyWireValueFormat)
         {
-            decimal adjustedValue = MultiplyBy100 == true ? (decimal)RemoveTrailingZeroes(value * 100)! : (decimal)value;
+            decimal adjustedValue =
+                MultiplyBy100 == true
+                    ? (decimal)RemoveTrailingZeroes(value * 100)!
+                    : (decimal)value;
 
             if (Precision != null)
             {
-                int effectivePrecision = Math.Min(28, MultiplyBy100 == true ? Precision.Value : Precision.Value + 2);
+                int effectivePrecision = Math.Min(
+                    28,
+                    MultiplyBy100 == true ? Precision.Value : Precision.Value + 2
+                );
                 return Round(adjustedValue, effectivePrecision)!;
             }
             return adjustedValue;
@@ -197,6 +222,10 @@ public class Percentage_t : Float_t
         }
 
         // We use this slightly ugly manipulation to remove the trailing zeroes that multiplication by 100 produces
-        return decimal.Parse(((decimal)value).ToString("G29", CultureInfo.InvariantCulture), NumberStyles.Float, CultureInfo.InvariantCulture);
+        return decimal.Parse(
+            ((decimal)value).ToString("G29", CultureInfo.InvariantCulture),
+            NumberStyles.Float,
+            CultureInfo.InvariantCulture
+        );
     }
 }

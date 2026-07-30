@@ -12,4 +12,3 @@ namespace FixPortal.FixAtdl.Model.Types;
 /// places may vary and some fields such as LastForwardPoints may be negative.'
 /// </summary>
 public class PriceOffset_t : Float_t;
-

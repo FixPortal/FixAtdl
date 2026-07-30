@@ -22,7 +22,7 @@ public class KeyedCollectionTests
     {
         var pairs = new EnumPairCollection
         {
-            new EnumPair_t { EnumId = "BUY",  WireValue = "1" },
+            new EnumPair_t { EnumId = "BUY", WireValue = "1" },
             new EnumPair_t { EnumId = "SELL", WireValue = "2" },
         };
 
@@ -57,7 +57,10 @@ public class KeyedCollectionTests
         var empty = new EnumPairCollection();
         empty.HasValues.Should().BeFalse();
 
-        var nonempty = new EnumPairCollection { new EnumPair_t { EnumId = "X", WireValue = "x" } };
+        var nonempty = new EnumPairCollection
+        {
+            new EnumPair_t { EnumId = "X", WireValue = "x" },
+        };
         nonempty.HasValues.Should().BeTrue();
     }
 
@@ -152,7 +155,10 @@ public class KeyedCollectionTests
             new Region_t { Name = Region.TheAmericas, Inclusion = Inclusion_t.Exclude },
         };
 
-        regions.GetApplicableRegions().Should().Be(Region.EuropeMiddleEastAfrica | Region.AsiaPacificJapan);
+        regions
+            .GetApplicableRegions()
+            .Should()
+            .Be(Region.EuropeMiddleEastAfrica | Region.AsiaPacificJapan);
     }
 
     [Fact]
@@ -177,30 +183,42 @@ public class KeyedCollectionTests
             new Region_t { Name = Region.TheAmericas, Inclusion = Inclusion_t.Exclude },
         };
 
-        regions.IsApplicableTo(IsoCountryCode.GB).Should().BeTrue();   // EMEA — not excluded
-        regions.IsApplicableTo(IsoCountryCode.US).Should().BeFalse();  // TheAmericas — excluded
+        regions.IsApplicableTo(IsoCountryCode.GB).Should().BeTrue(); // EMEA — not excluded
+        regions.IsApplicableTo(IsoCountryCode.US).Should().BeFalse(); // TheAmericas — excluded
     }
 
     [Fact]
     public void RegionCollection_country_exclude_overrides_included_region()
     {
-        var emea = new Region_t { Name = Region.EuropeMiddleEastAfrica, Inclusion = Inclusion_t.Include };
-        emea.Countries.Add(new Country_t { CountryCode = IsoCountryCode.GB, Inclusion = Inclusion_t.Exclude });
+        var emea = new Region_t
+        {
+            Name = Region.EuropeMiddleEastAfrica,
+            Inclusion = Inclusion_t.Include,
+        };
+        emea.Countries.Add(
+            new Country_t { CountryCode = IsoCountryCode.GB, Inclusion = Inclusion_t.Exclude }
+        );
         var regions = new RegionCollection { emea };
 
-        regions.IsApplicableTo(IsoCountryCode.GB).Should().BeFalse();  // explicitly excluded country
-        regions.IsApplicableTo(IsoCountryCode.DE).Should().BeTrue();   // region applies, no override
+        regions.IsApplicableTo(IsoCountryCode.GB).Should().BeFalse(); // explicitly excluded country
+        regions.IsApplicableTo(IsoCountryCode.DE).Should().BeTrue(); // region applies, no override
     }
 
     [Fact]
     public void RegionCollection_country_include_overrides_excluded_region()
     {
-        var emea = new Region_t { Name = Region.EuropeMiddleEastAfrica, Inclusion = Inclusion_t.Exclude };
-        emea.Countries.Add(new Country_t { CountryCode = IsoCountryCode.GB, Inclusion = Inclusion_t.Include });
+        var emea = new Region_t
+        {
+            Name = Region.EuropeMiddleEastAfrica,
+            Inclusion = Inclusion_t.Exclude,
+        };
+        emea.Countries.Add(
+            new Country_t { CountryCode = IsoCountryCode.GB, Inclusion = Inclusion_t.Include }
+        );
         var regions = new RegionCollection { emea };
 
-        regions.IsApplicableTo(IsoCountryCode.GB).Should().BeTrue();   // explicitly included country
-        regions.IsApplicableTo(IsoCountryCode.DE).Should().BeFalse();  // region excluded, no override
+        regions.IsApplicableTo(IsoCountryCode.GB).Should().BeTrue(); // explicitly included country
+        regions.IsApplicableTo(IsoCountryCode.DE).Should().BeFalse(); // region excluded, no override
     }
 
     [Fact]
@@ -260,7 +278,7 @@ public class KeyedCollectionTests
         var us = new Country_t { CountryCode = IsoCountryCode.US };
 
         countries.Add(us);
-        countries.Add(us).Should().BeFalse();  // HashSet returns false for duplicate
+        countries.Add(us).Should().BeFalse(); // HashSet returns false for duplicate
     }
 
     [Fact]
@@ -298,7 +316,13 @@ public class KeyedCollectionTests
     {
         EditCollection edits =
         [
-            new Edit_t { Id = "edit1", Field = "Qty", Operator = Operator_t.GreaterThan, Value = "0" },
+            new Edit_t
+            {
+                Id = "edit1",
+                Field = "Qty",
+                Operator = Operator_t.GreaterThan,
+                Value = "0",
+            },
         ];
 
         edits.HasEdit("edit1").Should().BeTrue();
@@ -313,7 +337,7 @@ public class KeyedCollectionTests
             Id = "myEdit",
             Field = "Participation",
             Operator = Operator_t.GreaterThan,
-            Value = "0"
+            Value = "0",
         };
         EditCollection edits = [source];
 

@@ -13,9 +13,9 @@ using FixPortal.FixAtdl.Resources;
 namespace FixPortal.FixAtdl.Model.Types;
 
 /// <summary>
-/// 'string field representing a time/date combination representing local time with an offset to UTC to allow identification of 
+/// 'string field representing a time/date combination representing local time with an offset to UTC to allow identification of
 /// local time and timezone offset of that time. The representation is based on ISO 8601.
-/// Format is YYYYMMDD-HH:MM:SS[Z | [ + | - hh[:mm]]] where YYYY = 0000 to 9999, MM = 01-12, DD = 01-31 HH = 00-23 hours, 
+/// Format is YYYYMMDD-HH:MM:SS[Z | [ + | - hh[:mm]]] where YYYY = 0000 to 9999, MM = 01-12, DD = 01-31 HH = 00-23 hours,
 /// MM = 00-59 minutes, SS = 00-59 seconds, hh = 01-12 offset hours, mm = 00-59 offset minutes
 /// Example: 20060901-07:39Z is 07:39 UTC on 1st of September 2006
 /// Example: 20060901-02:39-05 is five hours behind UTC, thus Eastern Time on 1st of September 2006
@@ -32,7 +32,7 @@ public class TZTimestamp_t : DateTimeTypeBase
         FixDateTimeFormat.FixDateTimeMinutesWithMinuteOffset,
         FixDateTimeFormat.FixDateTimeWithHourOffset,
         FixDateTimeFormat.FixDateTimeFractionalWithHourOffset,
-        FixDateTimeFormat.FixDateTimeFractionalWithMinuteOffset
+        FixDateTimeFormat.FixDateTimeFractionalWithMinuteOffset,
     ];
 
     /// <summary>
@@ -54,7 +54,9 @@ public class TZTimestamp_t : DateTimeTypeBase
     /// (e.g. "-05") is not retained — full fidelity would require carrying a DateTimeOffset.
     /// </summary>
     protected override DateTimeStyles WireParseStyles =>
-        DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal;
+        DateTimeStyles.AllowWhiteSpaces
+        | DateTimeStyles.AssumeUniversal
+        | DateTimeStyles.AdjustToUniversal;
 
     /// <summary>
     /// Gets the human-readable type name for use in error messages shown to the user.
@@ -76,8 +78,16 @@ public class TZTimestamp_t : DateTimeTypeBase
     {
         DateTime? parsed = base.ConvertFromWireValueFormat(value);
 
-        if (parsed != null
-            && DateTimeOffset.TryParseExact(value, _formatStrings, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+        if (
+            parsed != null
+            && DateTimeOffset.TryParseExact(
+                value,
+                _formatStrings,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out _
+            )
+        )
         {
             _originalWireValue = value;
             _parsedUtcValue = parsed;
@@ -115,14 +125,19 @@ public class TZTimestamp_t : DateTimeTypeBase
         // belongs to the parsed instant alone and must not be re-applied to a value set
         // programmatically (control/SetWireValue) after the parse, which previously emitted
         // the wrong offset.
-        if (_originalWireValue != null && _parsedUtcValue != null && adjustedValue.Equals(_parsedUtcValue.Value))
+        if (
+            _originalWireValue != null
+            && _parsedUtcValue != null
+            && adjustedValue.Equals(_parsedUtcValue.Value)
+        )
         {
             return _originalWireValue;
         }
 
-        string format = adjustedValue.Ticks % TimeSpan.TicksPerSecond == 0
-            ? FixDateTimeFormat.FixDateTimeWithTz
-            : FixDateTimeFormat.FixDateTimeFractionalWithMinuteOffset;
+        string format =
+            adjustedValue.Ticks % TimeSpan.TicksPerSecond == 0
+                ? FixDateTimeFormat.FixDateTimeWithTz
+                : FixDateTimeFormat.FixDateTimeFractionalWithMinuteOffset;
         return adjustedValue.ToString(format, CultureInfo.InvariantCulture);
     }
 }

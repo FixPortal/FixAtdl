@@ -17,13 +17,14 @@ namespace FixPortal.FixAtdl.Tests.Controls;
 public class ClockLoadDateAnchoringTests
 {
     // Etc/UTC keeps wall-clock == UTC so the resolved date/time reads directly.
-    private static Clock_t TimeOnlyClock(IClock clock) => new("clk")
-    {
-        InitValue = new InitValueClock("08:00:00"), // time-only: the DATE is supplied by the clock
-        LocalMktTz = "Etc/UTC",
-        InitValueMode = 0,
-        Clock = clock,
-    };
+    private static Clock_t TimeOnlyClock(IClock clock) =>
+        new("clk")
+        {
+            InitValue = new InitValueClock("08:00:00"), // time-only: the DATE is supplied by the clock
+            LocalMktTz = "Etc/UTC",
+            InitValueMode = 0,
+            Clock = clock,
+        };
 
     [Fact]
     public void Time_only_initValue_is_frozen_at_load_date_when_clock_advances_to_send_day()
@@ -38,8 +39,10 @@ public class ClockLoadDateAnchoringTests
         clock.AdvanceDays(1);
 
         // D-F1: the value stays anchored to the LOAD date (15th), not the send date (16th).
-        control.ToDateTime(null!, CultureInfo.InvariantCulture)
-            .Should().Be(new DateTime(2026, 1, 15, 8, 0, 0, DateTimeKind.Utc));
+        control
+            .ToDateTime(null!, CultureInfo.InvariantCulture)
+            .Should()
+            .Be(new DateTime(2026, 1, 15, 8, 0, 0, DateTimeKind.Utc));
     }
 
     [Fact]
@@ -56,7 +59,9 @@ public class ClockLoadDateAnchoringTests
         // decision boundary, deliberately left outside the control.
         control.LoadInitValue(FixFieldValueProvider.Empty);
 
-        control.ToDateTime(null!, CultureInfo.InvariantCulture)
-            .Should().Be(new DateTime(2026, 1, 16, 8, 0, 0, DateTimeKind.Utc));
+        control
+            .ToDateTime(null!, CultureInfo.InvariantCulture)
+            .Should()
+            .Be(new DateTime(2026, 1, 16, 8, 0, 0, DateTimeKind.Utc));
     }
 }

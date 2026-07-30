@@ -21,7 +21,7 @@ namespace FixPortal.FixAtdl.Model.Types;
 /// absence of the decimal point within the string will be interpreted as the float representation of an integer value.
 /// All float fields must accommodate up to fifteen significant digits. The number of decimal places used should be a
 /// factor of business/market needs and mutual agreement between counterparties. Note that float values may contain
-/// leading zeros (e.g. "00023.23" = "23.23") and may contain or omit trailing zeros after the decimal point 
+/// leading zeros (e.g. "00023.23" = "23.23") and may contain or omit trailing zeros after the decimal point
 /// (e.g. "23.0" = "23.0000" = "23" = "23.").
 /// Note that fields which are derived from float may contain negative values unless explicitly specified otherwise.'
 /// </summary>
@@ -45,8 +45,8 @@ public class Float_t : AtdlValueType<decimal>, IControlConvertible
     private int? _precision;
 
     /// <summary>
-    /// Gets/sets the precision of this value, taken as the number of digits to the right of the decimal point in 
-    /// which to round when populating the FIX message. Lack of this attribute indicates that the value entered by 
+    /// Gets/sets the precision of this value, taken as the number of digits to the right of the decimal point in
+    /// which to round when populating the FIX message. Lack of this attribute indicates that the value entered by
     /// the user should be taken as-is without rounding.
     /// </summary>
     public int? Precision
@@ -56,7 +56,10 @@ public class Float_t : AtdlValueType<decimal>, IControlConvertible
         {
             if (value is < 0 or > 28)
             {
-                throw ThrowHelper.New<Diagnostics.Exceptions.InvalidFieldValueException>(this, "Precision must be between 0 and 28.");
+                throw ThrowHelper.New<Diagnostics.Exceptions.InvalidFieldValueException>(
+                    this,
+                    "Precision must be between 0 and 28."
+                );
             }
             _precision = value;
         }
@@ -77,17 +80,30 @@ public class Float_t : AtdlValueType<decimal>, IControlConvertible
         {
             if (MaxValue != null && (decimal)value > MaxValue)
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MaxValueExceeded, value, MaxValue);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.MaxValueExceeded,
+                    value,
+                    MaxValue
+                );
             }
 
             if (MinValue != null && (decimal)value < MinValue)
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MinValueNotMet, value, MinValue);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.MinValueNotMet,
+                    value,
+                    MinValue
+                );
             }
         }
         else if (isRequired)
         {
-            return new ValidationResult(ValidationResult.ResultType.Missing, ErrorMessages.NonOptionalParameterNotSupplied2);
+            return new ValidationResult(
+                ValidationResult.ResultType.Missing,
+                ErrorMessages.NonOptionalParameterNotSupplied2
+            );
         }
 
         return ValidationResult.ValidResult;
@@ -141,13 +157,16 @@ public class Float_t : AtdlValueType<decimal>, IControlConvertible
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override decimal? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
+    protected override decimal? ConvertToNativeType(
+        IParameter hostParameter,
+        IParameterConvertible value
+    )
     {
         return value.ToDecimal(hostParameter, CultureInfo.InvariantCulture);
     }
 
     /// <summary>
-    /// Gets the value of this parameter type in its native (i.e., raw) form, such as int, char, string, etc. 
+    /// Gets the value of this parameter type in its native (i.e., raw) form, such as int, char, string, etc.
     /// </summary>
     /// <param name="applyWireValueFormat">If set to true, the value returned is adjusted to be in the 'format'
     /// it would be if sent on the FIX wire.  For example, for Float_t parameters, setting this value to true
@@ -187,7 +206,9 @@ public class Float_t : AtdlValueType<decimal>, IControlConvertible
     /// zeros are not padded, which is wire-legal for float fields (batch 5, M4).</remarks>
     protected static decimal? Round(decimal? value, int precision)
     {
-        return value != null ? Math.Round((decimal)value, precision, MidpointRounding.AwayFromZero) : null;
+        return value != null
+            ? Math.Round((decimal)value, precision, MidpointRounding.AwayFromZero)
+            : null;
     }
 
     #region IControlConvertible Members
@@ -198,7 +219,12 @@ public class Float_t : AtdlValueType<decimal>, IControlConvertible
     /// <returns>One of true, false or null which is equivalent to the value of this instance.</returns>
     public bool? ToBoolean()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Boolean");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Boolean"
+        );
     }
 
     /// <summary>
@@ -228,7 +254,12 @@ public class Float_t : AtdlValueType<decimal>, IControlConvertible
     /// <returns>A nullable DateTime equivalent to the value of this instance.</returns>
     public DateTime? ToDateTime()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "DateTime");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "DateTime"
+        );
     }
 
     /// <summary>
@@ -237,7 +268,12 @@ public class Float_t : AtdlValueType<decimal>, IControlConvertible
     /// <returns>A valid EnumState, assuming the source value can be correctly converted.</returns>
     public EnumState ToEnumState(EnumPairCollection enumPairs)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "EnumState");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "EnumState"
+        );
     }
 
     #endregion

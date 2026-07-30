@@ -15,7 +15,10 @@ public class ParameterCollectionOutputTests
     [Fact]
     public async Task Filled_twap_strategy_emits_expected_fix_tags()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
+        var xml = await FixtureFiles.ReadAllTextAsync(
+            "Fixtures/twap.xml",
+            TestContext.Current.CancellationToken
+        );
         var strategies = Load(xml);
         var twap = strategies.Strategies[0];
 

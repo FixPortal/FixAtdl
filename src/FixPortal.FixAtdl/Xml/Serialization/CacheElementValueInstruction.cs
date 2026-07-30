@@ -18,4 +18,3 @@ public class CacheElementValueInstruction(string cacheKey)
     /// </summary>
     public string CacheKey { get; private set; } = cacheKey;
 }
-

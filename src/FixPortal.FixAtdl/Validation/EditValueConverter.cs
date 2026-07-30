@@ -46,7 +46,10 @@ public static class EditValueConverter
         // domain exception, matching ConvertToBool's null handling (O-G2).
         if (value == null)
         {
-            throw ThrowHelper.New<InvalidFieldValueException>(ExceptionContext, ErrorMessages.IllegalUseOfNullError);
+            throw ThrowHelper.New<InvalidFieldValueException>(
+                ExceptionContext,
+                ErrorMessages.IllegalUseOfNullError
+            );
         }
 
         // Data_t (char[]) has no meaningful comparison target. Without this check the switch below
@@ -55,7 +58,12 @@ public static class EditValueConverter
         // Edit_t.CheckForUnsupportedComparisons raises for the same scenario elsewhere.
         if (typeInstanceToMatch is char[] lhsChars)
         {
-            throw ThrowHelper.New<InvalidOperationException>(ExceptionContext, ErrorMessages.UnsupportedComparisonOperation, value, new string(lhsChars));
+            throw ThrowHelper.New<InvalidOperationException>(
+                ExceptionContext,
+                ErrorMessages.UnsupportedComparisonOperation,
+                value,
+                new string(lhsChars)
+            );
         }
 
         string? type = typeInstanceToMatch.GetType().FullName;
@@ -71,20 +79,34 @@ public static class EditValueConverter
                 "System.Char" => Convert.ToChar(value),
                 "System.DateTime" => ConvertToDateTime(typeInstanceToMatch, value),
                 "System.String" => value,
-                "FixPortal.FixAtdl.Model.Reference.IsoCountryCode" => value.ParseAsEnum<IsoCountryCode>(),
-                "FixPortal.FixAtdl.Model.Reference.IsoCurrencyCode" => value.ParseAsEnum<IsoCurrencyCode>(),
-                "FixPortal.FixAtdl.Model.Reference.IsoLanguageCode" => value.ParseAsEnum<IsoLanguageCode>(),
+                "FixPortal.FixAtdl.Model.Reference.IsoCountryCode" =>
+                    value.ParseAsEnum<IsoCountryCode>(),
+                "FixPortal.FixAtdl.Model.Reference.IsoCurrencyCode" =>
+                    value.ParseAsEnum<IsoCurrencyCode>(),
+                "FixPortal.FixAtdl.Model.Reference.IsoLanguageCode" =>
+                    value.ParseAsEnum<IsoLanguageCode>(),
                 "FixPortal.FixAtdl.Model.Types.Support.MonthYear" => MonthYear.Parse(value),
                 "FixPortal.FixAtdl.Model.Types.Support.Tenor" => Tenor.Parse(value),
                 "FixPortal.FixAtdl.Model.Controls.Support.EnumState" => value,
-                _ => throw ThrowHelper.New<InvalidCastException>(ExceptionContext, ErrorMessages.DataConversionError1, value, type),
+                _ => throw ThrowHelper.New<InvalidCastException>(
+                    ExceptionContext,
+                    ErrorMessages.DataConversionError1,
+                    value,
+                    type
+                ),
             };
         }
         catch (Exception ex) when (ex is FormatException or OverflowException or ArgumentException)
         {
             // Translate raw Convert.* conversion failures into a domain InvalidFieldValueException,
             // matching the boundary established elsewhere rather than leaking a raw BCL exception (M4).
-            throw ThrowHelper.New<InvalidFieldValueException>(ExceptionContext, ex, ErrorMessages.DataConversionError1, value, type);
+            throw ThrowHelper.New<InvalidFieldValueException>(
+                ExceptionContext,
+                ex,
+                ErrorMessages.DataConversionError1,
+                value,
+                type
+            );
         }
     }
 
@@ -92,7 +114,10 @@ public static class EditValueConverter
     {
         if (value == null)
         {
-            throw ThrowHelper.New<InvalidFieldValueException>(ExceptionContext, ErrorMessages.IllegalUseOfNullError);
+            throw ThrowHelper.New<InvalidFieldValueException>(
+                ExceptionContext,
+                ErrorMessages.IllegalUseOfNullError
+            );
         }
 
         return value.ToUpperInvariant() switch
@@ -103,7 +128,12 @@ public static class EditValueConverter
             // FormatException (and use the invariant upper-case above for culture safety).
             _ => bool.TryParse(value, out bool result)
                 ? result
-                : throw ThrowHelper.New<InvalidFieldValueException>(ExceptionContext, ErrorMessages.DataConversionError1, value, "System.Boolean"),
+                : throw ThrowHelper.New<InvalidFieldValueException>(
+                    ExceptionContext,
+                    ErrorMessages.DataConversionError1,
+                    value,
+                    "System.Boolean"
+                ),
         };
     }
 
@@ -118,16 +148,32 @@ public static class EditValueConverter
         {
             // LHS is time-only (anchored to 0001-01-01). Anchor RHS to 0001-01-01 too so
             // the comparison compares times of day.
-            normalised = new DateTime(1, 1, 1, normalised.Hour, normalised.Minute, normalised.Second, normalised.Millisecond, normalised.Kind)
-                .AddTicks(normalised.Ticks % TimeSpan.TicksPerMillisecond);
+            normalised = new DateTime(
+                1,
+                1,
+                1,
+                normalised.Hour,
+                normalised.Minute,
+                normalised.Second,
+                normalised.Millisecond,
+                normalised.Kind
+            ).AddTicks(normalised.Ticks % TimeSpan.TicksPerMillisecond);
         }
         else if (IsDateLess(value))
         {
             // LHS is datetime, but RHS is time-only.
             // If RHS is date-less, it represents a time-of-day comparison on the same date as LHS.
             // So we copy LHS's date component to RHS.
-            normalised = new DateTime(lhsDt.Year, lhsDt.Month, lhsDt.Day, normalised.Hour, normalised.Minute, normalised.Second, normalised.Millisecond, normalised.Kind)
-                .AddTicks(normalised.Ticks % TimeSpan.TicksPerMillisecond);
+            normalised = new DateTime(
+                lhsDt.Year,
+                lhsDt.Month,
+                lhsDt.Day,
+                normalised.Hour,
+                normalised.Minute,
+                normalised.Second,
+                normalised.Millisecond,
+                normalised.Kind
+            ).AddTicks(normalised.Ticks % TimeSpan.TicksPerMillisecond);
         }
 
         return normalised;

@@ -47,14 +47,19 @@ public class EditCollection : KeyedCollection<string, Edit_t>
     /// <typeparam name="T"></typeparam>
     /// <param name="Id">The id.</param>
     /// <returns></returns>
-    public Edit_t<T> Clone<T>(string Id) where T : class, IValueProvider
+    public Edit_t<T> Clone<T>(string Id)
+        where T : class, IValueProvider
     {
         // Surface a located domain error for a dangling EditRef rather than a raw KeyNotFoundException
         // from the indexer (Theme G). Callers normally pre-check Contains, but Clone may be reached
         // directly.
         if (!Contains(Id))
         {
-            throw ThrowHelper.New<ReferencedObjectNotFoundException>(this, ErrorMessages.EditRefResolutionFailure, Id);
+            throw ThrowHelper.New<ReferencedObjectNotFoundException>(
+                this,
+                ErrorMessages.EditRefResolutionFailure,
+                Id
+            );
         }
 
         Edit_t sourceEdit = this[Id];
@@ -67,11 +72,20 @@ public class EditCollection : KeyedCollection<string, Edit_t>
     /// </summary>
     /// <param name="source">Instance of Edit_t to be copied.</param>
     /// <returns>Copy of source Edit_t instance.</returns>
-    private Edit_t<T> Copy<T>(Edit_t source) where T : class, IValueProvider
+    private Edit_t<T> Copy<T>(Edit_t source)
+        where T : class, IValueProvider
     {
         // Carry the source Id across — Clone previously dropped it, producing an anonymous copy (M1).
         // (The non-generic Edit_t source carries no EditRefs, so there are none to copy here.)
-        Edit_t<T> target = new() { Id = source.Id, Field = source.Field, Field2 = source.Field2, LogicOperator = source.LogicOperator, Operator = source.Operator, Value = source.Value };
+        Edit_t<T> target = new()
+        {
+            Id = source.Id,
+            Field = source.Field,
+            Field2 = source.Field2,
+            LogicOperator = source.LogicOperator,
+            Operator = source.Operator,
+            Value = source.Value,
+        };
 
         foreach (Edit_t child in source.Edits)
         {

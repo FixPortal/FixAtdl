@@ -13,15 +13,10 @@ public class FixAtdlException : Exception
 {
     /// <summary>Initializes a new instance of the FixAtdlException class with a specified error message.</summary>
     public FixAtdlException(string message)
-        : base(message)
-    {
-    }
+        : base(message) { }
 
     /// <summary>Initializes a new instance of the FixAtdlException class with a specified error message and a reference to the inner exception that is the
     /// cause of this exception.</summary>
     public FixAtdlException(string message, Exception innerException)
-        : base(message, innerException)
-    {
-    }
+        : base(message, innerException) { }
 }
-

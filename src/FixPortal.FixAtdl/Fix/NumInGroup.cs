@@ -26,7 +26,11 @@ public readonly struct NumInGroup
     {
         if (value < 0)
         {
-            throw ThrowHelper.New<ArgumentOutOfRangeException>(typeof(NumInGroup).FullName, ErrorMessages.NonNegativeIntRequired, value);
+            throw ThrowHelper.New<ArgumentOutOfRangeException>(
+                typeof(NumInGroup).FullName,
+                ErrorMessages.NonNegativeIntRequired,
+                value
+            );
         }
 
         _value = value;

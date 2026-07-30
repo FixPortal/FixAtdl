@@ -46,7 +46,12 @@ public class ChildElementDefinition
     /// <param name="containerProperty">The parent property that receives the child.</param>
     /// <param name="containerPropertyType">The type of the parent property.</param>
     /// <param name="containerMethod">The standard container method to use.</param>
-    public ChildElementDefinition(ContainerElementDefinition containerElementDefinition, string containerProperty, Type containerPropertyType, StandardContainerMethod containerMethod)
+    public ChildElementDefinition(
+        ContainerElementDefinition containerElementDefinition,
+        string containerProperty,
+        Type containerPropertyType,
+        StandardContainerMethod containerMethod
+    )
     {
         ContainerElementName = containerElementDefinition.ElementName;
         ElementDefinition = containerElementDefinition.ChildDefinition;
@@ -62,7 +67,12 @@ public class ChildElementDefinition
     /// <param name="containerProperty">The parent property that receives the child.</param>
     /// <param name="containerPropertyType">The type of the parent property.</param>
     /// <param name="containerMethod">The standard container method to use.</param>
-    public ChildElementDefinition(ElementDefinition elementDefinition, string containerProperty, Type containerPropertyType, StandardContainerMethod containerMethod)
+    public ChildElementDefinition(
+        ElementDefinition elementDefinition,
+        string containerProperty,
+        Type containerPropertyType,
+        StandardContainerMethod containerMethod
+    )
     {
         ElementDefinition = elementDefinition;
         ContainerProperty = containerProperty;
@@ -77,7 +87,12 @@ public class ChildElementDefinition
     /// <param name="containerProperty">The parent property that receives the child.</param>
     /// <param name="containerPropertyType">The type of the parent property.</param>
     /// <param name="containerMethod">The container method name to invoke.</param>
-    public ChildElementDefinition(ElementDefinition elementDefinition, string containerProperty, Type containerPropertyType, string containerMethod)
+    public ChildElementDefinition(
+        ElementDefinition elementDefinition,
+        string containerProperty,
+        Type containerPropertyType,
+        string containerMethod
+    )
     {
         ElementDefinition = elementDefinition;
         ContainerProperty = containerProperty;

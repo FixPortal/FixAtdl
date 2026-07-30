@@ -56,8 +56,12 @@ public class CountryCollection : IEnumerable<Country_t>
     {
         if (!IsCountryInRegion(item))
         {
-            throw ThrowHelper.New<ArgumentException>(this, ErrorMessages.InvalidAttemptToAddCountryToRegion,
-                Enum.GetName(item.CountryCode), Enum.GetName(_owner.Name));
+            throw ThrowHelper.New<ArgumentException>(
+                this,
+                ErrorMessages.InvalidAttemptToAddCountryToRegion,
+                Enum.GetName(item.CountryCode),
+                Enum.GetName(_owner.Name)
+            );
         }
 
         // Surface the add/duplicate result rather than silently swallowing it.

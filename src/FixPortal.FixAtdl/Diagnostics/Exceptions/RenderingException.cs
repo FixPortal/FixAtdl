@@ -18,9 +18,7 @@ public class RenderingException : FixAtdlException
     /// </summary>
     /// <param name="message"></param>
     public RenderingException(string message)
-        : base(message)
-    {
-    }
+        : base(message) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RenderingException"/> class.
@@ -28,9 +26,5 @@ public class RenderingException : FixAtdlException
     /// <param name="message">The message.</param>
     /// <param name="innerException">The inner exception.</param>
     public RenderingException(string message, Exception innerException)
-        : base(message, innerException)
-    {
-    }
-
+        : base(message, innerException) { }
 }
-

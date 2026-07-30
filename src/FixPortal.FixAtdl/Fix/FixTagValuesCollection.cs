@@ -33,9 +33,7 @@ public class FixTagValuesCollection : IEnumerable<KeyValuePair<FixField, string>
     /// </summary>
     /// <param name="fixMessage">The FIX message to parse.</param>
     public FixTagValuesCollection(string fixMessage)
-        : this(new FixMessage(fixMessage))
-    {
-    }
+        : this(new FixMessage(fixMessage)) { }
 
     /// <summary>
     /// Initializes a new <see cref="FixTagValuesCollection"/> from an existing <see cref="FixMessage"/>.
@@ -60,7 +58,8 @@ public class FixTagValuesCollection : IEnumerable<KeyValuePair<FixField, string>
     /// <param name="fixField">The FIX field to read or write.</param>
     public string this[FixField fixField]
     {
-        get => _message[fixField]; set => _message[fixField] = value;
+        get => _message[fixField];
+        set => _message[fixField] = value;
     }
 
     /// <summary>
@@ -75,7 +74,6 @@ public class FixTagValuesCollection : IEnumerable<KeyValuePair<FixField, string>
 
             return _message[field];
         }
-
         set
         {
             FixField field = fixField.ParseAsEnum<FixField>();
@@ -139,7 +137,12 @@ public class FixTagValuesCollection : IEnumerable<KeyValuePair<FixField, string>
         // FixMessage(string) parse path, rather than a raw Dictionary ArgumentException.
         if (!_message.TryAdd(tag, value))
         {
-            throw ThrowHelper.New<FixParseException>(this, ErrorMessages.AttemptToAddDuplicateKey, ((FixField)tag).ToString(), "FixMessage");
+            throw ThrowHelper.New<FixParseException>(
+                this,
+                ErrorMessages.AttemptToAddDuplicateKey,
+                ((FixField)tag).ToString(),
+                "FixMessage"
+            );
         }
     }
 

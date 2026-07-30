@@ -62,15 +62,18 @@ public static class FixDateTimeFormat
     public static readonly string FixDateTimeMinutesWithMinuteOffset = "yyyyMMdd-HH:mmK";
 
     /// <summary>Date and time with fractional seconds and a bare-hour timezone offset.</summary>
-    public static readonly string FixDateTimeFractionalWithHourOffset = "yyyyMMdd-HH:mm:ss.FFFFFFFzz";
+    public static readonly string FixDateTimeFractionalWithHourOffset =
+        "yyyyMMdd-HH:mm:ss.FFFFFFFzz";
 
     /// <summary>Date and time with fractional seconds and a timezone offset including minutes.</summary>
-    public static readonly string FixDateTimeFractionalWithMinuteOffset = "yyyyMMdd-HH:mm:ss.FFFFFFFK";
+    public static readonly string FixDateTimeFractionalWithMinuteOffset =
+        "yyyyMMdd-HH:mm:ss.FFFFFFFK";
 
     /// <summary>Date and time with whole seconds and an appended bare-hour timezone offset.</summary>
     public static readonly string FixDateTimeWithHourOffset = "yyyyMMdd-HH:mm:sszz";
 
-    internal static readonly string[] FormatsArray = [
+    internal static readonly string[] FormatsArray =
+    [
         FixDateTime,
         FixDateTimeMs,
         FixTimeOnly,
@@ -89,7 +92,7 @@ public static class FixDateTimeFormat
         FixDateTimeMinutesWithMinuteOffset,
         FixDateTimeWithHourOffset,
         FixDateTimeFractionalWithHourOffset,
-        FixDateTimeFractionalWithMinuteOffset
+        FixDateTimeFractionalWithMinuteOffset,
     ];
 
     /// <summary>

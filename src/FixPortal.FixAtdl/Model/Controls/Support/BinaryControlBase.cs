@@ -35,9 +35,7 @@ public abstract class BinaryControlBase : InitializableControl<bool?>
     /// </summary>
     /// <param name="id">ID for this control.</param>
     protected BinaryControlBase(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 
     /// <summary>Output EnumID if checked/selected.  Applicable when xsi:type is CheckBox_t or RadioButton_t.</summary>
     public string CheckedEnumRef { get; set; } = null!;
@@ -120,7 +118,10 @@ public abstract class BinaryControlBase : InitializableControl<bool?>
             }
             else
             {
-                throw ThrowHelper.New<InconsistentStrategyException>(this, ErrorMessages.InconsistentEnumPairsListItemsError);
+                throw ThrowHelper.New<InconsistentStrategyException>(
+                    this,
+                    ErrorMessages.InconsistentEnumPairsListItemsError
+                );
             }
         }
         else
@@ -166,8 +167,16 @@ public abstract class BinaryControlBase : InitializableControl<bool?>
             }
             else
             {
-                throw ThrowHelper.New<InvalidFieldValueException>(this, ErrorMessages.InitControlValueError,
-                    Id, string.Format(CultureInfo.InvariantCulture, "'{0}' is not a valid value for this control", value));
+                throw ThrowHelper.New<InvalidFieldValueException>(
+                    this,
+                    ErrorMessages.InitControlValueError,
+                    Id,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "'{0}' is not a valid value for this control",
+                        value
+                    )
+                );
             }
         }
         else
@@ -176,8 +185,12 @@ public abstract class BinaryControlBase : InitializableControl<bool?>
             {
                 bool b => b,
                 null => null,
-                _ => throw ThrowHelper.New<InternalErrorException>(this, InternalErrors.UnexpectedArgumentType,
-                    newValue.GetType().FullName!, "System.String, System.Boolean"),
+                _ => throw ThrowHelper.New<InternalErrorException>(
+                    this,
+                    InternalErrors.UnexpectedArgumentType,
+                    newValue.GetType().FullName!,
+                    "System.String, System.Boolean"
+                ),
             };
         }
     }
@@ -225,7 +238,13 @@ public abstract class BinaryControlBase : InitializableControl<bool?>
     /// <returns>A nullable decimal equivalent to the value of this instance.</returns>
     public override decimal? ToDecimal(IParameter targetParameter, IFormatProvider provider)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedControlValueConversion, _value, "Decimal", Id);
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedControlValueConversion,
+            _value,
+            "Decimal",
+            Id
+        );
     }
 
     /// <summary>
@@ -237,7 +256,6 @@ public abstract class BinaryControlBase : InitializableControl<bool?>
     public override int? ToInt32(IParameter targetParameter, IFormatProvider provider)
     {
         string? wireValue = _value != null ? ToString(targetParameter) : null;
-
 
         return TryConvertToInt(wireValue, out int result) ? result : null;
     }
@@ -251,7 +269,6 @@ public abstract class BinaryControlBase : InitializableControl<bool?>
     public override uint? ToUInt32(IParameter targetParameter, IFormatProvider provider)
     {
         string? wireValue = _value != null ? ToString(targetParameter) : null;
-
 
         return TryConvertToUint(wireValue, out uint result) ? result : null;
     }
@@ -291,7 +308,9 @@ public abstract class BinaryControlBase : InitializableControl<bool?>
     private string GetEnumeratedStateString(IParameter targetParameter)
     {
         EnumPairCollection enumPairs = targetParameter.EnumPairs;
-        string value = (bool)_value! ? enumPairs.GetWireValueFromEnumId(CheckedEnumRef) : enumPairs.GetWireValueFromEnumId(UncheckedEnumRef);
+        string value = (bool)_value!
+            ? enumPairs.GetWireValueFromEnumId(CheckedEnumRef)
+            : enumPairs.GetWireValueFromEnumId(UncheckedEnumRef);
         return value != Atdl.NullValue ? value : null!;
     }
 
@@ -316,7 +335,13 @@ public abstract class BinaryControlBase : InitializableControl<bool?>
     /// <returns>A nullable DateTime equivalent to the value of this instance.</returns>
     public override DateTime? ToDateTime(IParameter targetParameter, IFormatProvider provider)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedControlValueConversion, _value, "DateTime", Id);
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedControlValueConversion,
+            _value,
+            "DateTime",
+            Id
+        );
     }
 
     /// <summary>

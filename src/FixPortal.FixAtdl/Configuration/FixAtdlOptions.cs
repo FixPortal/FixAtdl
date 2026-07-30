@@ -8,4 +8,3 @@ public sealed class FixAtdlOptions
     /// <summary>The default options instance.</summary>
     public static FixAtdlOptions Default { get; } = new();
 }
-

@@ -51,9 +51,7 @@ public abstract class ListControlBase : InitializableControl<string>
     /// </summary>
     /// <param name="id">ID for this control.</param>
     protected ListControlBase(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 
     #region InitializableControl<T> Overrides
 
@@ -126,8 +124,12 @@ public abstract class ListControlBase : InitializableControl<string>
     {
         if (_value == null)
         {
-            throw ThrowHelper.New<InternalErrorException>(this, InternalErrors.UnexpectedNullReference, "_value",
-                "FixPortal.FixAtdl.Model.Types.Support.EnumState");
+            throw ThrowHelper.New<InternalErrorException>(
+                this,
+                InternalErrors.UnexpectedNullReference,
+                "_value",
+                "FixPortal.FixAtdl.Model.Types.Support.EnumState"
+            );
         }
 
         if (newValue == null || newValue as string == Atdl.NullValue)
@@ -142,8 +144,12 @@ public abstract class ListControlBase : InitializableControl<string>
         {
             // Reject a non-EnumState argument with a clear diagnostic rather than (newValue as
             // EnumState)! resolving to null and UpdateFrom throwing ArgumentNullException.
-            throw ThrowHelper.New<InternalErrorException>(this, InternalErrors.UnexpectedArgumentType,
-                newValue.GetType().FullName, "FixPortal.FixAtdl.Model.Types.Support.EnumState");
+            throw ThrowHelper.New<InternalErrorException>(
+                this,
+                InternalErrors.UnexpectedArgumentType,
+                newValue.GetType().FullName,
+                "FixPortal.FixAtdl.Model.Types.Support.EnumState"
+            );
         }
     }
 
@@ -182,7 +188,13 @@ public abstract class ListControlBase : InitializableControl<string>
     /// <returns>One of true, false or null which is equivalent to the value of this instance.</returns>
     public override bool? ToBoolean(IParameter targetParameter)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedControlValueConversion, _value, "Boolean", Id);
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedControlValueConversion,
+            _value,
+            "Boolean",
+            Id
+        );
     }
 
     /// <summary>
@@ -243,7 +255,12 @@ public abstract class ListControlBase : InitializableControl<string>
     {
         if (_value == null)
         {
-            throw ThrowHelper.New<InternalErrorException>(this, InternalErrors.UnexpectedNullReference, "_value", GetType().Name);
+            throw ThrowHelper.New<InternalErrorException>(
+                this,
+                InternalErrors.UnexpectedNullReference,
+                "_value",
+                GetType().Name
+            );
         }
 
         try
@@ -252,7 +269,14 @@ public abstract class ListControlBase : InitializableControl<string>
         }
         catch (InvalidOperationException ex)
         {
-            throw ThrowHelper.Rethrow(this, ex, ErrorMessages.UnsuccessfulSetParameterOperation, targetParameter.Name, Id, ex.Message);
+            throw ThrowHelper.Rethrow(
+                this,
+                ex,
+                ErrorMessages.UnsuccessfulSetParameterOperation,
+                targetParameter.Name,
+                Id,
+                ex.Message
+            );
         }
     }
 
@@ -264,7 +288,13 @@ public abstract class ListControlBase : InitializableControl<string>
     /// <returns>A nullable DateTime equivalent to the value of this instance.</returns>
     public override DateTime? ToDateTime(IParameter targetParameter, IFormatProvider provider)
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedControlValueConversion, _value, "DateTime", Id);
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedControlValueConversion,
+            _value,
+            "DateTime",
+            Id
+        );
     }
 
     /// <summary>

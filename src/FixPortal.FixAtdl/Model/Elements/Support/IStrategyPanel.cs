@@ -12,4 +12,3 @@ namespace FixPortal.FixAtdl.Model.Elements.Support;
 /// treated and the same type.  Has no members.
 /// </summary>
 public interface IStrategyPanel;
-

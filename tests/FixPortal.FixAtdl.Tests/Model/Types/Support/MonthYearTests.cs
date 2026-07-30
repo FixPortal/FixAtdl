@@ -15,15 +15,15 @@ public class MonthYearTests
     [InlineData("202601")]
     [InlineData("202612")]
     [InlineData("000001")]
-    public void Parse_roundtrips_YYYYMM_format(string wire)
-        => MonthYear.Parse(wire).ToString().Should().Be(wire);
+    public void Parse_roundtrips_YYYYMM_format(string wire) =>
+        MonthYear.Parse(wire).ToString().Should().Be(wire);
 
     [Theory]
     [InlineData("20260115")]
     [InlineData("20261231")]
     [InlineData("20260101")]
-    public void Parse_roundtrips_YYYYMMDD_format(string wire)
-        => MonthYear.Parse(wire).ToString().Should().Be(wire);
+    public void Parse_roundtrips_YYYYMMDD_format(string wire) =>
+        MonthYear.Parse(wire).ToString().Should().Be(wire);
 
     [Fact]
     public void Parse_roundtrips_YYYYMMWW_format()
@@ -58,8 +58,8 @@ public class MonthYearTests
     }
 
     [Fact]
-    public void MonthYear_CompareTo_null_returns_positive()
-        => MonthYear.Parse("202601").CompareTo(null).Should().BePositive();
+    public void MonthYear_CompareTo_null_returns_positive() =>
+        MonthYear.Parse("202601").CompareTo(null).Should().BePositive();
 
     // ──────────────────────────────────────────────────────────────────────────
     // Invalid inputs → ArgumentException
@@ -104,12 +104,17 @@ public class MonthYearTests
         var week1 = MonthYear.Parse("202601w1");
 
         // Exact equality stays suffix-sensitive...
-        (day7 == week1).Should().BeFalse();
+        (day7 == week1)
+            .Should()
+            .BeFalse();
 
         // ...but ordering is total (consumed by MonthYear_t.ValidateValue Min/Max checks) and
         // must not throw on mixed suffixes; a day-qualified value sorts after a week-qualified
         // one at the same intra-month ordinal via the deterministic tie-break.
-        Action act1 = () => { _ = day7 > week1; };
+        Action act1 = () =>
+        {
+            _ = day7 > week1;
+        };
         act1.Should().NotThrow();
         (day7 > week1).Should().BeTrue();
         (week1 < day7).Should().BeTrue();

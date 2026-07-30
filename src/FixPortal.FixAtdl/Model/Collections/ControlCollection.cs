@@ -41,7 +41,12 @@ public class ControlCollection : ObservableCollection<Control_t>
     {
         if (_owner.OwningStrategy != null && _owner.OwningStrategy.Controls.Contains(item.Id))
         {
-            throw Diagnostics.ThrowHelper.New<Diagnostics.Exceptions.DuplicateKeyException>(this, Resources.ErrorMessages.AttemptToAddDuplicateKey, item.Id, "Controls");
+            throw Diagnostics.ThrowHelper.New<Diagnostics.Exceptions.DuplicateKeyException>(
+                this,
+                Resources.ErrorMessages.AttemptToAddDuplicateKey,
+                item.Id,
+                "Controls"
+            );
         }
 
         ((IParentable<StrategyPanel_t>)item).Parent = _owner;
@@ -59,7 +64,12 @@ public class ControlCollection : ObservableCollection<Control_t>
             Control_t oldItem = Items[index];
             if (item.Id != oldItem.Id && _owner.OwningStrategy.Controls.Contains(item.Id))
             {
-                throw Diagnostics.ThrowHelper.New<Diagnostics.Exceptions.DuplicateKeyException>(this, Resources.ErrorMessages.AttemptToAddDuplicateKey, item.Id, "Controls");
+                throw Diagnostics.ThrowHelper.New<Diagnostics.Exceptions.DuplicateKeyException>(
+                    this,
+                    Resources.ErrorMessages.AttemptToAddDuplicateKey,
+                    item.Id,
+                    "Controls"
+                );
             }
         }
 
@@ -93,4 +103,3 @@ public class ControlCollection : ObservableCollection<Control_t>
         }
     }
 }
-

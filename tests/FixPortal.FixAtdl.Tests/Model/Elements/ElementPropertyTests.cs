@@ -16,14 +16,24 @@ public class ElementPropertyTests
     [Fact]
     public void ListItem_t_ToString_returns_ui_rep()
     {
-        var item = new ListItem_t { EnumId = "BUY", UiRep = "Buy", IsSelected = true };
+        var item = new ListItem_t
+        {
+            EnumId = "BUY",
+            UiRep = "Buy",
+            IsSelected = true,
+        };
         item.ToString().Should().Be("Buy");
     }
 
     [Fact]
     public void ListItem_t_properties_round_trip()
     {
-        var item = new ListItem_t { EnumId = "SELL", UiRep = "Sell", IsSelected = false };
+        var item = new ListItem_t
+        {
+            EnumId = "SELL",
+            UiRep = "Sell",
+            IsSelected = false,
+        };
         item.EnumId.Should().Be("SELL");
         item.UiRep.Should().Be("Sell");
         item.IsSelected.Should().BeFalse();
@@ -55,7 +65,7 @@ public class ElementPropertyTests
             Id = "e1",
             Operator = Operator_t.GreaterThan,
             LogicOperator = LogicOperator_t.And,
-            Value = "500"
+            Value = "500",
         };
 
         edit.Field.Should().Be("Qty");
@@ -85,7 +95,7 @@ public class ElementPropertyTests
         {
             Enabled = true,
             Value = "42",
-            Visible = false
+            Visible = false,
         };
 
         var result = rule.ToString();
@@ -114,7 +124,12 @@ public class ElementPropertyTests
     [Fact]
     public void StateRule_t_properties_round_trip()
     {
-        var rule = new StateRule_t { Enabled = true, Value = "X", Visible = true };
+        var rule = new StateRule_t
+        {
+            Enabled = true,
+            Value = "X",
+            Visible = true,
+        };
         rule.Enabled.Should().BeTrue();
         rule.Value.Should().Be("X");
         rule.Visible.Should().BeTrue();
@@ -153,7 +168,7 @@ public class ElementPropertyTests
         var country = new Country_t
         {
             CountryCode = IsoCountryCode.GB,
-            Inclusion = Inclusion_t.Include
+            Inclusion = Inclusion_t.Include,
         };
         country.CountryCode.Should().Be(IsoCountryCode.GB);
         country.Inclusion.Should().Be(Inclusion_t.Include);
@@ -162,7 +177,11 @@ public class ElementPropertyTests
     [Fact]
     public void Country_t_exclusion_round_trips()
     {
-        var country = new Country_t { CountryCode = IsoCountryCode.US, Inclusion = Inclusion_t.Exclude };
+        var country = new Country_t
+        {
+            CountryCode = IsoCountryCode.US,
+            Inclusion = Inclusion_t.Exclude,
+        };
         country.Inclusion.Should().Be(Inclusion_t.Exclude);
         country.CountryCode.Should().Be(IsoCountryCode.US);
     }

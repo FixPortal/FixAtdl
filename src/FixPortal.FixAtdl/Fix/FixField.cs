@@ -4369,7 +4369,5 @@ public enum FixField
     FIX_StreamAsgnType = 1617,
 
     /// <summary>FIX RelSymTransactTime tag (tag 1504).</summary>
-    FIX_RelSymTransactTime = 1504
-
+    FIX_RelSymTransactTime = 1504,
 }
-

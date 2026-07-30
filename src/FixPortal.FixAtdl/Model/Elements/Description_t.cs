@@ -31,4 +31,3 @@ public class Description_t
     /// <returns>Content field of this description, i.e., the descriptive text.</returns>
     public static implicit operator string(Description_t description) => description.Content;
 }
-

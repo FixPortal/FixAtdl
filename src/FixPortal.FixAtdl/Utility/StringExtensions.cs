@@ -24,11 +24,16 @@ public static class StringExtensions
     /// <typeparam name="T">Type of enum.</typeparam>
     /// <param name="value">Value to convert to the supplied enum type.</param>
     /// <returns>A valid enumerated value if the conversion was possible; an exception is thrown otherwise.</returns>
-    public static T ParseAsEnum<T>(this string value) where T : struct, Enum
+    public static T ParseAsEnum<T>(this string value)
+        where T : struct, Enum
     {
         if (string.IsNullOrEmpty(value))
         {
-            throw ThrowHelper.New<ArgumentNullException>(ExceptionContext, ErrorMessages.NullOrEmptyStringEnumParseFailure, typeof(T).Name);
+            throw ThrowHelper.New<ArgumentNullException>(
+                ExceptionContext,
+                ErrorMessages.NullOrEmptyStringEnumParseFailure,
+                typeof(T).Name
+            );
         }
 
         T result;
@@ -39,7 +44,13 @@ public static class StringExtensions
         }
         catch (Exception ex) when (ex is ArgumentException or OverflowException)
         {
-            throw ThrowHelper.New<ArgumentException>(ExceptionContext, ex, ErrorMessages.InvalidValueEnumParseFailure, value, typeof(T).Name);
+            throw ThrowHelper.New<ArgumentException>(
+                ExceptionContext,
+                ex,
+                ErrorMessages.InvalidValueEnumParseFailure,
+                value,
+                typeof(T).Name
+            );
         }
 
         // Enum.Parse accepts a raw underlying numeric value even when it is not a defined member
@@ -48,10 +59,14 @@ public static class StringExtensions
         // of several members) is legitimately not itself a single defined member.
         if (!Enum.IsDefined(result) && typeof(T).GetCustomAttribute<FlagsAttribute>() is null)
         {
-            throw ThrowHelper.New<ArgumentException>(ExceptionContext, ErrorMessages.InvalidValueEnumParseFailure, value, typeof(T).Name);
+            throw ThrowHelper.New<ArgumentException>(
+                ExceptionContext,
+                ErrorMessages.InvalidValueEnumParseFailure,
+                value,
+                typeof(T).Name
+            );
         }
 
         return result;
     }
 }
-

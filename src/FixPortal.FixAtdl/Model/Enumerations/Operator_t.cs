@@ -34,6 +34,5 @@ public enum Operator_t
     LessThanOrEqual,
 
     /// <summary>Greater than or equal</summary>
-    GreaterThanOrEqual
+    GreaterThanOrEqual,
 }
-

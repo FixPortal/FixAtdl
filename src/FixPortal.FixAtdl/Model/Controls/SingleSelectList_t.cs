@@ -19,7 +19,5 @@ public class SingleSelectList_t : ListControlBase
     /// </summary>
     /// <param name="id">ID for this control.</param>
     public SingleSelectList_t(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 }

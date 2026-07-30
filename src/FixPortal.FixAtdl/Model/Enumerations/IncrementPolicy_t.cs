@@ -8,7 +8,7 @@
 namespace FixPortal.FixAtdl.Model.Enumerations;
 
 /// <summary>
-/// Used with single spinner control, defines how to determine the increment. 
+/// Used with single spinner control, defines how to determine the increment.
 /// </summary>
 public enum IncrementPolicy_t
 {
@@ -19,6 +19,5 @@ public enum IncrementPolicy_t
     LotSize,
 
     /// <summary>Use symbol minimum tick size.</summary>
-    Tick
+    Tick,
 }
-

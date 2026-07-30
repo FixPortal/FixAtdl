@@ -19,11 +19,9 @@ public class RadioButton_t : BinaryControlBase
     /// </summary>
     /// <param name="id">ID for this control.</param>
     public RadioButton_t(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 
-    /// <summary>Identifies a common group name used by a set of RadioButton_t among which only one radio button 
+    /// <summary>Identifies a common group name used by a set of RadioButton_t among which only one radio button
     /// may be selected at a time.  Applicable when xsi:type is RadioButton_t.</summary>
     public string RadioGroup { get; set; } = null!;
 }

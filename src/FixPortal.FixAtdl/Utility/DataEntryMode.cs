@@ -25,6 +25,5 @@ public enum DataEntryMode
     /// <summary>
     /// Amend order mode.
     /// </summary>
-    Amend
+    Amend,
 }
-

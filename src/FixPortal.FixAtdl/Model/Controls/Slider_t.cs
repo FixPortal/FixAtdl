@@ -21,7 +21,5 @@ public class Slider_t : ListControlBase
     /// </summary>
     /// <param name="id">ID for this control.</param>
     public Slider_t(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 }

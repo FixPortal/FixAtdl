@@ -25,4 +25,3 @@ public class MarketCollection : KeyedCollection<string, Market_t>
         return item.MICCode;
     }
 }
-

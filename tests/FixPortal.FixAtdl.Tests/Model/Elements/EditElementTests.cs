@@ -24,9 +24,18 @@ public class EditElementTests
     }
 
     private static Edit_t<IParameter> MakeResolvedEdit(
-        Strategy_t twap, string field, Operator_t op, string? value = null)
+        Strategy_t twap,
+        string field,
+        Operator_t op,
+        string? value = null
+    )
     {
-        var edit = new Edit_t<IParameter> { Field = field, Operator = op, Value = value! };
+        var edit = new Edit_t<IParameter>
+        {
+            Field = field,
+            Operator = op,
+            Value = value!,
+        };
         ((IResolvable<Strategy_t, IParameter>)edit).Resolve(twap, twap.Parameters);
         return edit;
     }
@@ -71,7 +80,7 @@ public class EditElementTests
             Field = "Participation",
             Operator = Operator_t.Equal,
             Value = "100",
-            Field2 = "BenchmarkPrice"
+            Field2 = "BenchmarkPrice",
         };
 
         var result = edit.ToString();
@@ -104,7 +113,10 @@ public class EditElementTests
     [Fact]
     public async Task Edit_t_Evaluate_with_neither_operator_nor_logic_operator_throws_InvalidOperationException()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
+        var xml = await FixtureFiles.ReadAllTextAsync(
+            "Fixtures/twap.xml",
+            TestContext.Current.CancellationToken
+        );
         var twap = LoadTwap(xml);
 
         // Edit with no Operator and no LogicOperator
@@ -121,7 +133,10 @@ public class EditElementTests
     [Fact]
     public async Task Sources_with_operator_and_field_only_contains_field()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
+        var xml = await FixtureFiles.ReadAllTextAsync(
+            "Fixtures/twap.xml",
+            TestContext.Current.CancellationToken
+        );
         var twap = LoadTwap(xml);
 
         var edit = MakeResolvedEdit(twap, "Participation", Operator_t.Exist);
@@ -132,15 +147,14 @@ public class EditElementTests
     [Fact]
     public async Task Sources_with_FIX_prefixed_field_is_included_in_sources()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
+        var xml = await FixtureFiles.ReadAllTextAsync(
+            "Fixtures/twap.xml",
+            TestContext.Current.CancellationToken
+        );
         var twap = LoadTwap(xml);
 
         // FIX_ prefix fields are resolved via FixFieldValueProvider, not Parameters
-        var edit = new Edit_t<IParameter>
-        {
-            Field = "FIX_OrderQty",
-            Operator = Operator_t.Exist
-        };
+        var edit = new Edit_t<IParameter> { Field = "FIX_OrderQty", Operator = Operator_t.Exist };
         ((IResolvable<Strategy_t, IParameter>)edit).Resolve(twap, twap.Parameters);
 
         edit.Sources.Should().Contain("FIX_OrderQty");
@@ -163,7 +177,10 @@ public class EditElementTests
     {
         var editRef = new EditRef_t<IParameter>("editA");
 
-        var act = () => { _ = editRef.Field; };
+        var act = () =>
+        {
+            _ = editRef.Field;
+        };
 
         act.Should().Throw<InternalErrorException>();
     }
@@ -187,13 +204,16 @@ public class EditElementTests
     [Fact]
     public async Task EditRef_t_Resolve_with_unknown_id_throws_ReferencedObjectNotFoundException()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
+        var xml = await FixtureFiles.ReadAllTextAsync(
+            "Fixtures/twap.xml",
+            TestContext.Current.CancellationToken
+        );
         var twap = LoadTwap(xml);
 
         var editRef = new EditRef_t<IParameter>("nonExistentEdit");
 
-        var act = () => ((IResolvable<Strategy_t, IParameter>)editRef)
-            .Resolve(twap, twap.Parameters);
+        var act = () =>
+            ((IResolvable<Strategy_t, IParameter>)editRef).Resolve(twap, twap.Parameters);
 
         act.Should().Throw<ReferencedObjectNotFoundException>();
     }
@@ -203,7 +223,10 @@ public class EditElementTests
     [Fact]
     public async Task EditRef_t_after_resolve_delegates_Evaluate_to_referenced_edit()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
+        var xml = await FixtureFiles.ReadAllTextAsync(
+            "Fixtures/twap.xml",
+            TestContext.Current.CancellationToken
+        );
         var twap = LoadTwap(xml);
 
         // Inject a named Edit_t (non-generic) into the strategy's Edits collection.
@@ -213,7 +236,7 @@ public class EditElementTests
             Id = "e_part",
             Field = "Participation",
             Operator = Operator_t.Equal,
-            Value = "50"
+            Value = "50",
         };
         twap.Edits.Add(sourceEdit);
 
@@ -231,14 +254,17 @@ public class EditElementTests
     [Fact]
     public async Task EditRef_t_after_resolve_ToString_shows_referenced_edit_details()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
+        var xml = await FixtureFiles.ReadAllTextAsync(
+            "Fixtures/twap.xml",
+            TestContext.Current.CancellationToken
+        );
         var twap = LoadTwap(xml);
 
         var sourceEdit = new Edit_t
         {
             Id = "e_str",
             Field = "Participation",
-            Operator = Operator_t.Exist
+            Operator = Operator_t.Exist,
         };
         twap.Edits.Add(sourceEdit);
 
@@ -254,7 +280,10 @@ public class EditElementTests
     [Fact]
     public async Task Edit_t_evaluate_with_false_result_reflects_in_CurrentState()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
+        var xml = await FixtureFiles.ReadAllTextAsync(
+            "Fixtures/twap.xml",
+            TestContext.Current.CancellationToken
+        );
         var twap = LoadTwap(xml);
 
         var sourceEdit = new Edit_t
@@ -262,7 +291,7 @@ public class EditElementTests
             Id = "e_false",
             Field = "Participation",
             Operator = Operator_t.Equal,
-            Value = "999"
+            Value = "999",
         };
         twap.Edits.Add(sourceEdit);
 
@@ -280,23 +309,27 @@ public class EditElementTests
     [Fact]
     public async Task Edit_t_Resolve_with_operator_but_no_field_throws_InconsistentStrategyException()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
+        var xml = await FixtureFiles.ReadAllTextAsync(
+            "Fixtures/twap.xml",
+            TestContext.Current.CancellationToken
+        );
         var twap = LoadTwap(xml);
 
-        var edit = new Edit_t<IParameter>
-        {
-            Operator = Operator_t.Equal,
-            Value = "100"
-        };
+        var edit = new Edit_t<IParameter> { Operator = Operator_t.Equal, Value = "100" };
 
         var act = () => ((IResolvable<Strategy_t, IParameter>)edit).Resolve(twap, twap.Parameters);
-        act.Should().Throw<InconsistentStrategyException>().WithMessage("*missing the 'field' attribute*");
+        act.Should()
+            .Throw<InconsistentStrategyException>()
+            .WithMessage("*missing the 'field' attribute*");
     }
 
     [Fact]
     public async Task Edit_t_Resolve_with_operator_and_logic_operator_throws_InconsistentStrategyException()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
+        var xml = await FixtureFiles.ReadAllTextAsync(
+            "Fixtures/twap.xml",
+            TestContext.Current.CancellationToken
+        );
         var twap = LoadTwap(xml);
 
         var edit = new Edit_t<IParameter>
@@ -304,10 +337,12 @@ public class EditElementTests
             Field = "Participation",
             Operator = Operator_t.Equal,
             Value = "100",
-            LogicOperator = LogicOperator_t.And
+            LogicOperator = LogicOperator_t.And,
         };
 
         var act = () => ((IResolvable<Strategy_t, IParameter>)edit).Resolve(twap, twap.Parameters);
-        act.Should().Throw<InconsistentStrategyException>().WithMessage("*both comparison operator and child edits/logicOperator*");
+        act.Should()
+            .Throw<InconsistentStrategyException>()
+            .WithMessage("*both comparison operator and child edits/logicOperator*");
     }
 }

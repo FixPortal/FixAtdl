@@ -19,9 +19,7 @@ public class EditableDropDownList_t : ListControlBase
     /// </summary>
     /// <param name="id">ID for this control.</param>
     public EditableDropDownList_t(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 
     /// <summary>
     /// Indicates whether the EnumState value for this control can be set to a value other than one of the enumerated

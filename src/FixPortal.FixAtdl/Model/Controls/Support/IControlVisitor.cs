@@ -20,4 +20,3 @@ public interface IControlVisitor
     /// <param name="control">Control to process as part of this visitor pattern.</param>
     void Visit(Control_t control);
 }
-

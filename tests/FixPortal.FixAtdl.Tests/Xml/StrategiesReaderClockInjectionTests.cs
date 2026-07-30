@@ -44,15 +44,18 @@ public class StrategiesReaderClockInjectionTests
         using var stream = new MemoryStream(Encoding.UTF8.GetBytes(ClockStrategyXml));
         Strategies_t strategies = new StrategiesReader(clock: clock).Load(stream);
 
-        Clock_t control = strategies.Strategies[0].StrategyLayout.StrategyPanel.Controls
-            .OfType<Clock_t>()
+        Clock_t control = strategies
+            .Strategies[0]
+            .StrategyLayout.StrategyPanel.Controls.OfType<Clock_t>()
             .Single();
 
         // No manual control.Clock assignment — the reader wired the injected clock at load time.
         control.LoadInitValue(FixFieldValueProvider.Empty);
 
         // 08:00 Berlin in January is CET (UTC+1) => 07:00Z, anchored to the injected clock's date.
-        control.ToDateTime(null!, CultureInfo.InvariantCulture)
-            .Should().Be(new DateTime(2026, 1, 15, 7, 0, 0, DateTimeKind.Utc));
+        control
+            .ToDateTime(null!, CultureInfo.InvariantCulture)
+            .Should()
+            .Be(new DateTime(2026, 1, 15, 7, 0, 0, DateTimeKind.Utc));
     }
 }

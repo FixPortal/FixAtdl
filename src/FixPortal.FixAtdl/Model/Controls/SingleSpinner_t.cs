@@ -20,9 +20,7 @@ public class SingleSpinner_t : NumericControlBase
     /// </summary>
     /// <param name="id">ID for this control.</param>
     public SingleSpinner_t(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 
     /// <summary>Limits the granularity of a spinner control. Useful in spinner objects to enforce odd-lot and sub-penny
     ///  restrictions.  Applicable when xsi:type is SingleSpinner_t or Slider_t.</summary>

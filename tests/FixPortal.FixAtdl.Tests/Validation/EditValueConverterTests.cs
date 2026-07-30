@@ -25,11 +25,11 @@ public class EditValueConverterTests
     // surface InvalidFieldValueException, so they share one assertion path.
 
     [Theory]
-    [InlineData(typeof(decimal))]   // was: Convert.ToDecimal(null) => 0m  (silent)
-    [InlineData(typeof(int))]       // was: Convert.ToInt32(null)   => 0   (silent)
-    [InlineData(typeof(uint))]      // was: Convert.ToUInt32(null)  => 0u  (silent)
+    [InlineData(typeof(decimal))] // was: Convert.ToDecimal(null) => 0m  (silent)
+    [InlineData(typeof(int))] // was: Convert.ToInt32(null)   => 0   (silent)
+    [InlineData(typeof(uint))] // was: Convert.ToUInt32(null)  => 0u  (silent)
     [InlineData(typeof(MonthYear))] // was: NRE inside MonthYear.Parse(null)
-    [InlineData(typeof(Tenor))]     // was: NRE inside Tenor.Parse(null)
+    [InlineData(typeof(Tenor))] // was: NRE inside Tenor.Parse(null)
     public void Null_value_throws_InvalidFieldValueException(Type prototypeType)
     {
         object prototype = Activator.CreateInstance(prototypeType)!;
@@ -151,7 +151,10 @@ public class EditValueConverterTests
     public void Converts_datetime_string()
     {
         // FIX UTCTimestamp format: YYYYMMDD-HH:MM:SS
-        IComparable result = EditValueConverter.ConvertToComparableType(new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc), "20240101-09:30:00");
+        IComparable result = EditValueConverter.ConvertToComparableType(
+            new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+            "20240101-09:30:00"
+        );
         result.Should().Be(new DateTime(2024, 1, 1, 9, 30, 0, DateTimeKind.Utc));
     }
 
@@ -160,21 +163,30 @@ public class EditValueConverterTests
     [Fact]
     public void Converts_iso_country_code()
     {
-        IComparable result = EditValueConverter.ConvertToComparableType(default(IsoCountryCode), "US");
+        IComparable result = EditValueConverter.ConvertToComparableType(
+            default(IsoCountryCode),
+            "US"
+        );
         result.Should().Be(IsoCountryCode.US);
     }
 
     [Fact]
     public void Converts_iso_currency_code()
     {
-        IComparable result = EditValueConverter.ConvertToComparableType(default(IsoCurrencyCode), "USD");
+        IComparable result = EditValueConverter.ConvertToComparableType(
+            default(IsoCurrencyCode),
+            "USD"
+        );
         result.Should().Be(IsoCurrencyCode.USD);
     }
 
     [Fact]
     public void Converts_iso_language_code()
     {
-        IComparable result = EditValueConverter.ConvertToComparableType(default(IsoLanguageCode), "en");
+        IComparable result = EditValueConverter.ConvertToComparableType(
+            default(IsoLanguageCode),
+            "en"
+        );
         result.Should().Be(IsoLanguageCode.EN);
     }
 
@@ -183,14 +195,18 @@ public class EditValueConverterTests
     [Fact]
     public void Converts_month_year()
     {
-        IComparable result = EditValueConverter.ConvertToComparableType(default(MonthYear), "202401");
+        IComparable result = EditValueConverter.ConvertToComparableType(
+            default(MonthYear),
+            "202401"
+        );
         result.Should().Be(MonthYear.Parse("202401"));
     }
 
     [Fact]
     public void Wraps_invalid_month_year_values_in_InvalidFieldValueException()
     {
-        var act = () => EditValueConverter.ConvertToComparableType(default(MonthYear), "not-a-month-year");
+        var act = () =>
+            EditValueConverter.ConvertToComparableType(default(MonthYear), "not-a-month-year");
 
         act.Should().Throw<InvalidFieldValueException>();
     }

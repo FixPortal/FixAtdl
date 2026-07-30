@@ -11,10 +11,10 @@ using FixPortal.FixAtdl.Validation;
 namespace FixPortal.FixAtdl.Model.Elements;
 
 /// <summary>
-/// Represents the FIXatdl StrategyEdit element, which is a definition of a validation rule. A StrategyEdit element must 
-/// contain an Edit element as a child. The boolean expression described by the Edit element is an assertion, 
-/// i.e., validation succeeds if the condition described by the Edit is true and fails when the condition described by 
-/// the Edit element is false. In the case where validation fails, the error message, supplied by the errorMsg attribute 
+/// Represents the FIXatdl StrategyEdit element, which is a definition of a validation rule. A StrategyEdit element must
+/// contain an Edit element as a child. The boolean expression described by the Edit element is an assertion,
+/// i.e., validation succeeds if the condition described by the Edit is true and fails when the condition described by
+/// the Edit element is false. In the case where validation fails, the error message, supplied by the errorMsg attribute
 /// of the StrategyEdit, may be displayed to an OMS user or logged.
 /// </summary>
 public class StrategyEdit_t : EditEvaluator<IParameter>
@@ -30,4 +30,3 @@ public class StrategyEdit_t : EditEvaluator<IParameter>
     /// </summary>
     public string ErrorMessage { get; set; } = null!;
 }
-

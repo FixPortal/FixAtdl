@@ -8,7 +8,7 @@
 namespace FixPortal.FixAtdl.Model.Enumerations;
 
 /// <summary>
-/// Declares the orientation of nested StrategyPanels within a strategyPanel or the orientation of radio buttons 
+/// Declares the orientation of nested StrategyPanels within a strategyPanel or the orientation of radio buttons
 /// within a RadioButtonList or checkboxes within a CheckBoxList.
 /// </summary>
 public enum Orientation_t
@@ -17,6 +17,5 @@ public enum Orientation_t
     Horizontal,
 
     /// <summary>Vertical orientation.</summary>
-    Vertical
+    Vertical,
 }
-

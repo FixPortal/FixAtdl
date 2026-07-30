@@ -15,7 +15,8 @@ namespace FixPortal.FixAtdl.Model.Types.Support;
 /// <summary>
 /// Provides shared conversion behavior for enum-backed FIXatdl value types.
 /// </summary>
-public abstract class EnumTypeBase<T> : AtdlValueType<T>, IControlConvertible where T : struct
+public abstract class EnumTypeBase<T> : AtdlValueType<T>, IControlConvertible
+    where T : struct
 {
     #region IControlConvertible Members
 
@@ -25,7 +26,12 @@ public abstract class EnumTypeBase<T> : AtdlValueType<T>, IControlConvertible wh
     /// <returns>One of true, false or null which is equivalent to the value of this instance.</returns>
     public bool? ToBoolean()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Boolean");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Boolean"
+        );
     }
 
     /// <summary>
@@ -46,7 +52,12 @@ public abstract class EnumTypeBase<T> : AtdlValueType<T>, IControlConvertible wh
     /// <returns>A nullable decimal equivalent to the value of this instance.</returns>
     public decimal? ToDecimal()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Decimal");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Decimal"
+        );
     }
 
     /// <summary>
@@ -55,7 +66,12 @@ public abstract class EnumTypeBase<T> : AtdlValueType<T>, IControlConvertible wh
     /// <returns>A nullable DateTime equivalent to the value of this instance.</returns>
     public DateTime? ToDateTime()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "DateTime");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "DateTime"
+        );
     }
 
     /// <summary>

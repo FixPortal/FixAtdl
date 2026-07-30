@@ -62,7 +62,10 @@ public class ValueConverterTests
     [InlineData("false", false)]
     [InlineData("True", true)]
     [InlineData("False", false)]
-    public void ConvertTo_supports_boolean_values_including_xs_boolean_literals(string value, bool expected)
+    public void ConvertTo_supports_boolean_values_including_xs_boolean_literals(
+        string value,
+        bool expected
+    )
     {
         var result = ValueConverter.ConvertTo<bool>(value);
 

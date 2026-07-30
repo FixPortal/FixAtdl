@@ -28,4 +28,3 @@ public class EnumPair_t
     /// </summary>
     public int? Index { get; set; }
 }
-

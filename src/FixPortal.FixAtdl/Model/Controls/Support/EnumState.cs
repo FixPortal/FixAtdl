@@ -41,7 +41,13 @@ public class EnumState
     {
         // Guard up front: Count, the indexer and ToString all dereference _enumIds unconditionally,
         // so a null array would surface as an opaque NRE far from here.
-        _enumIds = enumIds ?? throw ThrowHelper.NewWithParamName<ArgumentNullException>(typeof(EnumState), nameof(enumIds), "A valid array of EnumIDs must be supplied.");
+        _enumIds =
+            enumIds
+            ?? throw ThrowHelper.NewWithParamName<ArgumentNullException>(
+                typeof(EnumState),
+                nameof(enumIds),
+                "A valid array of EnumIDs must be supplied."
+            );
         _enumStates = new BitArray(_enumIds.Length);
         _nonEnumValue = null;
     }
@@ -54,7 +60,10 @@ public class EnumState
     {
         if (sourceState == null)
         {
-            throw ThrowHelper.New<ArgumentException>(typeof(EnumState), "A valid EnumState value must be supplied to use this constuctor");
+            throw ThrowHelper.New<ArgumentException>(
+                typeof(EnumState),
+                "A valid EnumState value must be supplied to use this constuctor"
+            );
         }
 
         _enumIds = sourceState._enumIds;
@@ -81,12 +90,19 @@ public class EnumState
     {
         if (source == null)
         {
-            throw ThrowHelper.NewWithParamName<ArgumentNullException>(this, nameof(source), "A valid EnumState must be supplied");
+            throw ThrowHelper.NewWithParamName<ArgumentNullException>(
+                this,
+                nameof(source),
+                "A valid EnumState must be supplied"
+            );
         }
 
         if (_enumIds.Length != source._enumIds.Length)
         {
-            throw ThrowHelper.New<ArgumentException>(this, "Unable to update this EnumState from supplied EnumState as the number of EnumIDs was not consistent");
+            throw ThrowHelper.New<ArgumentException>(
+                this,
+                "Unable to update this EnumState from supplied EnumState as the number of EnumIDs was not consistent"
+            );
         }
 
         // Validate that every EnumID lines up BEFORE mutating any bit, so a mismatch leaves this
@@ -95,7 +111,10 @@ public class EnumState
         {
             if (Array.IndexOf(source._enumIds, _enumIds[n]) < 0)
             {
-                throw ThrowHelper.New<ArgumentException>(this, "Mismatch between the EnumIDs of the source and target EnumState");
+                throw ThrowHelper.New<ArgumentException>(
+                    this,
+                    "Mismatch between the EnumIDs of the source and target EnumState"
+                );
             }
         }
 
@@ -135,7 +154,8 @@ public class EnumState
         // Compare the bit states element-wise. The previous _enumStates.Equals(state) compared a
         // BitArray to an EnumState by reference, so it was ALWAYS false for two distinct instances,
         // breaking equality / HashSet / Dictionary / dirty-checking semantics.
-        return _nonEnumValue == state._nonEnumValue && BitArraysEqual(_enumStates, state._enumStates);
+        return _nonEnumValue == state._nonEnumValue
+            && BitArraysEqual(_enumStates, state._enumStates);
     }
 
     private static bool BitArraysEqual(BitArray left, BitArray right)
@@ -214,9 +234,12 @@ public class EnumState
                 }
             }
 
-            throw ThrowHelper.New<ArgumentException>(this, ErrorMessages.UnrecognisedEnumIdValue, enumId);
+            throw ThrowHelper.New<ArgumentException>(
+                this,
+                ErrorMessages.UnrecognisedEnumIdValue,
+                enumId
+            );
         }
-
         set
         {
             for (int n = 0; n < _enumIds.Length; n++)
@@ -238,7 +261,11 @@ public class EnumState
                 }
             }
 
-            throw ThrowHelper.New<ArgumentException>(this, ErrorMessages.UnrecognisedEnumIdValue, enumId);
+            throw ThrowHelper.New<ArgumentException>(
+                this,
+                ErrorMessages.UnrecognisedEnumIdValue,
+                enumId
+            );
         }
     }
 
@@ -252,7 +279,8 @@ public class EnumState
     /// enumerated value is enabled, or a non-enum (free-text) value is present. An all-false EnumState
     /// with no non-enum value represents "nothing selected" and is treated as absent by EX/NX edits.
     /// </summary>
-    public bool HasSelection => GetFirstSelectedEnumIdIndex() != -1 || !string.IsNullOrEmpty(_nonEnumValue);
+    public bool HasSelection =>
+        GetFirstSelectedEnumIdIndex() != -1 || !string.IsNullOrEmpty(_nonEnumValue);
 
     /// <summary>
     /// Determines whether the supplied EnumID value is valid for this EnumState instance.
@@ -268,7 +296,11 @@ public class EnumState
     {
         if (!IsValidEnumId(enumId))
         {
-            throw ThrowHelper.New<InvalidFieldValueException>(this, ErrorMessages.UnrecognisedEnumIdValue, enumId);
+            throw ThrowHelper.New<InvalidFieldValueException>(
+                this,
+                ErrorMessages.UnrecognisedEnumIdValue,
+                enumId
+            );
         }
 
         return this[enumId];
@@ -280,7 +312,6 @@ public class EnumState
     public string? NonEnumValue
     {
         get => _nonEnumValue;
-
         set
         {
             _enumStates.SetAll(false);
@@ -369,7 +400,11 @@ public class EnumState
         // throw before ClearAll so the current state is not left half-cleared / half-set (Theme D).
         if (!allAreValid && !allowNonEnumValue)
         {
-            throw ThrowHelper.New<ArgumentException>(this, ErrorMessages.UnrecognisedEnumIdValue, initValues);
+            throw ThrowHelper.New<ArgumentException>(
+                this,
+                ErrorMessages.UnrecognisedEnumIdValue,
+                initValues
+            );
         }
 
         ClearAll();
@@ -398,7 +433,10 @@ public class EnumState
     {
         if (enumPairs.Count != _enumStates.Count)
         {
-            throw ThrowHelper.New<InvalidOperationException>(ExceptionContext, ErrorMessages.InconsistentEnumPairsListItemsError);
+            throw ThrowHelper.New<InvalidOperationException>(
+                ExceptionContext,
+                ErrorMessages.InconsistentEnumPairsListItemsError
+            );
         }
 
         // Override the values in the states collection if a non-enum value is supplied.  This is used to handle
@@ -456,16 +494,22 @@ public class EnumState
     {
         // Drop empty tokens so a blank, double-delimited or trailing-delimiter input does not yield
         // a "" token that TryParseWireValue would reject.
-        string[] inputValues = multiValueString.Split([';', ' ', ','], StringSplitOptions.RemoveEmptyEntries);
+        string[] inputValues = multiValueString.Split(
+            [';', ' ', ','],
+            StringSplitOptions.RemoveEmptyEntries
+        );
 
         EnumState result = new(enumPairs.EnumIds);
 
         foreach (string inputValue in inputValues)
         {
-
             if (!enumPairs.TryParseWireValue(inputValue, out string? enumId))
             {
-                throw ThrowHelper.New<ArgumentException>(ExceptionContext, ErrorMessages.UnrecognisedEnumIdValue, inputValue);
+                throw ThrowHelper.New<ArgumentException>(
+                    ExceptionContext,
+                    ErrorMessages.UnrecognisedEnumIdValue,
+                    inputValue
+                );
             }
 
             result[enumId!] = true;
@@ -486,7 +530,13 @@ public class EnumState
 
         for (int n = 0; n < _enumStates.Length; n++)
         {
-            sb.AppendFormat(CultureInfo.InvariantCulture, "{0}={1}{2}", _enumIds[n], _enumStates[n].ToString().ToLowerInvariant(), n < _enumStates.Length - 1 ? ", " : string.Empty);
+            sb.AppendFormat(
+                CultureInfo.InvariantCulture,
+                "{0}={1}{2}",
+                _enumIds[n],
+                _enumStates[n].ToString().ToLowerInvariant(),
+                n < _enumStates.Length - 1 ? ", " : string.Empty
+            );
         }
 
         if (_nonEnumValue != null)
@@ -498,5 +548,4 @@ public class EnumState
 
         return sb.ToString();
     }
-
 }

@@ -23,7 +23,10 @@ namespace FixPortal.FixAtdl.Model.Collections;
 /// <summary>
 /// Provides read-only keyed access to the controls defined for a strategy.
 /// </summary>
-public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Control_t>, ISimpleDictionary<Control_t>
+public class ReadOnlyControlCollection
+    : IParentable<Strategy_t>,
+        IEnumerable<Control_t>,
+        ISimpleDictionary<Control_t>
 {
     private Strategy_t Owner { get; set; }
     private readonly Dictionary<string, Control_t> _controls = [];
@@ -75,7 +78,12 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
         {
             if (_controls.ContainsKey(control.Id))
             {
-                throw ThrowHelper.New<DuplicateKeyException>(this, ErrorMessages.AttemptToAddDuplicateKey, control.Id, "Controls");
+                throw ThrowHelper.New<DuplicateKeyException>(
+                    this,
+                    ErrorMessages.AttemptToAddDuplicateKey,
+                    control.Id,
+                    "Controls"
+                );
             }
 
             _controls.Add(control.Id, control);
@@ -92,7 +100,12 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
         {
             if (_controls.ContainsKey(item.Id))
             {
-                throw ThrowHelper.New<DuplicateKeyException>(this, ErrorMessages.AttemptToAddDuplicateKey, item.Id, "Controls");
+                throw ThrowHelper.New<DuplicateKeyException>(
+                    this,
+                    ErrorMessages.AttemptToAddDuplicateKey,
+                    item.Id,
+                    "Controls"
+                );
             }
 
             _controls.Add(item.Id, item);
@@ -119,7 +132,12 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
 
             if (newControl.Id != oldId && _controls.ContainsKey(newControl.Id))
             {
-                throw ThrowHelper.New<DuplicateKeyException>(this, ErrorMessages.AttemptToAddDuplicateKey, newControl.Id, "Controls");
+                throw ThrowHelper.New<DuplicateKeyException>(
+                    this,
+                    ErrorMessages.AttemptToAddDuplicateKey,
+                    newControl.Id,
+                    "Controls"
+                );
             }
 
             _controls.Remove(oldId);
@@ -141,16 +159,16 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
     /// Gets the control with the specified identifier.
     /// </summary>
     /// <param name="key">The control identifier.</param>
-    public Control_t this[string key]
-        => _controls.TryGetValue(key, out Control_t? value) ? value : null!;
+    public Control_t this[string key] =>
+        _controls.TryGetValue(key, out Control_t? value) ? value : null!;
 
     /// <summary>
     /// Loads the initial values for each control based on the InitPolicy, InitFixField and InitValue attributes.
     /// </summary>
     /// <param name="controlInitValueProvider">Value provider for initializing control values from InitFixField.</param>
-    /// <remarks>The spec states: 'If the value of the initPolicy attribute is undefined or equal to "UseValue" and the initValue attribute is 
-    /// defined then initialize with initValue.  If the value is equal to "UseFixField" then attempt to initialize with the value of 
-    /// the tag specified in the initFixField attribute. If the value is equal to "UseFixField" and it is not possible to access the 
+    /// <remarks>The spec states: 'If the value of the initPolicy attribute is undefined or equal to "UseValue" and the initValue attribute is
+    /// defined then initialize with initValue.  If the value is equal to "UseFixField" then attempt to initialize with the value of
+    /// the tag specified in the initFixField attribute. If the value is equal to "UseFixField" and it is not possible to access the
     /// value of the specified fix tag then revert to using initValue. If the value is equal to "UseFixField", the field is not accessible,
     /// and initValue is not defined, then do not initialize.</remarks>
     public void LoadDefaults(FixFieldValueProvider controlInitValueProvider)
@@ -168,7 +186,12 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
         }
         catch (Exception ex)
         {
-            throw ThrowHelper.Rethrow(this, ex, ErrorMessages.InitControlValueError, control != null ? control.Id : "(unknown)");
+            throw ThrowHelper.Rethrow(
+                this,
+                ex,
+                ErrorMessages.InitControlValueError,
+                control != null ? control.Id : "(unknown)"
+            );
         }
     }
 
@@ -179,7 +202,11 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
     /// <param name="shortCircuit">If true, this method returns as soon as any error is found; if false, an attempt is made to update all parameter
     /// values before the method returns.</param>
     /// <param name="validationResults">If one or more validations fail, this parameter contains a list of ValidationResults; null otherwise.</param>
-    public bool TryUpdateParameterValues(ParameterCollection parameters, bool shortCircuit, out IList<ValidationResult>? validationResults)
+    public bool TryUpdateParameterValues(
+        ParameterCollection parameters,
+        bool shortCircuit,
+        out IList<ValidationResult>? validationResults
+    )
     {
         bool isValid = true;
         validationResults = null;
@@ -192,7 +219,11 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
             {
                 if (!parameters.Contains(parameter))
                 {
-                    throw ThrowHelper.New<ReferencedObjectNotFoundException>(this, ErrorMessages.UnresolvedParameterRefError, parameter);
+                    throw ThrowHelper.New<ReferencedObjectNotFoundException>(
+                        this,
+                        ErrorMessages.UnresolvedParameterRefError,
+                        parameter
+                    );
                 }
 
                 ValidationResult result = parameters[parameter].SetValueFromControl(control);
@@ -231,7 +262,11 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
 
             if (hasParameterRef && !isValidParameter)
             {
-                throw ThrowHelper.New<ReferencedObjectNotFoundException>(this, ErrorMessages.UnresolvedParameterRefError, control.ParameterRef);
+                throw ThrowHelper.New<ReferencedObjectNotFoundException>(
+                    this,
+                    ErrorMessages.UnresolvedParameterRefError,
+                    control.ParameterRef
+                );
             }
 
             // We only want to update the control value if the parameter has a value
@@ -241,13 +276,25 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
                 {
                     control.SetValueFromParameter(parameter);
                 }
-                catch (Exception ex) when (ex is ArgumentException or FormatException or InvalidCastException or OverflowException)
+                catch (Exception ex)
+                    when (ex
+                            is ArgumentException
+                                or FormatException
+                                or InvalidCastException
+                                or OverflowException
+                    )
                 {
                     // Defense in depth: a value/type-conversion failure while pushing a parameter value into
                     // its bound control (e.g. an unresolvable date/time Kind) must not propagate as a raw,
                     // uncaught exception (D-F8) - wrap it with control/parameter context instead.
-                    throw ThrowHelper.Rethrow(this, ex, ErrorMessages.UnsuccessfulSetParameterOperation,
-                        control.ParameterRef!, control.Id, ex.Message);
+                    throw ThrowHelper.Rethrow(
+                        this,
+                        ex,
+                        ErrorMessages.UnsuccessfulSetParameterOperation,
+                        control.ParameterRef!,
+                        control.Id,
+                        ex.Message
+                    );
                 }
 
                 UpdateRelatedHelperControls(control);
@@ -299,15 +346,22 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
         {
             Edit_t<Control_t>? edit = stateRule.Edit;
 
-            if (edit is not { } || stateRule.Value != Atdl.NullValue || edit.Operator != Operator_t.Equal)
+            if (
+                edit is not { }
+                || stateRule.Value != Atdl.NullValue
+                || edit.Operator != Operator_t.Equal
+            )
             {
                 continue;
             }
 
             string sourceControlId = edit.Field;
 
-            if (IsValidControlId(sourceControlId) && this[sourceControlId].IsToggleable
-                && bool.TryParse(edit.Value, out bool result))
+            if (
+                IsValidControlId(sourceControlId)
+                && this[sourceControlId].IsToggleable
+                && bool.TryParse(edit.Value, out bool result)
+            )
             {
                 ApplyHelperControlToggle(this[sourceControlId], result);
             }
@@ -337,13 +391,17 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
     private void SetCompanionRadioButton(RadioButton_t radioButton)
     {
         // Approach 1: RadioGroup name; Approach 2 (fallback): sibling controls on same panel.
-        IEnumerable<RadioButton_t> radioButtons = radioButton.RadioGroup != null
-            ? from c in _controls.Values
-              where c.Id != radioButton.Id && c is RadioButton_t t && t.RadioGroup == radioButton.RadioGroup
-              select c as RadioButton_t
-            : from c in radioButton.OwningStrategyPanel.Controls
-              where c.Id != radioButton.Id && c is RadioButton_t
-              select c as RadioButton_t;
+        IEnumerable<RadioButton_t> radioButtons =
+            radioButton.RadioGroup != null
+                ? from c in _controls.Values
+                where
+                    c.Id != radioButton.Id
+                    && c is RadioButton_t t
+                    && t.RadioGroup == radioButton.RadioGroup
+                select c as RadioButton_t
+                : from c in radioButton.OwningStrategyPanel.Controls
+                where c.Id != radioButton.Id && c is RadioButton_t
+                select c as RadioButton_t;
 
         // The query is lazy; Count() + First() would enumerate it twice. Materialise once
         // (Take(2) is enough to distinguish "exactly one companion").
@@ -362,7 +420,8 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
     /// </summary>
     Strategy_t IParentable<Strategy_t>.Parent
     {
-        get => Owner; set => Owner = value;
+        get => Owner;
+        set => Owner = value;
     }
 
     #endregion

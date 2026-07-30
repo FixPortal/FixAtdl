@@ -8,7 +8,7 @@
 namespace FixPortal.FixAtdl.Diagnostics.Exceptions;
 
 /// <summary>
-/// The exception that is thrown when a reference from one object to another cannot be resolved; for example, if a 
+/// The exception that is thrown when a reference from one object to another cannot be resolved; for example, if a
 /// control has a parameterRef value but there is no corresponding parameter with that name.
 /// </summary>
 public class ReferencedObjectNotFoundException : FixAtdlException
@@ -18,9 +18,7 @@ public class ReferencedObjectNotFoundException : FixAtdlException
     /// </summary>
     /// <param name="message">The message.</param>
     public ReferencedObjectNotFoundException(string message)
-        : base(message)
-    {
-    }
+        : base(message) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ReferencedObjectNotFoundException"/> class.
@@ -28,9 +26,5 @@ public class ReferencedObjectNotFoundException : FixAtdlException
     /// <param name="message">The message.</param>
     /// <param name="innerException">The inner exception.</param>
     public ReferencedObjectNotFoundException(string message, Exception innerException)
-        : base(message, innerException)
-    {
-    }
-
+        : base(message, innerException) { }
 }
-

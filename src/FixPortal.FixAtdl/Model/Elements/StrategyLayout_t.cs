@@ -19,4 +19,3 @@ public class StrategyLayout_t : IStrategyPanel
     /// </summary>
     public StrategyPanel_t StrategyPanel { get; set; } = null!;
 }
-

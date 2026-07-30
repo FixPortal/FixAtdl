@@ -52,22 +52,39 @@ public class String_t : AtdlReferenceType<string>, IControlConvertible
             // reject it here. ('=' is intentionally allowed — FIX values may contain it; only SOH frames.)
             if (value.Contains(FixMessage.SOH))
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.ValueContainsDelimiter, "string");
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.ValueContainsDelimiter,
+                    "string"
+                );
             }
 
             if (MaxLength != null && value.Length > MaxLength)
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MaxLengthExceeded, value, MaxLength);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.MaxLengthExceeded,
+                    value,
+                    MaxLength
+                );
             }
 
             if (MinLength != null && value.Length < MinLength)
             {
-                return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.MinLengthNotMet, value, MinLength);
+                return new ValidationResult(
+                    ValidationResult.ResultType.Invalid,
+                    ErrorMessages.MinLengthNotMet,
+                    value,
+                    MinLength
+                );
             }
         }
         else if (isRequired)
         {
-            return new ValidationResult(ValidationResult.ResultType.Missing, ErrorMessages.NonOptionalParameterNotSupplied2);
+            return new ValidationResult(
+                ValidationResult.ResultType.Missing,
+                ErrorMessages.NonOptionalParameterNotSupplied2
+            );
         }
 
         return ValidationResult.ValidResult;
@@ -100,7 +117,10 @@ public class String_t : AtdlReferenceType<string>, IControlConvertible
     /// <param name="hostParameter"><see cref="IParameter"/> that hosts this value.</param>
     /// <param name="value">Value to convert, may be null.</param>
     /// <returns>If input value is not null, returns value converted to string; null otherwise.</returns>
-    protected override string? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
+    protected override string? ConvertToNativeType(
+        IParameter hostParameter,
+        IParameterConvertible value
+    )
     {
         return value.ToString(hostParameter);
     }
@@ -124,7 +144,12 @@ public class String_t : AtdlReferenceType<string>, IControlConvertible
     /// <returns>One of true, false or null which is equivalent to the value of this instance.</returns>
     public bool? ToBoolean()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Boolean");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Boolean"
+        );
     }
 
     /// <summary>
@@ -143,7 +168,12 @@ public class String_t : AtdlReferenceType<string>, IControlConvertible
     /// <returns>A nullable decimal equivalent to the value of this instance.</returns>
     public decimal? ToDecimal()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "Decimal");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "Decimal"
+        );
     }
 
     /// <summary>
@@ -152,7 +182,12 @@ public class String_t : AtdlReferenceType<string>, IControlConvertible
     /// <returns>A nullable DateTime equivalent to the value of this instance.</returns>
     public DateTime? ToDateTime()
     {
-        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.UnsupportedParameterValueConversion, _value, "DateTime");
+        throw ThrowHelper.New<InvalidCastException>(
+            this,
+            ErrorMessages.UnsupportedParameterValueConversion,
+            _value,
+            "DateTime"
+        );
     }
 
     /// <summary>
@@ -173,4 +208,3 @@ public class String_t : AtdlReferenceType<string>, IControlConvertible
 
     #endregion
 }
-

@@ -9,22 +9,18 @@ namespace FixPortal.FixAtdl.Tests;
 public class ArchitectureTests
 {
     private static readonly Architecture Architecture = new ArchLoader()
-        .LoadAssemblies(
-            typeof(StrategiesReader).Assembly)
+        .LoadAssemblies(typeof(StrategiesReader).Assembly)
         .Build();
 
     [Fact]
     public void Interfaces_must_have_I_prefix()
     {
-        FixPortalArchRules.InterfacesMustHaveIPrefix()
-            .Check(Architecture);
+        FixPortalArchRules.InterfacesMustHaveIPrefix().Check(Architecture);
     }
 
     [Fact]
     public void Exception_types_must_inherit_from_Exception()
     {
-        FixPortalArchRules.ExceptionsMustInheritFromException()
-            .Check(Architecture);
+        FixPortalArchRules.ExceptionsMustInheritFromException().Check(Architecture);
     }
-
 }

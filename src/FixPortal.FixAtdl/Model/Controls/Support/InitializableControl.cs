@@ -12,7 +12,7 @@ using FixPortal.FixAtdl.Model.Enumerations;
 namespace FixPortal.FixAtdl.Model.Controls.Support;
 
 /// <summary>
-/// Generic base class for all controls.  Provides the ability to initialize controls based on the state of the InitPolicy, 
+/// Generic base class for all controls.  Provides the ability to initialize controls based on the state of the InitPolicy,
 /// InitFixField and InitValue attributes.
 /// </summary>
 /// <typeparam name="T">Specified the type of the InitValue.  Note that this may not be the same as the type that the
@@ -25,9 +25,7 @@ public abstract class InitializableControl<T> : Control_t
     /// </summary>
     /// <param name="id">Id of this control.</param>
     protected InitializableControl(string id)
-        : base(id)
-    {
-    }
+        : base(id) { }
 
     /// <summary>The value used to pre-populate the GUI component when the order entry screen is initially rendered.</summary>
     public T InitValue { get; set; } = default!;
@@ -47,10 +45,12 @@ public abstract class InitializableControl<T> : Control_t
     public override void LoadInitValue(FixFieldValueProvider controlInitValueProvider)
     {
         // If UseFixField, then attempt to initialize with FIX field...
-        if (InitPolicy == InitPolicy_t.UseFixField
+        if (
+            InitPolicy == InitPolicy_t.UseFixField
             && !string.IsNullOrEmpty(InitFixField)
             && controlInitValueProvider.TryGetValue(InitFixField, ParameterRef, out string value)
-            && LoadDefaultFromFixValue(value))
+            && LoadDefaultFromFixValue(value)
+        )
         {
             return;
         }

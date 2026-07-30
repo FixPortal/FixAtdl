@@ -51,9 +51,7 @@ public class ElementDefinition
     /// <param name="targetType">The target CLR type.</param>
     /// <param name="attributes">The attribute mappings.</param>
     public ElementDefinition(XName? elementName, Type? targetType, ElementAttribute[]? attributes)
-        : this(elementName, targetType, null, attributes, [], null)
-    {
-    }
+        : this(elementName, targetType, null, attributes, [], null) { }
 
     /// <summary>
     /// Initializes a new <see cref="ElementDefinition"/> with a single child mapping.
@@ -62,10 +60,13 @@ public class ElementDefinition
     /// <param name="targetType">The target CLR type.</param>
     /// <param name="attributes">The attribute mappings.</param>
     /// <param name="child">The child element mapping.</param>
-    public ElementDefinition(XName elementName, Type targetType, ElementAttribute[] attributes, ChildElementDefinition child)
-        : this(elementName, targetType, null, attributes, [child], null)
-    {
-    }
+    public ElementDefinition(
+        XName elementName,
+        Type targetType,
+        ElementAttribute[] attributes,
+        ChildElementDefinition child
+    )
+        : this(elementName, targetType, null, attributes, [child], null) { }
 
     /// <summary>
     /// Initializes a new <see cref="ElementDefinition"/> with child mappings.
@@ -74,10 +75,13 @@ public class ElementDefinition
     /// <param name="targetType">The target CLR type.</param>
     /// <param name="attributes">The attribute mappings.</param>
     /// <param name="children">The child element mappings.</param>
-    public ElementDefinition(XName elementName, Type targetType, ElementAttribute[] attributes, ChildElementDefinition[] children)
-        : this(elementName, targetType, null, attributes, children, null)
-    {
-    }
+    public ElementDefinition(
+        XName elementName,
+        Type targetType,
+        ElementAttribute[] attributes,
+        ChildElementDefinition[] children
+    )
+        : this(elementName, targetType, null, attributes, children, null) { }
 
     /// <summary>
     /// Initializes a new <see cref="ElementDefinition"/> with child mappings and element-value caching.
@@ -87,11 +91,14 @@ public class ElementDefinition
     /// <param name="attributes">The attribute mappings.</param>
     /// <param name="children">The child element mappings.</param>
     /// <param name="cacheInstruction">The caching instruction.</param>
-    public ElementDefinition(XName elementName, Type targetType, ElementAttribute[] attributes, ChildElementDefinition[] children,
-        CacheElementValueInstruction cacheInstruction)
-        : this(elementName, targetType, null, attributes, children, cacheInstruction)
-    {
-    }
+    public ElementDefinition(
+        XName elementName,
+        Type targetType,
+        ElementAttribute[] attributes,
+        ChildElementDefinition[] children,
+        CacheElementValueInstruction cacheInstruction
+    )
+        : this(elementName, targetType, null, attributes, children, cacheInstruction) { }
 
     /// <summary>
     /// Initializes a new <see cref="ElementDefinition"/> with constructor parameters and attribute mappings.
@@ -100,10 +107,13 @@ public class ElementDefinition
     /// <param name="targetType">The target CLR type.</param>
     /// <param name="constructorParameters">The constructor parameter mappings.</param>
     /// <param name="attributes">The attribute mappings.</param>
-    public ElementDefinition(XName elementName, Type targetType, ConstructorParameter[] constructorParameters, ElementAttribute[] attributes)
-        : this(elementName, targetType, constructorParameters, attributes, [], null)
-    {
-    }
+    public ElementDefinition(
+        XName elementName,
+        Type targetType,
+        ConstructorParameter[] constructorParameters,
+        ElementAttribute[] attributes
+    )
+        : this(elementName, targetType, constructorParameters, attributes, [], null) { }
 
     /// <summary>
     /// Initializes a new <see cref="ElementDefinition"/> with constructor parameters and a single child mapping.
@@ -113,11 +123,14 @@ public class ElementDefinition
     /// <param name="constructorParameters">The constructor parameter mappings.</param>
     /// <param name="attributes">The attribute mappings.</param>
     /// <param name="child">The child element mapping.</param>
-    public ElementDefinition(XName elementName, Type targetType, ConstructorParameter[] constructorParameters, ElementAttribute[] attributes,
-        ChildElementDefinition child)
-        : this(elementName, targetType, constructorParameters, attributes, [child], null)
-    {
-    }
+    public ElementDefinition(
+        XName elementName,
+        Type targetType,
+        ConstructorParameter[] constructorParameters,
+        ElementAttribute[] attributes,
+        ChildElementDefinition child
+    )
+        : this(elementName, targetType, constructorParameters, attributes, [child], null) { }
 
     /// <summary>
     /// Initializes a new <see cref="ElementDefinition"/> with constructor parameters and child mappings.
@@ -127,11 +140,14 @@ public class ElementDefinition
     /// <param name="constructorParameters">The constructor parameter mappings.</param>
     /// <param name="attributes">The attribute mappings.</param>
     /// <param name="children">The child element mappings.</param>
-    public ElementDefinition(XName elementName, Type targetType, ConstructorParameter[] constructorParameters,
-        ElementAttribute[] attributes, ChildElementDefinition[] children)
-        : this(elementName, targetType, constructorParameters, attributes, children, null)
-    {
-    }
+    public ElementDefinition(
+        XName elementName,
+        Type targetType,
+        ConstructorParameter[] constructorParameters,
+        ElementAttribute[] attributes,
+        ChildElementDefinition[] children
+    )
+        : this(elementName, targetType, constructorParameters, attributes, children, null) { }
 
     /// <summary>
     /// Initializes a new <see cref="ElementDefinition"/> with the supplied mappings.
@@ -142,8 +158,14 @@ public class ElementDefinition
     /// <param name="attributes">The attribute mappings.</param>
     /// <param name="children">The child element mappings.</param>
     /// <param name="cacheInstruction">The optional caching instruction.</param>
-    public ElementDefinition(XName? elementName, Type? targetType, ConstructorParameter[]? constructorParameters,
-        ElementAttribute[]? attributes, ChildElementDefinition[]? children, CacheElementValueInstruction? cacheInstruction)
+    public ElementDefinition(
+        XName? elementName,
+        Type? targetType,
+        ConstructorParameter[]? constructorParameters,
+        ElementAttribute[]? attributes,
+        ChildElementDefinition[]? children,
+        CacheElementValueInstruction? cacheInstruction
+    )
     {
         ElementName = elementName;
         TargetType = targetType;

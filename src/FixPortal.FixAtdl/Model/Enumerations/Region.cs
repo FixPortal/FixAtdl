@@ -26,6 +26,5 @@ public enum Region
     AsiaPacificJapan = 4,
 
     /// <summary>All regions.</summary>
-    All = AsiaPacificJapan | EuropeMiddleEastAfrica | TheAmericas
+    All = AsiaPacificJapan | EuropeMiddleEastAfrica | TheAmericas,
 }
-

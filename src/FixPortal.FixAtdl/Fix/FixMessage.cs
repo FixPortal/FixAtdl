@@ -27,9 +27,7 @@ public class FixMessage : Dictionary<FixField, string>
     /// <summary>
     /// Initializes a new instance of <see cref="FixMessage"/>.
     /// </summary>
-    public FixMessage()
-    {
-    }
+    public FixMessage() { }
 
     /// <summary>
     /// Initializes a new instance of <see cref="FixMessage"/> using the supplied FIX message.
@@ -40,14 +38,21 @@ public class FixMessage : Dictionary<FixField, string>
     {
         if (string.IsNullOrEmpty(rawMessage))
         {
-            throw ThrowHelper.New<FixParseException>(this, ErrorMessages.UnableToParseFixMessageEmpty);
+            throw ThrowHelper.New<FixParseException>(
+                this,
+                ErrorMessages.UnableToParseFixMessageEmpty
+            );
         }
 
         string[] nameValuePairs = rawMessage.Split([SOH], StringSplitOptions.RemoveEmptyEntries);
 
         if (nameValuePairs.Length == 0)
         {
-            throw ThrowHelper.New<FixParseException>(this, ErrorMessages.UnableToParseFixMessageInvalidContent, rawMessage);
+            throw ThrowHelper.New<FixParseException>(
+                this,
+                ErrorMessages.UnableToParseFixMessageInvalidContent,
+                rawMessage
+            );
         }
 
         string tagText = string.Empty;
@@ -61,7 +66,11 @@ public class FixMessage : Dictionary<FixField, string>
 
                 if (separatorIndex <= 0 || separatorIndex == nameValuePair.Length - 1)
                 {
-                    throw ThrowHelper.New<FixParseException>(this, ErrorMessages.UnableToParseFixMessageInvalidContent, nameValuePair);
+                    throw ThrowHelper.New<FixParseException>(
+                        this,
+                        ErrorMessages.UnableToParseFixMessageInvalidContent,
+                        nameValuePair
+                    );
                 }
 
                 tagText = nameValuePair[..separatorIndex];
@@ -73,18 +82,33 @@ public class FixMessage : Dictionary<FixField, string>
                 // admitted and then corrupted by the (uint) cast in ToFix (e.g. -1 -> 4294967295).
                 if (tag <= 0)
                 {
-                    throw ThrowHelper.New<FixParseException>(this, ErrorMessages.UnableToParseFixMessageInvalidContent, nameValuePair);
+                    throw ThrowHelper.New<FixParseException>(
+                        this,
+                        ErrorMessages.UnableToParseFixMessageInvalidContent,
+                        nameValuePair
+                    );
                 }
 
                 if (!TryAdd((FixField)tag, valueText))
                 {
-                    throw ThrowHelper.New<FixParseException>(this, ErrorMessages.UnableToParseFixMessageInvalidContent, nameValuePair);
+                    throw ThrowHelper.New<FixParseException>(
+                        this,
+                        ErrorMessages.UnableToParseFixMessageInvalidContent,
+                        nameValuePair
+                    );
                 }
             }
         }
         catch (Exception ex) when (ex is FormatException or OverflowException)
         {
-            throw ThrowHelper.New<FixParseException>(this, ex, ErrorMessages.UnableToParseFixMessageInvalidFormat, tagText, valueText, ex.Message);
+            throw ThrowHelper.New<FixParseException>(
+                this,
+                ex,
+                ErrorMessages.UnableToParseFixMessageInvalidFormat,
+                tagText,
+                valueText,
+                ex.Message
+            );
         }
     }
 
@@ -111,8 +135,11 @@ public class FixMessage : Dictionary<FixField, string>
             // emitted and silently corrupted by the (uint) cast below (-1 -> 4294967295).
             if ((int)item.Key <= 0)
             {
-                throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.InvalidFixTagForSerialization,
-                    ((int)item.Key).ToString(CultureInfo.InvariantCulture));
+                throw ThrowHelper.New<InvalidOperationException>(
+                    this,
+                    ErrorMessages.InvalidFixTagForSerialization,
+                    ((int)item.Key).ToString(CultureInfo.InvariantCulture)
+                );
             }
 
             // A null value would emit "tag=" + SOH, which this class's own parse constructor then rejects
@@ -120,11 +147,21 @@ public class FixMessage : Dictionary<FixField, string>
             // wire. Guard both at this single serialization chokepoint, mirroring the tag guard above.
             if (item.Value == null || item.Value.Contains(SOH))
             {
-                throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.InvalidFixValueForSerialization,
-                    ((uint)item.Key).ToString(CultureInfo.InvariantCulture));
+                throw ThrowHelper.New<InvalidOperationException>(
+                    this,
+                    ErrorMessages.InvalidFixValueForSerialization,
+                    ((uint)item.Key).ToString(CultureInfo.InvariantCulture)
+                );
             }
 
-            sb.AppendFormat(CultureInfo.InvariantCulture, "{0}{1}{2}{3}", ((uint)item.Key).ToString(CultureInfo.InvariantCulture), Separator, item.Value, SOH);
+            sb.AppendFormat(
+                CultureInfo.InvariantCulture,
+                "{0}{1}{2}{3}",
+                ((uint)item.Key).ToString(CultureInfo.InvariantCulture),
+                Separator,
+                item.Value,
+                SOH
+            );
         }
 
         return sb.ToString();

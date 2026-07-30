@@ -39,9 +39,15 @@ public class MultiTypeElementDefinition : ElementDefinition
     /// <param name="commonAttributes">The attribute mappings common to all runtime types.</param>
     /// <param name="attributeDictionary">The type-specific attribute mappings.</param>
     /// <param name="children">The child element mappings.</param>
-    public MultiTypeElementDefinition(XName elementName, XName attributeForType, string typeNamespace,
-        ConstructorParameter[] constructorParameters, ElementAttribute[] commonAttributes,
-        Dictionary<Type, ElementAttribute[]> attributeDictionary, ChildElementDefinition[] children)
+    public MultiTypeElementDefinition(
+        XName elementName,
+        XName attributeForType,
+        string typeNamespace,
+        ConstructorParameter[] constructorParameters,
+        ElementAttribute[] commonAttributes,
+        Dictionary<Type, ElementAttribute[]> attributeDictionary,
+        ChildElementDefinition[] children
+    )
         : base(elementName, null, constructorParameters, commonAttributes, children, null)
     {
         AttributeForType = attributeForType;

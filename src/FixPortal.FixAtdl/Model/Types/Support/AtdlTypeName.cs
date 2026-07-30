@@ -99,4 +99,3 @@ public static class AtdlTypeName
     /// <summary>UTCTimestamp_t type.</summary>
     public const string UTCTimestamp_t = "UTCTimestamp_t";
 }
-
