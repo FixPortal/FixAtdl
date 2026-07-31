@@ -38,9 +38,11 @@ public class ThrowHelperTests
     [Fact]
     public void New_params_overload_preserves_literal_braces_when_no_arguments_are_supplied()
     {
-        var ex = ThrowHelper.New<InvalidOperationException>(null, "{NULL}", []);
+        string message = new(['{', 'N', 'U', 'L', 'L', '}']);
 
-        ex.Message.Should().Be("{NULL}");
+        var ex = ThrowHelper.New<InvalidOperationException>(null, message, []);
+
+        ex.Message.Should().Be(message);
     }
 
     [Fact]
