@@ -89,7 +89,7 @@ public class SupplementalCollectionTests
         };
 
         var act = () => items.Add(new ListItem_t { EnumId = "DUP", UiRep = "Second" });
-        act.Should().Throw<DuplicateKeyException>();
+        act.Should().Throw<DuplicateKeyException>().WithMessage("*'DUP'*ListItems*");
     }
 
     // -----------------------------------------------------------------------
@@ -256,6 +256,6 @@ public class SupplementalCollectionTests
         // ctrlDup has same ID as ctrl2
         var ctrlDup = new TextField_t("c_Two");
         var act = () => panel.Controls[0] = ctrlDup; // set ctrl1 to ctrlDup, triggering Replace
-        act.Should().Throw<DuplicateKeyException>();
+        act.Should().Throw<DuplicateKeyException>().WithMessage("*'c_Two'*Controls*");
     }
 }

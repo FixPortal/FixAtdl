@@ -140,12 +140,6 @@ public class FixMessageTests
     // FixFieldValueProvider --------------------------------------------------
 
     [Fact]
-    public void FixFieldValueProvider_Empty_is_not_null()
-    {
-        FixFieldValueProvider.Empty.Should().NotBeNull();
-    }
-
-    [Fact]
     public void FixFieldValueProvider_Empty_has_null_Parameters()
     {
         FixFieldValueProvider.Empty.Parameters.Should().BeNull();
@@ -262,6 +256,16 @@ public class FixMessageTests
         // The inherited Dictionary surface lets a caller inject a non-positive tag that the string ctor
         // would have rejected; ToFix must refuse to serialize it rather than emit a (uint)-corrupted tag.
         var message = new FixMessage { [(FixField)(-1)] = "x" };
+
+        var act = () => message.ToFix();
+
+        act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Fact]
+    public void ToFix_throws_for_soh_in_value_injected_via_indexer()
+    {
+        var message = new FixMessage { [(FixField)35] = $"A{FixMessage.SOH}B" };
 
         var act = () => message.ToFix();
 

@@ -464,7 +464,7 @@ public class ParameterTypeFeatureTests
     {
         var p = new Parameter_t<UTCTimestamp_t>("X") { WireValue = "20260101-09:30:00" };
         var cc = p.Value;
-        cc.ToDateTime().Should().NotBeNull();
+        cc.ToDateTime().Should().Be(new DateTime(2026, 1, 1, 9, 30, 0, DateTimeKind.Utc));
     }
 
     [Fact]

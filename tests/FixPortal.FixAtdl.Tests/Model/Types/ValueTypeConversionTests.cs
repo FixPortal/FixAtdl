@@ -179,11 +179,12 @@ public class ValueTypeConversionTests
     // ──────────────────────────────────────────────────────────────────────────
 
     [Theory]
-    [InlineData("500")]
-    [InlineData("1000.5")]
-    public void Qty_t_round_trips_quantity(string wire)
+    [InlineData("500", 500)]
+    [InlineData("1000.5", 1000.5)]
+    public void Qty_t_round_trips_quantity(string wire, double expected)
     {
         var p = new Parameter_t<Qty_t>("Qty") { WireValue = wire };
+        p.GetCurrentValue().Should().Be((decimal)expected);
         p.WireValue.Should().Be(wire);
     }
 
@@ -192,11 +193,12 @@ public class ValueTypeConversionTests
     // ──────────────────────────────────────────────────────────────────────────
 
     [Theory]
-    [InlineData("100.25")]
-    [InlineData("0.001")]
-    public void Price_t_round_trips_price(string wire)
+    [InlineData("100.25", 100.25)]
+    [InlineData("0.001", 0.001)]
+    public void Price_t_round_trips_price(string wire, double expected)
     {
         var p = new Parameter_t<Price_t>("Price") { WireValue = wire };
+        p.GetCurrentValue().Should().Be((decimal)expected);
         p.WireValue.Should().Be(wire);
     }
 
@@ -205,11 +207,12 @@ public class ValueTypeConversionTests
     // ──────────────────────────────────────────────────────────────────────────
 
     [Theory]
-    [InlineData("0.5")]
-    [InlineData("-0.25")]
-    public void PriceOffset_t_round_trips_offset(string wire)
+    [InlineData("0.5", 0.5)]
+    [InlineData("-0.25", -0.25)]
+    public void PriceOffset_t_round_trips_offset(string wire, double expected)
     {
         var p = new Parameter_t<PriceOffset_t>("Offset") { WireValue = wire };
+        p.GetCurrentValue().Should().Be((decimal)expected);
         p.WireValue.Should().Be(wire);
     }
 
