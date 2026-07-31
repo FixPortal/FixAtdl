@@ -26,17 +26,6 @@ public class StrategiesParserRejectionTests
     }
 
     [Fact]
-    public async Task Parse_schema_invalid_xml_throws_or_records_validation_error()
-    {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/invalid-schema.xml",
-            TestContext.Current.CancellationToken
-        );
-        var act = () => Load(xml);
-        act.Should().Throw<FixAtdlException>();
-    }
-
-    [Fact]
     public void Parse_document_with_repeating_group_throws_fix_atdl_exception()
     {
         var xml = """
@@ -115,5 +104,18 @@ public class StrategiesParserRejectionTests
 
         var act = () => Load(sb.ToString());
         act.Should().Throw<FixAtdlException>().WithMessage("*exceeded maximum depth limit*");
+    }
+
+    [Fact]
+    public void Parse_document_without_strategies_root_throws_fix_atdl_exception()
+    {
+        const string xml =
+            """<Strategy xmlns="http://www.fixprotocol.org/FIXatdl-1-1/Core" name="Test" />""";
+
+        var act = () => Load(xml);
+
+        act.Should()
+            .Throw<FixAtdlException>()
+            .WithMessage("*'Strategies' is not the root element*");
     }
 }

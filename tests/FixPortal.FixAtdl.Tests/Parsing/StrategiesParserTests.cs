@@ -28,6 +28,26 @@ public class StrategiesParserTests
     }
 
     [Fact]
+    public void Load_path_parses_fixture()
+    {
+        string path = Path.Combine(AppContext.BaseDirectory, "Fixtures", "twap.xml");
+
+        var strategies = new StrategiesReader().Load(path);
+
+        strategies.Should().ContainSingle().Which.Name.Should().Be("TWAP");
+    }
+
+    [Fact]
+    public void Load_path_propagates_missing_file_error()
+    {
+        string path = Path.Combine(AppContext.BaseDirectory, "Fixtures", "does-not-exist.xml");
+
+        var act = () => new StrategiesReader().Load(path);
+
+        act.Should().Throw<FileNotFoundException>();
+    }
+
+    [Fact]
     public async Task Parse_twap_extracts_three_parameters_with_correct_fix_tags()
     {
         var xml = await FixtureFiles.ReadAllTextAsync(

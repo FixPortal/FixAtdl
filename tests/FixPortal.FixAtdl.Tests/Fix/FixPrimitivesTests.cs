@@ -122,16 +122,31 @@ public class FixPrimitivesTests
     // FixDateTime -------------------------------------------------------------
 
     [Theory]
-    [InlineData("20260101-09:30:00")]
-    [InlineData("20260101-09:30:00.123")]
-    [InlineData("09:30:00")]
-    [InlineData("09:30:00.456")]
-    [InlineData("20260101")]
-    public void FixDateTime_TryParse_returns_true_for_valid_FIX_formats(string input)
+    [InlineData("20260101-09:30:00", 2026, 1, 1, 9, 30, 0, 0)]
+    [InlineData("20260101-09:30:00.123", 2026, 1, 1, 9, 30, 0, 123)]
+    [InlineData("09:30:00", 0, 0, 0, 9, 30, 0, 0)]
+    [InlineData("09:30:00.456", 0, 0, 0, 9, 30, 0, 456)]
+    [InlineData("20260101", 2026, 1, 1, 0, 0, 0, 0)]
+    public void FixDateTime_TryParse_returns_expected_value_for_valid_FIX_formats(
+        string input,
+        int year,
+        int month,
+        int day,
+        int hour,
+        int minute,
+        int second,
+        int millisecond
+    )
     {
         var result = FixDateTime.TryParse(input, CultureInfo.InvariantCulture, out var dt);
+
         result.Should().BeTrue();
-        dt.Should().NotBe(DateTime.MinValue);
+        dt.Kind.Should().Be(DateTimeKind.Utc);
+        dt.TimeOfDay.Should().Be(new TimeSpan(0, hour, minute, second, millisecond));
+        if (year != 0)
+        {
+            dt.Date.Should().Be(new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Utc));
+        }
     }
 
     [Fact]

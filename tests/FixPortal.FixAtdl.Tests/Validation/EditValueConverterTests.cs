@@ -158,6 +158,28 @@ public class EditValueConverterTests
         result.Should().Be(new DateTime(2024, 1, 1, 9, 30, 0, DateTimeKind.Utc));
     }
 
+    [Fact]
+    public void Converts_full_datetime_to_time_only_prototype_date()
+    {
+        IComparable result = EditValueConverter.ConvertToComparableType(
+            new DateTime(1, 1, 1, 8, 0, 0, DateTimeKind.Utc),
+            "20260101-09:30:00"
+        );
+
+        result.Should().Be(new DateTime(1, 1, 1, 9, 30, 0, DateTimeKind.Utc));
+    }
+
+    [Fact]
+    public void Converts_time_only_value_to_datetime_prototype_date()
+    {
+        IComparable result = EditValueConverter.ConvertToComparableType(
+            new DateTime(2026, 1, 15, 8, 0, 0, DateTimeKind.Utc),
+            "09:30:00"
+        );
+
+        result.Should().Be(new DateTime(2026, 1, 15, 9, 30, 0, DateTimeKind.Utc));
+    }
+
     // ── Enum codes ───────────────────────────────────────────────────────────
 
     [Fact]

@@ -60,6 +60,64 @@ public class ParameterCollectionTests
     }
 
     [Fact]
+    public async Task Load_initial_values_stops_after_an_invalid_value_and_keeps_prior_updates()
+    {
+        var parameters = await LoadTwapParametersAsync();
+        parameters["StartTime"].WireValue = "20260101-08:00:00";
+        parameters["EndTime"].WireValue = "20260101-16:00:00";
+        parameters["Participation"].WireValue = "0.1";
+
+        FixTagValuesCollection initialValues = [];
+        initialValues.Add(168, "20260101-09:30:00");
+        initialValues.Add(126, "not-a-timestamp");
+        initialValues.Add(7700, "0.2");
+
+        var act = () =>
+            parameters.LoadInitialValues(initialValues, resetNonSuppliedParameters: false);
+
+        act.Should().Throw<InvalidFieldValueException>();
+        parameters["StartTime"].WireValue.Should().Be("20260101-09:30:00");
+        parameters["EndTime"].WireValue.Should().Be("20260101-16:00:00");
+        parameters["Participation"].WireValue.Should().Be("0.1");
+    }
+
+    [Fact]
+    public void Parameter_wire_value_rejects_null()
+    {
+        var parameter = new Parameter_t<String_t>("Param");
+
+        var act = () => parameter.WireValue = null;
+
+        act.Should().Throw<ArgumentNullException>().WithParameterName("value");
+    }
+
+    [Fact]
+    public async Task Try_update_parameter_values_updates_valid_controls_and_reports_invalid_ones()
+    {
+        var xml = await FixtureFiles.ReadAllTextAsync(
+            "Fixtures/twap.xml",
+            TestContext.Current.CancellationToken
+        );
+        var strategy = Load(xml).Strategies[0];
+        strategy
+            .Controls["c_StartTime"]
+            .SetValue(new DateTime(2026, 1, 1, 9, 30, 0, DateTimeKind.Utc));
+        strategy.Controls["c_Part"].SetValue("20");
+
+        bool result = strategy.Controls.TryUpdateParameterValues(
+            strategy.Parameters,
+            shortCircuit: false,
+            out var validationResults
+        );
+
+        result.Should().BeFalse();
+        validationResults.Should().ContainSingle().Which.IsMissing.Should().BeTrue();
+        strategy.Parameters["StartTime"].WireValue.Should().Be("20260101-09:30:00");
+        strategy.Parameters["EndTime"].IsSet.Should().BeFalse();
+        strategy.Parameters["Participation"].WireValue.Should().Be("0.2");
+    }
+
+    [Fact]
     public void Get_output_values_omits_unset_and_untagged_parameters()
     {
         ParameterCollection parameters = [];

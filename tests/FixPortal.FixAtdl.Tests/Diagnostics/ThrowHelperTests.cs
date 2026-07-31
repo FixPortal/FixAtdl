@@ -34,4 +34,24 @@ public class ThrowHelperTests
 
         ex.ParamName.Should().Be("Value");
     }
+
+    [Fact]
+    public void New_params_overload_preserves_literal_braces_when_no_arguments_are_supplied()
+    {
+        var ex = ThrowHelper.New<InvalidOperationException>(null, "{NULL}", []);
+
+        ex.Message.Should().Be("{NULL}");
+    }
+
+    [Fact]
+    public void Rethrow_formats_the_outer_message_once()
+    {
+        var inner = new InvalidOperationException("inner");
+
+        var ex = ThrowHelper.Rethrow(null, inner, "Could not parse {0}", "{NULL}", "unused");
+
+        ex.Should().BeOfType<InvalidOperationException>();
+        ex.Message.Should().Be("Could not parse {NULL}");
+        ex.InnerException.Should().BeSameAs(inner);
+    }
 }

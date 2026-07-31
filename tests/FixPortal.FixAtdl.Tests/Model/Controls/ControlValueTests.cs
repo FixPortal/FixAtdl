@@ -1,5 +1,6 @@
 using FixPortal.FixAtdl.Diagnostics.Exceptions;
 using FixPortal.FixAtdl.Fix;
+using FixPortal.FixAtdl.Model.Collections;
 using FixPortal.FixAtdl.Model.Controls;
 using FixPortal.FixAtdl.Model.Controls.Support;
 using FixPortal.FixAtdl.Model.Elements;
@@ -702,6 +703,15 @@ public class EnumStateTests
         target.UpdateFrom(source);
         target["A"].Should().BeTrue();
         target["B"].Should().BeFalse();
+    }
+
+    [Fact]
+    public void EnumState_to_wire_value_omits_selected_null_sentinel()
+    {
+        var state = new EnumState(["Null"]) { ["Null"] = true };
+        EnumPairCollection pairs = [new EnumPair_t { EnumId = "Null", WireValue = "{NULL}" }];
+
+        state.ToWireValue(pairs).Should().BeNull();
     }
 
     [Fact]
