@@ -30,7 +30,7 @@ public class StrategiesParserTests
     [Fact]
     public void Load_path_parses_fixture()
     {
-        string path = Path.Combine(AppContext.BaseDirectory, "Fixtures", "twap.xml");
+        string path = Path.Join(AppContext.BaseDirectory, "Fixtures", "twap.xml");
 
         var strategies = new StrategiesReader().Load(path);
 
@@ -40,7 +40,7 @@ public class StrategiesParserTests
     [Fact]
     public void Load_path_propagates_missing_file_error()
     {
-        string path = Path.Combine(AppContext.BaseDirectory, "Fixtures", "does-not-exist.xml");
+        string path = Path.Join(AppContext.BaseDirectory, "Fixtures", "does-not-exist.xml");
 
         var act = () => new StrategiesReader().Load(path);
 
