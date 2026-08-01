@@ -62,6 +62,10 @@ dotnet csharpier format .
 ```
 
 ```powershell
+dotnet csharpier check .
+```
+
+```powershell
 dotnet restore FixPortal.FixAtdl.slnx
 ```
 
