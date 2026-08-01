@@ -106,10 +106,7 @@ public class Data_t : AtdlReferenceType<char[]>, IControlConvertible
     /// <param name="hostParameter">Parameter that this value belongs to.</param>
     /// <param name="value">Value to convert, may be null.</param>
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
-    protected override char[]? ConvertToNativeType(
-        IParameter hostParameter,
-        IParameterConvertible value
-    )
+    protected override char[]? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
     {
         string? result = value.ToString(hostParameter);
 

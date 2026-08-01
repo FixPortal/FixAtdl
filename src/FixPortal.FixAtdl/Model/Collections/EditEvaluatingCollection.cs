@@ -62,10 +62,7 @@ public class EditEvaluatingCollection<T> : Collection<IEdit<T>>, IResolvable<Str
     {
         if (LogicOperator == null)
         {
-            throw ThrowHelper.New<InvalidOperationException>(
-                this,
-                ErrorMessages.MissingLogicalOperatorOnSetOfEdits
-            );
+            throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.MissingLogicalOperatorOnSetOfEdits);
         }
 
         // An empty collection never enters the loop below, so `newState` keeps its initial value.
@@ -132,16 +129,11 @@ public class EditEvaluatingCollection<T> : Collection<IEdit<T>>, IResolvable<Str
     // No unbind: Resolve only forwards to each child's Resolve (idempotent), establishing no binding to
     // tear down. The model is rebuilt fresh per parse, and the IBindable<T> mechanism this question
     // referred to was unused and has been removed.
-    void IResolvable<Strategy_t, T>.Resolve(
-        Strategy_t strategy,
-        ISimpleDictionary<T> sourceCollection
-    )
+    void IResolvable<Strategy_t, T>.Resolve(Strategy_t strategy, ISimpleDictionary<T> sourceCollection)
     {
         // Add accepts any IEdit<T>; OfType resolves only the resolvable ones, avoiding a cast with !
         // (and the NRE risk) on a non-resolvable edit.
-        foreach (
-            IResolvable<Strategy_t, T> resolvable in Items.OfType<IResolvable<Strategy_t, T>>()
-        )
+        foreach (IResolvable<Strategy_t, T> resolvable in Items.OfType<IResolvable<Strategy_t, T>>())
         {
             resolvable.Resolve(strategy, sourceCollection);
         }

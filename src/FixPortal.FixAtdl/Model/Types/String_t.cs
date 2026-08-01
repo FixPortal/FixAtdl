@@ -117,10 +117,7 @@ public class String_t : AtdlReferenceType<string>, IControlConvertible
     /// <param name="hostParameter"><see cref="IParameter"/> that hosts this value.</param>
     /// <param name="value">Value to convert, may be null.</param>
     /// <returns>If input value is not null, returns value converted to string; null otherwise.</returns>
-    protected override string? ConvertToNativeType(
-        IParameter hostParameter,
-        IParameterConvertible value
-    )
+    protected override string? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
     {
         return value.ToString(hostParameter);
     }

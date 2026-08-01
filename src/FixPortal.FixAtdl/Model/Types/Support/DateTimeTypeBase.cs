@@ -87,8 +87,7 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
         if (isTimeOnly)
         {
             DateTime parsed = FixDateTime.Parse(text, CultureInfo.InvariantCulture);
-            DateTime normalised =
-                parsed.Kind == DateTimeKind.Local ? parsed.ToUniversalTime() : parsed;
+            DateTime normalised = parsed.Kind == DateTimeKind.Local ? parsed.ToUniversalTime() : parsed;
             TimeOnly timeOfDay = TimeOnly.FromDateTime(normalised);
             if (isMax)
             {
@@ -109,8 +108,7 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
             // UTC so a full-datetime bound's wall-clock matches the canonically-UTC value it is compared
             // against, keeping the comparison host-timezone-independent.
             DateTime parsed = FixDateTime.Parse(text, CultureInfo.InvariantCulture);
-            DateTime normalised =
-                parsed.Kind == DateTimeKind.Local ? parsed.ToUniversalTime() : parsed;
+            DateTime normalised = parsed.Kind == DateTimeKind.Local ? parsed.ToUniversalTime() : parsed;
             if (isMax)
             {
                 MaxValue = normalised;
@@ -266,24 +264,12 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
 
         string[] formats = GetDateTimeFormatStrings();
 
-        if (
-            DateTime.TryParseExact(
-                value,
-                formats,
-                CultureInfo.InvariantCulture,
-                WireParseStyles,
-                out DateTime result
-            )
-        )
+        if (DateTime.TryParseExact(value, formats, CultureInfo.InvariantCulture, WireParseStyles, out DateTime result))
         {
             return result;
         }
 
-        throw ThrowHelper.New<InvalidCastException>(
-            this,
-            ErrorMessages.InvalidDateOrTimeValue,
-            value
-        );
+        throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.InvalidDateOrTimeValue, value);
     }
 
     /// <summary>
@@ -314,10 +300,7 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override DateTime? ConvertToNativeType(
-        IParameter hostParameter,
-        IParameterConvertible value
-    )
+    protected override DateTime? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
     {
         return value.ToDateTime(hostParameter, CultureInfo.InvariantCulture);
     }

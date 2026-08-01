@@ -119,10 +119,7 @@ public class SupplementalCollectionTests
         // NOTE: EditRef_t.Sources throws InternalErrorException before Resolve is called,
         // so we can only test the no-evaluating-collection path when constructing unresolved items.
         // Verify the EditRefCollection ctor accepting an evaluating collection does not throw on creation.
-        var evaluating = new EditEvaluatingCollection<IParameter>
-        {
-            LogicOperator = LogicOperator_t.Or,
-        };
+        var evaluating = new EditEvaluatingCollection<IParameter> { LogicOperator = LogicOperator_t.Or };
 
         // Verify construction with an evaluating collection argument succeeds (non-null path covered).
         EditRefCollection<IParameter> refs = new(evaluating);
@@ -152,8 +149,7 @@ public class SupplementalCollectionTests
 
         // The pass/fail outcome is fixture-dependent; the value of this test is that the
         // EvaluateAll code path runs to completion without throwing on resolved edits.
-        var act = () =>
-            twap.StrategyEdits.EvaluateAll(FixFieldValueProvider.Empty, shortCircuit: false);
+        var act = () => twap.StrategyEdits.EvaluateAll(FixFieldValueProvider.Empty, shortCircuit: false);
         act.Should().NotThrow();
     }
 
@@ -193,11 +189,7 @@ public class SupplementalCollectionTests
         ((IResolvable<Strategy_t, IParameter>)edit1).Resolve(twap, twap.Parameters);
 
         var strategyEdit1 = new StrategyEdit_t { Edit = edit1, ErrorMessage = "Failed" };
-        var strategyEdit2 = new StrategyEdit_t
-        {
-            Edit = new Edit_t<IParameter>(),
-            ErrorMessage = "Throws",
-        };
+        var strategyEdit2 = new StrategyEdit_t { Edit = new Edit_t<IParameter>(), ErrorMessage = "Throws" };
 
         var collection = new StrategyEditCollection { strategyEdit1, strategyEdit2 };
 

@@ -52,11 +52,7 @@ public class EnumPairCollection : KeyedCollection<string, EnumPair_t>
         // null), so the old null-check was dead. Check membership first and surface the domain error.
         if (!Contains(enumId))
         {
-            throw ThrowHelper.New<InvalidOperationException>(
-                this,
-                ErrorMessages.EnumerationNotFound,
-                enumId
-            );
+            throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.EnumerationNotFound, enumId);
         }
 
         string wireValue = this[enumId].WireValue;

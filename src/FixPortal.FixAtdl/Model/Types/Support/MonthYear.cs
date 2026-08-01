@@ -36,13 +36,7 @@ public struct MonthYear : IComparable
             _ => string.Empty,
         };
 
-        return string.Format(
-            CultureInfo.InvariantCulture,
-            "{0:0000}{1:00}{2}",
-            Year,
-            Month,
-            suffix
-        );
+        return string.Format(CultureInfo.InvariantCulture, "{0:0000}{1:00}{2}", Year, Month, suffix);
     }
 
     /// <summary>
@@ -52,10 +46,7 @@ public struct MonthYear : IComparable
     /// <param name="rhs">Right hand side value.</param>
     /// <returns>True if the day, month and year values of the two operands are the same; false otherwise.</returns>
     public static bool operator ==(MonthYear lhs, MonthYear rhs) =>
-        lhs.Year == rhs.Year
-        && lhs.Month == rhs.Month
-        && lhs.Day == rhs.Day
-        && lhs.Week == rhs.Week;
+        lhs.Year == rhs.Year && lhs.Month == rhs.Month && lhs.Day == rhs.Day && lhs.Week == rhs.Week;
 
     /// <summary>
     /// Compares two MonthYear values for inequality.
@@ -172,21 +163,13 @@ public struct MonthYear : IComparable
                 && result.Day.Value > DateTime.DaysInMonth(result.Year, result.Month)
             )
             {
-                throw ThrowHelper.New<ArgumentException>(
-                    ExceptionContext,
-                    ErrorMessages.InvalidMonthYearValue,
-                    value
-                );
+                throw ThrowHelper.New<ArgumentException>(ExceptionContext, ErrorMessages.InvalidMonthYearValue, value);
             }
 
             return result;
         }
 
-        throw ThrowHelper.New<ArgumentException>(
-            ExceptionContext,
-            ErrorMessages.InvalidMonthYearValue,
-            value
-        );
+        throw ThrowHelper.New<ArgumentException>(ExceptionContext, ErrorMessages.InvalidMonthYearValue, value);
     }
 
     private static ushort ValidateRange(string value, int lowerBound, int upperBound)
@@ -200,20 +183,11 @@ public struct MonthYear : IComparable
                 return numValue;
             }
 
-            throw ThrowHelper.New<ArgumentException>(
-                ExceptionContext,
-                ErrorMessages.InvalidMonthYearValue,
-                value
-            );
+            throw ThrowHelper.New<ArgumentException>(ExceptionContext, ErrorMessages.InvalidMonthYearValue, value);
         }
         catch (Exception ex) when (ex is FormatException or OverflowException)
         {
-            throw ThrowHelper.New<ArgumentException>(
-                ExceptionContext,
-                ex,
-                ErrorMessages.InvalidMonthYearValue,
-                value
-            );
+            throw ThrowHelper.New<ArgumentException>(ExceptionContext, ex, ErrorMessages.InvalidMonthYearValue, value);
         }
     }
 

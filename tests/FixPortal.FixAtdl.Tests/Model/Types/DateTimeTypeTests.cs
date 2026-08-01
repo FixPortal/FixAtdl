@@ -89,11 +89,7 @@ public class DateTimeTypeTests
 
         var value = p.GetCurrentValue();
 
-        value
-            .Should()
-            .BeOfType<DateTime>()
-            .Which.Date.Should()
-            .Be(new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+        value.Should().BeOfType<DateTime>().Which.Date.Should().Be(new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc));
     }
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -146,9 +142,7 @@ public class DateTimeTypeTests
         var p = new Parameter_t<TZTimeOnly_t>("T") { WireValue = "15:39+08" };
 
         p.WireValue.Should().Be("15:39+08");
-        ((DateTime?)p.GetCurrentValue())
-            .Value.Date.Should()
-            .Be(new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+        ((DateTime?)p.GetCurrentValue()).Value.Date.Should().Be(new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc));
     }
 
     [Fact]
@@ -209,10 +203,7 @@ public class DateTimeTypeTests
     [Fact]
     public void TZTimestamp_t_accepts_fractional_seconds_with_offsets()
     {
-        var p = new Parameter_t<TZTimestamp_t>("Ts")
-        {
-            WireValue = "20060901-13:09:00.123456+05:30",
-        };
+        var p = new Parameter_t<TZTimestamp_t>("Ts") { WireValue = "20060901-13:09:00.123456+05:30" };
 
         p.WireValue.Should().Be("20060901-13:09:00.123456+05:30");
     }
@@ -280,9 +271,7 @@ public class DateTimeTypeTests
 
         // Now 13:00:00 should fail because 13:00:00 > 12:00:00 (time-only bound)
         var actInvalid = () => param.WireValue = "20260602-13:00:00";
-        actInvalid
-            .Should()
-            .Throw<FixPortal.FixAtdl.Diagnostics.Exceptions.InvalidFieldValueException>();
+        actInvalid.Should().Throw<FixPortal.FixAtdl.Diagnostics.Exceptions.InvalidFieldValueException>();
     }
 
     [Fact]

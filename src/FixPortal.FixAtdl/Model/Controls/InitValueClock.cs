@@ -94,11 +94,7 @@ public sealed class InitValueClock
             return;
         }
 
-        throw ThrowHelper.New<InvalidFieldValueException>(
-            ExceptionContext,
-            ErrorMessages.InvalidDateOrTimeValue,
-            raw
-        );
+        throw ThrowHelper.New<InvalidFieldValueException>(ExceptionContext, ErrorMessages.InvalidDateOrTimeValue, raw);
     }
 
     /// <summary>The raw initValue text, retained for diagnostics.</summary>

@@ -190,10 +190,7 @@ public class Strategy_t : IParentable<Strategies_t>
     /// <param name="controlInitValueProvider"><see cref="FixFieldValueProvider"/> providing the FIX values to initialize from.</param>
     /// <param name="resetExistingValues">Set to true if each parameter value is to be reset if its value is specified in
     /// inputValues; set to false to leave the parameter value unchanged.</param>
-    public void LoadParameterValues(
-        FixFieldValueProvider controlInitValueProvider,
-        bool resetExistingValues
-    )
+    public void LoadParameterValues(FixFieldValueProvider controlInitValueProvider, bool resetExistingValues)
     {
         Parameters.LoadInitialValues(controlInitValueProvider.FixValues, resetExistingValues);
     }
@@ -213,10 +210,7 @@ public class Strategy_t : IParentable<Strategies_t>
     /// be required in the Edit evaluation.</param>
     /// <param name="shortCircuit">If true, this method returns as soon as any error is found; if false, all StrategyEdits
     /// are evaluated before the method returns.</param>
-    public bool EvaluateAllStrategyEdits(
-        IInitialFixValueProvider inputValueProvider,
-        bool shortCircuit
-    )
+    public bool EvaluateAllStrategyEdits(IInitialFixValueProvider inputValueProvider, bool shortCircuit)
     {
         FixFieldValueProvider additionalValues =
             inputValueProvider == null
@@ -232,10 +226,7 @@ public class Strategy_t : IParentable<Strategies_t>
     /// <param name="shortCircuit">If true, this method returns as soon as any error is found; if false, an attempt is made to update all parameter
     /// values before the method returns.</param>
     /// <param name="validationResults">If one or more validations fail, this parameter contains a list of ValidationResults; null otherwise.</param>
-    public bool TryUpdateParameterValuesFromControls(
-        bool shortCircuit,
-        out IList<ValidationResult>? validationResults
-    )
+    public bool TryUpdateParameterValuesFromControls(bool shortCircuit, out IList<ValidationResult>? validationResults)
     {
         return Controls.TryUpdateParameterValues(Parameters, shortCircuit, out validationResults);
     }

@@ -21,10 +21,7 @@ namespace FixPortal.FixAtdl.Model.Elements;
 /// <summary>
 /// Base class for all concrete <see cref="Control_t"/> types.
 /// </summary>
-public abstract class Control_t
-    : IParentable<StrategyPanel_t>,
-        IValueProvider,
-        IParameterConvertible
+public abstract class Control_t : IParentable<StrategyPanel_t>, IValueProvider, IParameterConvertible
 {
     /// <summary>
     /// Initializes a new <see cref="Control_t"/> instance with the specified identifier as id.
@@ -241,16 +238,9 @@ public abstract class Control_t
         result = 0;
         bool hasValue = !string.IsNullOrEmpty(value);
 
-        if (
-            hasValue
-            && !int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out result)
-        )
+        if (hasValue && !int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out result))
         {
-            throw ThrowHelper.New<InvalidCastException>(
-                this,
-                ErrorMessages.InvalidNumericValue,
-                value
-            );
+            throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.InvalidNumericValue, value);
         }
 
         return hasValue;
@@ -268,16 +258,9 @@ public abstract class Control_t
         result = 0;
         bool hasValue = !string.IsNullOrEmpty(value);
 
-        if (
-            hasValue
-            && !uint.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out result)
-        )
+        if (hasValue && !uint.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out result))
         {
-            throw ThrowHelper.New<InvalidCastException>(
-                this,
-                ErrorMessages.InvalidNumericValue,
-                value
-            );
+            throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.InvalidNumericValue, value);
         }
 
         return hasValue;
@@ -295,21 +278,9 @@ public abstract class Control_t
         result = 0;
         bool hasValue = !string.IsNullOrEmpty(value);
 
-        if (
-            hasValue
-            && !decimal.TryParse(
-                value,
-                NumberStyles.Number,
-                CultureInfo.InvariantCulture,
-                out result
-            )
-        )
+        if (hasValue && !decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out result))
         {
-            throw ThrowHelper.New<InvalidCastException>(
-                this,
-                ErrorMessages.InvalidNumericValue,
-                value
-            );
+            throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.InvalidNumericValue, value);
         }
 
         return hasValue;
@@ -328,11 +299,7 @@ public abstract class Control_t
 
         if (hasValue && value!.Length != 1)
         {
-            throw ThrowHelper.New<InvalidCastException>(
-                this,
-                ErrorMessages.InvalidCharValue,
-                value
-            );
+            throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.InvalidCharValue, value);
         }
 
         result = hasValue ? value![0] : char.MinValue;

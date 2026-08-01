@@ -120,10 +120,7 @@ public class Int_t : AtdlValueType<int>, IControlConvertible
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override int? ConvertToNativeType(
-        IParameter hostParameter,
-        IParameterConvertible value
-    )
+    protected override int? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
     {
         return value.ToInt32(hostParameter, CultureInfo.InvariantCulture);
     }

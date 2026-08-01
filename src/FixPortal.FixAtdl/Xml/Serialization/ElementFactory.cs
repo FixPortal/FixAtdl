@@ -50,10 +50,7 @@ public class ElementFactory : INotifyClassDeserialized
 
         if (_log.IsEnabled(LogLevel.Debug))
         {
-            _log.LogDebug(
-                "ElementFactory created; root ElementName='{ElementName}'.",
-                elementDefinition.ElementName
-            );
+            _log.LogDebug("ElementFactory created; root ElementName='{ElementName}'.", elementDefinition.ElementName);
         }
 
         _elementDefinition = elementDefinition;
@@ -86,25 +83,13 @@ public class ElementFactory : INotifyClassDeserialized
         // matching CreateObject overload instead of always binding to the plain ElementDefinition one.
         return _elementDefinition switch
         {
-            GenericTypeElementDefinition genericDefinition => CreateObject(
-                genericDefinition,
-                element,
-                null
-            ),
-            MultiTypeElementDefinition multiDefinition => CreateObject(
-                multiDefinition,
-                element,
-                null
-            ),
+            GenericTypeElementDefinition genericDefinition => CreateObject(genericDefinition, element, null),
+            MultiTypeElementDefinition multiDefinition => CreateObject(multiDefinition, element, null),
             _ => CreateObject(_elementDefinition, element, null),
         };
     }
 
-    private object CreateObject(
-        ElementDefinition definition,
-        XElement sourceElement,
-        object? parentObject
-    )
+    private object CreateObject(ElementDefinition definition, XElement sourceElement, object? parentObject)
     {
         using var guard = new DepthGuard(this, sourceElement);
 
@@ -139,13 +124,7 @@ public class ElementFactory : INotifyClassDeserialized
 
         try
         {
-            ProcessAttributes(
-                definition.TargetType!,
-                definition.Attributes!,
-                attributes,
-                newObject,
-                sourceElement
-            );
+            ProcessAttributes(definition.TargetType!, definition.Attributes!, attributes, newObject, sourceElement);
         }
         catch (FixAtdlException ex)
         {
@@ -205,11 +184,8 @@ public class ElementFactory : INotifyClassDeserialized
         );
 
         string? innerTypeName =
-            ReadAttribute(
-                sourceElement.Attributes(),
-                genericTypeDefinition.AttributeForInnerType,
-                typeof(string)
-            ) as string;
+            ReadAttribute(sourceElement.Attributes(), genericTypeDefinition.AttributeForInnerType, typeof(string))
+            as string;
 
         if (string.IsNullOrEmpty(innerTypeName))
         {
@@ -305,13 +281,7 @@ public class ElementFactory : INotifyClassDeserialized
                 newObject,
                 sourceElement
             );
-            ProcessAttributes(
-                newObject.GetType(),
-                innerTypeAttributes,
-                xAttributes,
-                newObject,
-                sourceElement
-            );
+            ProcessAttributes(newObject.GetType(), innerTypeAttributes, xAttributes, newObject, sourceElement);
         }
         catch (FixAtdlException ex)
         {
@@ -359,11 +329,7 @@ public class ElementFactory : INotifyClassDeserialized
         );
 
         string? typeName =
-            ReadAttribute(
-                sourceElement.Attributes(),
-                multiTypeDefinition.AttributeForType,
-                typeof(string)
-            ) as string;
+            ReadAttribute(sourceElement.Attributes(), multiTypeDefinition.AttributeForType, typeof(string)) as string;
 
         if (string.IsNullOrEmpty(typeName))
         {
@@ -400,12 +366,7 @@ public class ElementFactory : INotifyClassDeserialized
         Type? targetType = string.IsNullOrEmpty(multiTypeDefinition.TypeNamespace)
             ? Type.GetType(typeName)
             : Type.GetType(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "{0}.{1}",
-                    multiTypeDefinition.TypeNamespace,
-                    typeName
-                )
+                string.Format(CultureInfo.InvariantCulture, "{0}.{1}", multiTypeDefinition.TypeNamespace, typeName)
             );
 
         if (targetType == null)
@@ -423,12 +384,7 @@ public class ElementFactory : INotifyClassDeserialized
         // SECURITY: gate on the allow-list (TypeToAttributesMap) BEFORE constructing the type, so an
         // un-mapped (but namespace-pinned, ctor-matching) type from untrusted ATDL cannot trigger its
         // constructor / type-initializer side effects before being rejected.
-        if (
-            !multiTypeDefinition.TypeToAttributesMap.TryGetValue(
-                targetType,
-                out ElementAttribute[]? typeAttributes
-            )
-        )
+        if (!multiTypeDefinition.TypeToAttributesMap.TryGetValue(targetType, out ElementAttribute[]? typeAttributes))
         {
             throw ThrowHelper.New<InvalidFieldValueException>(
                 this,
@@ -440,11 +396,7 @@ public class ElementFactory : INotifyClassDeserialized
             );
         }
 
-        object newObject = CreateRawObject(
-            targetType,
-            constructorParameterTypes,
-            constructorParameterValues
-        );
+        object newObject = CreateRawObject(targetType, constructorParameterTypes, constructorParameterValues);
 
         IEnumerable<XAttribute> attributes = sourceElement.Attributes();
 
@@ -458,13 +410,7 @@ public class ElementFactory : INotifyClassDeserialized
                 newObject,
                 sourceElement
             );
-            ProcessAttributes(
-                newObject.GetType(),
-                typeAttributes,
-                xAttributes,
-                newObject,
-                sourceElement
-            );
+            ProcessAttributes(newObject.GetType(), typeAttributes, xAttributes, newObject, sourceElement);
         }
         catch (FixAtdlException ex)
         {
@@ -487,12 +433,7 @@ public class ElementFactory : INotifyClassDeserialized
         return newObject;
     }
 
-    private object CreateRawObject(
-        Type outerType,
-        Type[] innerTypes,
-        Type[] argTypes,
-        params object[] args
-    )
+    private object CreateRawObject(Type outerType, Type[] innerTypes, Type[] argTypes, params object[] args)
     {
         if (_log.IsEnabled(LogLevel.Debug))
         {
@@ -622,9 +563,7 @@ public class ElementFactory : INotifyClassDeserialized
         int parameterIndex
     )
     {
-        ConstructorParameter constructorParameter = elementDefinition.ConstructorParameters![
-            parameterIndex
-        ];
+        ConstructorParameter constructorParameter = elementDefinition.ConstructorParameters![parameterIndex];
         object? value = ReadAttribute(
             sourceElement.Attributes(),
             constructorParameter.Source,
@@ -655,10 +594,7 @@ public class ElementFactory : INotifyClassDeserialized
     {
         if (_log.IsEnabled(LogLevel.Debug))
         {
-            _log.LogDebug(
-                "ProcessAttributes called; Target type={TargetType}.",
-                targetType.FullName
-            );
+            _log.LogDebug("ProcessAttributes called; Target type={TargetType}.", targetType.FullName);
         }
 
         var xAttributes = attributes as XAttribute[] ?? [.. attributes];
@@ -667,12 +603,7 @@ public class ElementFactory : INotifyClassDeserialized
         {
             object? value =
                 attrDefn.Type.IsEnum && attrDefn.EnumValues != null
-                    ? ReadAttribute(
-                        xAttributes,
-                        attrDefn.XmlName,
-                        attrDefn.Type,
-                        attrDefn.EnumValues
-                    )
+                    ? ReadAttribute(xAttributes, attrDefn.XmlName, attrDefn.Type, attrDefn.EnumValues)
                     : ReadAttribute(xAttributes, attrDefn.XmlName, attrDefn.Type);
 
             if (attrDefn.Required == Required.Mandatory && value == null)
@@ -703,12 +634,7 @@ public class ElementFactory : INotifyClassDeserialized
         }
     }
 
-    private void SetIndirectPropertyValue(
-        Type targetType,
-        ElementAttribute attrDefn,
-        object target,
-        object value
-    )
+    private void SetIndirectPropertyValue(Type targetType, ElementAttribute attrDefn, object target, object value)
     {
         string[] names = attrDefn.Property.Split('.');
 
@@ -760,12 +686,7 @@ public class ElementFactory : INotifyClassDeserialized
         SetPropertyValue(property, innerObject, value);
     }
 
-    private void SetDirectPropertyValue(
-        Type targetType,
-        ElementAttribute attrDefn,
-        object target,
-        object value
-    )
+    private void SetDirectPropertyValue(Type targetType, ElementAttribute attrDefn, object target, object value)
     {
         PropertyInfo property = targetType.GetProperty(attrDefn.Property)!;
 
@@ -782,18 +703,11 @@ public class ElementFactory : INotifyClassDeserialized
         SetPropertyValue(property, target, value);
     }
 
-    private void ProcessChildren(
-        ElementDefinition definition,
-        XElement sourceElement,
-        object target
-    )
+    private void ProcessChildren(ElementDefinition definition, XElement sourceElement, object target)
     {
         if (_log.IsEnabled(LogLevel.Debug))
         {
-            _log.LogDebug(
-                "ProcessChildren called; ElementName='{ElementName}'",
-                definition.ElementName
-            );
+            _log.LogDebug("ProcessChildren called; ElementName='{ElementName}'", definition.ElementName);
         }
 
         // We have to reflect the target type as we can't rely on the Definition to contain it (e.g. MultiTypeElementDefinition).
@@ -801,13 +715,9 @@ public class ElementFactory : INotifyClassDeserialized
 
         foreach (ChildElementDefinition childDefinition in definition.ChildElements!)
         {
-            bool isRecursiveDefinition =
-                childDefinition.ElementDefinition is RecursiveTypeElementDefinition;
-            bool hasContainerElement =
-                !isRecursiveDefinition && childDefinition.ContainerElementName != null;
-            ElementDefinition targetDefinition = isRecursiveDefinition
-                ? definition
-                : childDefinition.ElementDefinition;
+            bool isRecursiveDefinition = childDefinition.ElementDefinition is RecursiveTypeElementDefinition;
+            bool hasContainerElement = !isRecursiveDefinition && childDefinition.ContainerElementName != null;
+            ElementDefinition targetDefinition = isRecursiveDefinition ? definition : childDefinition.ElementDefinition;
 
             foreach (
                 XElement childElement in GetMatchingChildElements(
@@ -818,14 +728,7 @@ public class ElementFactory : INotifyClassDeserialized
                 )
             )
             {
-                ProcessMatchingChild(
-                    definition,
-                    childDefinition,
-                    targetDefinition,
-                    targetType,
-                    target,
-                    childElement
-                );
+                ProcessMatchingChild(definition, childDefinition, targetDefinition, targetType, target, childElement);
             }
         }
     }
@@ -839,24 +742,17 @@ public class ElementFactory : INotifyClassDeserialized
     {
         if (hasContainerElement)
         {
-            XElement? containerElement = (
-                from e in sourceElement.Elements(childDefinition.ContainerElementName)
-                select e
-            ).FirstOrDefault();
+            XElement? containerElement = sourceElement.Elements(childDefinition.ContainerElementName).FirstOrDefault();
 
             if (containerElement == null)
             {
                 return [];
             }
 
-            return from e in containerElement.Elements(
-                    childDefinition.ElementDefinition.ElementName
-                )
-                select e;
+            return containerElement.Elements(childDefinition.ElementDefinition.ElementName);
         }
 
-        return from e in sourceElement.Elements(targetDefinition.ElementName)
-            select e;
+        return sourceElement.Elements(targetDefinition.ElementName);
     }
 
     private void ProcessMatchingChild(
@@ -870,16 +766,8 @@ public class ElementFactory : INotifyClassDeserialized
     {
         object childObject = targetDefinition switch
         {
-            GenericTypeElementDefinition genericDefinition => CreateObject(
-                genericDefinition,
-                childElement,
-                target
-            ),
-            MultiTypeElementDefinition multiDefinition => CreateObject(
-                multiDefinition,
-                childElement,
-                target
-            ),
+            GenericTypeElementDefinition genericDefinition => CreateObject(genericDefinition, childElement, target),
+            MultiTypeElementDefinition multiDefinition => CreateObject(multiDefinition, childElement, target),
             _ => CreateObject(targetDefinition, childElement, target),
         };
 
@@ -957,10 +845,7 @@ public class ElementFactory : INotifyClassDeserialized
                 return;
             }
 
-            containerMethod = Enum.GetName(
-                typeof(StandardContainerMethod),
-                childDefinition.ContainerMethod
-            )!;
+            containerMethod = Enum.GetName(typeof(StandardContainerMethod), childDefinition.ContainerMethod)!;
         }
         else if (childDefinition.ContainerMethod is string methodName)
         {
@@ -1039,9 +924,7 @@ public class ElementFactory : INotifyClassDeserialized
                 object result = Enum.Parse(type, attribute.Value);
                 if (!Enum.IsDefined(type, result))
                 {
-                    throw new ArgumentException(
-                        "Parsed enum value is not defined in the enum type."
-                    );
+                    throw new ArgumentException("Parsed enum value is not defined in the enum type.");
                 }
                 return result;
             }

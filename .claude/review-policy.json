@@ -27,7 +27,9 @@
     ".coderabbit.yaml",
     ".gitignore",
     ".github/workflows/**",
-    ".config/dotnet-tools.json"
+    ".config/dotnet-tools.json",
+    "nuget.config",
+    "Directory.Build.props"
   ],
 
   "low": [

@@ -33,8 +33,9 @@ public class Region_t
         get
         {
             // Lazy initialize as we can't use 'this' in constructor.
-            field ??=
-                new CountryCollection(this);
+            field ??= new CountryCollection(
+                this
+            );
 
             return field;
         }

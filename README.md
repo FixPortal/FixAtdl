@@ -58,7 +58,7 @@ dotnet tool restore
 ```
 
 ```powershell
-dotnet csharpier check .
+dotnet csharpier format .
 ```
 
 ```powershell

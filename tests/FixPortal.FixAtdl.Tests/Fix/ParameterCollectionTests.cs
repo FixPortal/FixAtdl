@@ -19,10 +19,7 @@ public class ParameterCollectionTests
 
     private static async Task<ParameterCollection> LoadTwapParametersAsync()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         return Load(xml).Strategies[0].Parameters;
     }
 
@@ -72,8 +69,7 @@ public class ParameterCollectionTests
         initialValues.Add(126, "not-a-timestamp");
         initialValues.Add(7700, "0.2");
 
-        var act = () =>
-            parameters.LoadInitialValues(initialValues, resetNonSuppliedParameters: false);
+        var act = () => parameters.LoadInitialValues(initialValues, resetNonSuppliedParameters: false);
 
         act.Should().Throw<InvalidFieldValueException>();
         parameters["StartTime"].WireValue.Should().Be("20260101-09:30:00");
@@ -94,14 +90,9 @@ public class ParameterCollectionTests
     [Fact]
     public async Task Try_update_parameter_values_updates_valid_controls_and_reports_invalid_ones()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         var strategy = Load(xml).Strategies[0];
-        strategy
-            .Controls["c_StartTime"]
-            .SetValue(new DateTime(2026, 1, 1, 9, 30, 0, DateTimeKind.Utc));
+        strategy.Controls["c_StartTime"].SetValue(new DateTime(2026, 1, 1, 9, 30, 0, DateTimeKind.Utc));
         strategy.Controls["c_Part"].SetValue("20");
 
         bool result = strategy.Controls.TryUpdateParameterValues(
@@ -121,31 +112,17 @@ public class ParameterCollectionTests
     public void Get_output_values_omits_unset_and_untagged_parameters()
     {
         ParameterCollection parameters = [];
-        var included = new Parameter_t<String_t>("Included")
-        {
-            FixTag = 168,
-            WireValue = "20260101-09:30:00",
-        };
-        var unsetOptional = new Parameter_t<String_t>("UnsetOptional")
-        {
-            FixTag = 126,
-            Use = Use_t.Optional,
-        };
+        var included = new Parameter_t<String_t>("Included") { FixTag = 168, WireValue = "20260101-09:30:00" };
+        var unsetOptional = new Parameter_t<String_t>("UnsetOptional") { FixTag = 126, Use = Use_t.Optional };
         var localOnly = new Parameter_t<String_t>("LocalOnly") { WireValue = "internal" };
 
         parameters.Add(included);
         parameters.Add(unsetOptional);
         parameters.Add(localOnly);
 
-        var values = parameters
-            .GetOutputValues()
-            .ToDictionary(pair => (int)pair.Key, pair => pair.Value);
+        var values = parameters.GetOutputValues().ToDictionary(pair => (int)pair.Key, pair => pair.Value);
 
-        values
-            .Should()
-            .ContainSingle()
-            .Which.Should()
-            .Be(new KeyValuePair<int, string>(168, "20260101-09:30:00"));
+        values.Should().ContainSingle().Which.Should().Be(new KeyValuePair<int, string>(168, "20260101-09:30:00"));
     }
 
     [Fact]

@@ -93,21 +93,12 @@ public static class ValueConverter
                 }
 
             case "System.Int32":
-                return ParseOrThrow(
-                    value,
-                    targetType,
-                    v => Convert.ToInt32(v, CultureInfo.InvariantCulture)
-                );
+                return ParseOrThrow(value, targetType, v => Convert.ToInt32(v, CultureInfo.InvariantCulture));
 
             case "System.Decimal":
-                return ParseOrThrow(
-                    value,
-                    targetType,
-                    v => Convert.ToDecimal(v, CultureInfo.InvariantCulture)
-                );
+                return ParseOrThrow(value, targetType, v => Convert.ToDecimal(v, CultureInfo.InvariantCulture));
 
             case "System.DateTime":
-            {
                 if (!FixDateTime.TryParse(value, CultureInfo.InvariantCulture, out DateTime result))
                 {
                     throw ThrowHelper.New<InvalidFieldValueException>(
@@ -118,7 +109,6 @@ public static class ValueConverter
                 }
 
                 return result;
-            }
 
             case "FixPortal.FixAtdl.Fix.FixTag":
                 return ParseOrThrow(

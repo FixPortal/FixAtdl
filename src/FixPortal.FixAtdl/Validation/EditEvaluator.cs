@@ -170,10 +170,7 @@ public abstract class EditEvaluator<T> : IResolvable<Strategy_t, T>
     /// </summary>
     /// <param name="strategy">The strategy providing resolution context.</param>
     /// <param name="sourceCollection">The value source collection used to resolve field references.</param>
-    void IResolvable<Strategy_t, T>.Resolve(
-        Strategy_t strategy,
-        ISimpleDictionary<T> sourceCollection
-    )
+    void IResolvable<Strategy_t, T>.Resolve(Strategy_t strategy, ISimpleDictionary<T> sourceCollection)
     {
         if (Edit == null && EditRef == null)
         {

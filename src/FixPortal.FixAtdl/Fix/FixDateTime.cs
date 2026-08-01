@@ -38,17 +38,10 @@ public static class FixDateTime
         // omitted AssumeUniversal/AdjustToUniversal, so its result Kind drifted to Unspecified (or Local
         // when the input carried an offset) — inconsistent with the exact path's documented UTC contract.
         const DateTimeStyles styles =
-            DateTimeStyles.AllowWhiteSpaces
-            | DateTimeStyles.AssumeUniversal
-            | DateTimeStyles.AdjustToUniversal;
+            DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal;
 
-        return DateTime.TryParseExact(
-                value,
-                FixDateTimeFormat.FormatsArray,
-                provider,
-                styles,
-                out result
-            ) || DateTime.TryParse(value, provider, styles, out result);
+        return DateTime.TryParseExact(value, FixDateTimeFormat.FormatsArray, provider, styles, out result)
+            || DateTime.TryParse(value, provider, styles, out result);
     }
 
     /// <summary>

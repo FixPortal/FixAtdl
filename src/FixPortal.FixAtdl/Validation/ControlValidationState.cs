@@ -107,10 +107,7 @@ public class ControlValidationState
         {
             StringBuilder sb = new();
 
-            IEnumerable<StrategyEdit_t> strategyEditsInError =
-                from s in _strategyEdits
-                where !s.CurrentState
-                select s;
+            IEnumerable<StrategyEdit_t> strategyEditsInError = from s in _strategyEdits where !s.CurrentState select s;
 
             int count = strategyEditsInError.Count();
             bool parameterIsInvalid = ParameterValidationResult is { IsValid: false };
@@ -135,11 +132,7 @@ public class ControlValidationState
                 }
             }
 
-            foreach (
-                StrategyEdit_t strategyEdit in from s in _strategyEdits
-                where !s.CurrentState
-                select s
-            )
+            foreach (StrategyEdit_t strategyEdit in from s in _strategyEdits where !s.CurrentState select s)
             {
                 sb.Append(strategyEdit.ErrorMessage);
 

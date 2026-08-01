@@ -108,10 +108,7 @@ public class Tenor_t : AtdlValueType<Tenor>, IControlConvertible
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override Tenor? ConvertToNativeType(
-        IParameter hostParameter,
-        IParameterConvertible value
-    )
+    protected override Tenor? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
     {
         string tenor = value.ToString(hostParameter);
 

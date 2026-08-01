@@ -206,11 +206,7 @@ public abstract class TextControlBase : InitializableControl<string>
 
         if (!FixDateTime.TryParse(_value, provider, out DateTime result))
         {
-            throw ThrowHelper.New<InvalidCastException>(
-                this,
-                ErrorMessages.InvalidDateOrTimeValue,
-                _value
-            );
+            throw ThrowHelper.New<InvalidCastException>(this, ErrorMessages.InvalidDateOrTimeValue, _value);
         }
 
         return result;

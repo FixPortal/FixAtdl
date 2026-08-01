@@ -203,11 +203,7 @@ public class Clock_t : InitializableControl<InitValueClock?>
                     this,
                     ErrorMessages.InitControlValueError,
                     Id,
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "'{0}' is not a valid value for this control",
-                        value
-                    )
+                    string.Format(CultureInfo.InvariantCulture, "'{0}' is not a valid value for this control", value)
                 );
             }
         }
@@ -334,8 +330,7 @@ public class Clock_t : InitializableControl<InitValueClock?>
 
         // Emit milliseconds only when present, so whole-second values keep the compact seconds form
         // while sub-second precision is no longer silently dropped (batch 5, Phase-A follow-up).
-        string format =
-            utc.Millisecond == 0 ? FixDateTimeFormat.FixDateTime : FixDateTimeFormat.FixDateTimeMs;
+        string format = utc.Millisecond == 0 ? FixDateTimeFormat.FixDateTime : FixDateTimeFormat.FixDateTimeMs;
 
         return utc.ToString(format, CultureInfo.InvariantCulture);
     }
@@ -445,8 +440,7 @@ public class Clock_t : InitializableControl<InitValueClock?>
             }
         }
 
-        string paramInfo =
-            parameter != null ? $" bound to parameter '{parameter.Name}'" : string.Empty;
+        string paramInfo = parameter != null ? $" bound to parameter '{parameter.Name}'" : string.Empty;
         throw ThrowHelper.New<ArgumentException>(
             this,
             $"DateTimeKind.Unspecified is not supported to avoid timezone ambiguity; Kind must be Utc or Local. Control '{Id}'{paramInfo} has no localMktTz set."

@@ -14,9 +14,7 @@ namespace FixPortal.FixAtdl.Model.Collections;
 /// <summary>
 /// Collection class for FIXatdl parameters, keyed on parameter name.
 /// </summary>
-public class ParameterCollection
-    : KeyedCollection<string, IParameter>,
-        ISimpleDictionary<IParameter>
+public class ParameterCollection : KeyedCollection<string, IParameter>, ISimpleDictionary<IParameter>
 {
     /// <summary>
     /// Gets the key for the supplied item.
@@ -34,17 +32,11 @@ public class ParameterCollection
     /// <param name="initialValues"><see cref="FixTagValuesCollection"/> containing the FIX values to initialize from.</param>
     /// <param name="resetNonSuppliedParameters">Set to true if each parameter value is to be reset if a corresponding value is
     /// not specified in inputValues; set to false to leave the parameter value unchanged.</param>
-    public void LoadInitialValues(
-        FixTagValuesCollection initialValues,
-        bool resetNonSuppliedParameters
-    )
+    public void LoadInitialValues(FixTagValuesCollection initialValues, bool resetNonSuppliedParameters)
     {
         foreach (IParameter parameter in Items)
         {
-            if (
-                parameter.FixTag != null
-                && initialValues.TryGetValue((FixTag)parameter.FixTag, out string value)
-            )
+            if (parameter.FixTag != null && initialValues.TryGetValue((FixTag)parameter.FixTag, out string value))
             {
                 parameter.WireValue = value;
             }

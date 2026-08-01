@@ -92,11 +92,7 @@ public class Strategies_t : IEnumerable<Strategy_t>
             // Match the boolean parameters by concrete type rather than the string literal "Boolean_t" +
             // reflected "Value" property: the typed pattern is compile-time checked (no silent no-op if a
             // name drifts) and yields Boolean_t directly (E-G3).
-            foreach (
-                Parameter_t<Boolean_t> booleanParameter in strategy.Parameters.OfType<
-                    Parameter_t<Boolean_t>
-                >()
-            )
+            foreach (Parameter_t<Boolean_t> booleanParameter in strategy.Parameters.OfType<Parameter_t<Boolean_t>>())
             {
                 Boolean_t booleanType = booleanParameter.Value;
                 string trueVal = booleanType.TrueWireValue ?? "Y";

@@ -44,10 +44,7 @@ public class StrategiesReaderClockInjectionTests
         using var stream = new MemoryStream(Encoding.UTF8.GetBytes(ClockStrategyXml));
         Strategies_t strategies = new StrategiesReader(clock: clock).Load(stream);
 
-        Clock_t control = strategies
-            .Strategies[0]
-            .StrategyLayout.StrategyPanel.Controls.OfType<Clock_t>()
-            .Single();
+        Clock_t control = strategies.Strategies[0].StrategyLayout.StrategyPanel.Controls.OfType<Clock_t>().Single();
 
         // No manual control.Clock assignment — the reader wired the injected clock at load time.
         control.LoadInitValue(FixFieldValueProvider.Empty);

@@ -43,12 +43,7 @@ public class EditEvaluatingCollectionTests
     /// <summary>
     /// Creates a resolved Edit_t&lt;IParameter&gt; against the TWAP fixture.
     /// </summary>
-    private static Edit_t<IParameter> MakeEdit(
-        Strategy_t twap,
-        string field,
-        Operator_t op,
-        string value
-    )
+    private static Edit_t<IParameter> MakeEdit(Strategy_t twap, string field, Operator_t op, string value)
     {
         var edit = new Edit_t<IParameter>
         {
@@ -93,10 +88,7 @@ public class EditEvaluatingCollectionTests
         // Participation = 50 → (> 0) = true AND (< 100) = true → AND = true
         twap.Parameters["Participation"].WireValue = "50";
 
-        var collection = new EditEvaluatingCollection<IParameter>
-        {
-            LogicOperator = LogicOperator_t.And,
-        };
+        var collection = new EditEvaluatingCollection<IParameter> { LogicOperator = LogicOperator_t.And };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.LessThan, "100"));
 
@@ -112,10 +104,7 @@ public class EditEvaluatingCollectionTests
         // Participation = 150 → (> 0) = true AND (< 100) = false → AND = false
         twap.Parameters["Participation"].WireValue = "150";
 
-        var collection = new EditEvaluatingCollection<IParameter>
-        {
-            LogicOperator = LogicOperator_t.And,
-        };
+        var collection = new EditEvaluatingCollection<IParameter> { LogicOperator = LogicOperator_t.And };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.LessThan, "100"));
 
@@ -131,10 +120,7 @@ public class EditEvaluatingCollectionTests
         // Participation = -1 → (> 0) = false; short-circuit should skip second edit
         twap.Parameters["Participation"].WireValue = "-1";
 
-        var collection = new EditEvaluatingCollection<IParameter>
-        {
-            LogicOperator = LogicOperator_t.And,
-        };
+        var collection = new EditEvaluatingCollection<IParameter> { LogicOperator = LogicOperator_t.And };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
 
         // Sentinel edit with neither Operator nor LogicOperator set, which throws on Evaluate
@@ -157,10 +143,7 @@ public class EditEvaluatingCollectionTests
         // Participation = 50 → (> 0) = true OR (> 200) = false → OR = true.
         twap.Parameters["Participation"].WireValue = "50";
 
-        var collection = new EditEvaluatingCollection<IParameter>
-        {
-            LogicOperator = LogicOperator_t.Or,
-        };
+        var collection = new EditEvaluatingCollection<IParameter> { LogicOperator = LogicOperator_t.Or };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "200"));
 
@@ -176,10 +159,7 @@ public class EditEvaluatingCollectionTests
         // Participation = 50 → (> 0) = true; short-circuit should skip second edit
         twap.Parameters["Participation"].WireValue = "50";
 
-        var collection = new EditEvaluatingCollection<IParameter>
-        {
-            LogicOperator = LogicOperator_t.Or,
-        };
+        var collection = new EditEvaluatingCollection<IParameter> { LogicOperator = LogicOperator_t.Or };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
 
         // Sentinel edit with neither Operator nor LogicOperator set, which throws on Evaluate
@@ -198,10 +178,7 @@ public class EditEvaluatingCollectionTests
         // Participation = -5 → (> 0) = false OR (> 200) = false → OR = false
         twap.Parameters["Participation"].WireValue = "-5";
 
-        var collection = new EditEvaluatingCollection<IParameter>
-        {
-            LogicOperator = LogicOperator_t.Or,
-        };
+        var collection = new EditEvaluatingCollection<IParameter> { LogicOperator = LogicOperator_t.Or };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "200"));
 
@@ -221,10 +198,7 @@ public class EditEvaluatingCollectionTests
         // Participation = 50 → (> 0) = true; NOT → false
         twap.Parameters["Participation"].WireValue = "50";
 
-        var collection = new EditEvaluatingCollection<IParameter>
-        {
-            LogicOperator = LogicOperator_t.Not,
-        };
+        var collection = new EditEvaluatingCollection<IParameter> { LogicOperator = LogicOperator_t.Not };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
 
         collection.Evaluate(FixFieldValueProvider.Empty);
@@ -239,10 +213,7 @@ public class EditEvaluatingCollectionTests
         // Participation = -1 → (> 0) = false; NOT → true
         twap.Parameters["Participation"].WireValue = "-1";
 
-        var collection = new EditEvaluatingCollection<IParameter>
-        {
-            LogicOperator = LogicOperator_t.Not,
-        };
+        var collection = new EditEvaluatingCollection<IParameter> { LogicOperator = LogicOperator_t.Not };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
 
         collection.Evaluate(FixFieldValueProvider.Empty);
@@ -261,10 +232,7 @@ public class EditEvaluatingCollectionTests
         // Participation = 50 → (> 0) = true, (> 100) = false → XOR = true (one true)
         twap.Parameters["Participation"].WireValue = "50";
 
-        var collection = new EditEvaluatingCollection<IParameter>
-        {
-            LogicOperator = LogicOperator_t.Xor,
-        };
+        var collection = new EditEvaluatingCollection<IParameter> { LogicOperator = LogicOperator_t.Xor };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "100"));
 
@@ -280,10 +248,7 @@ public class EditEvaluatingCollectionTests
         // Participation = 150 → (> 0) = true, (> 100) = true → XOR = false (two true)
         twap.Parameters["Participation"].WireValue = "150";
 
-        var collection = new EditEvaluatingCollection<IParameter>
-        {
-            LogicOperator = LogicOperator_t.Xor,
-        };
+        var collection = new EditEvaluatingCollection<IParameter> { LogicOperator = LogicOperator_t.Xor };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "100"));
 
@@ -299,10 +264,7 @@ public class EditEvaluatingCollectionTests
         // Participation = -5 → (> 0) = false, (> 100) = false → XOR = false (none true)
         twap.Parameters["Participation"].WireValue = "-5";
 
-        var collection = new EditEvaluatingCollection<IParameter>
-        {
-            LogicOperator = LogicOperator_t.Xor,
-        };
+        var collection = new EditEvaluatingCollection<IParameter> { LogicOperator = LogicOperator_t.Xor };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "100"));
 
@@ -318,10 +280,7 @@ public class EditEvaluatingCollectionTests
         // Participation = 150 → (> 0), (> 50), (> 100) are all true → XOR = false (three true)
         twap.Parameters["Participation"].WireValue = "150";
 
-        var collection = new EditEvaluatingCollection<IParameter>
-        {
-            LogicOperator = LogicOperator_t.Xor,
-        };
+        var collection = new EditEvaluatingCollection<IParameter> { LogicOperator = LogicOperator_t.Xor };
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "50"));
         collection.Add(MakeEdit(twap, "Participation", Operator_t.GreaterThan, "100"));
@@ -341,10 +300,7 @@ public class EditEvaluatingCollectionTests
         var twap = LoadTwap();
         twap.Parameters["Participation"].WireValue = "50";
 
-        var collection = new EditEvaluatingCollection<IParameter>
-        {
-            LogicOperator = LogicOperator_t.And,
-        };
+        var collection = new EditEvaluatingCollection<IParameter> { LogicOperator = LogicOperator_t.And };
 
         var edit = MakeEdit(twap, "Participation", Operator_t.GreaterThan, "0");
         collection.Add(edit);

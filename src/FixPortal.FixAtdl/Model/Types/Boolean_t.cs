@@ -119,17 +119,12 @@ public class Boolean_t : AtdlValueType<bool>, IControlConvertible
 
         bool actualValue = (bool)value;
 
-        if (
-            actualValue && TrueWireValue == Atdl.NullValue
-            || !actualValue && FalseWireValue == Atdl.NullValue
-        )
+        if (actualValue && TrueWireValue == Atdl.NullValue || !actualValue && FalseWireValue == Atdl.NullValue)
         {
             return null;
         }
 
-        return actualValue
-            ? TrueWireValue ?? DefaultTrueValue
-            : FalseWireValue ?? DefaultFalseValue;
+        return actualValue ? TrueWireValue ?? DefaultTrueValue : FalseWireValue ?? DefaultFalseValue;
     }
 
     /// <summary>
@@ -140,10 +135,7 @@ public class Boolean_t : AtdlValueType<bool>, IControlConvertible
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override bool? ConvertToNativeType(
-        IParameter hostParameter,
-        IParameterConvertible value
-    )
+    protected override bool? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
     {
         return value.ToBoolean(hostParameter);
     }

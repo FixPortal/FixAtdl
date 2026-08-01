@@ -79,9 +79,7 @@ public class Language_t : EnumTypeBase<IsoLanguageCode>
     /// <returns>If input value is not null, returns value converted to a string; null otherwise.</returns>
     protected override string? ConvertToWireValueFormat(IsoLanguageCode? value)
     {
-        return value != null && value != IsoLanguageCode.None
-            ? Enum.GetName(typeof(IsoLanguageCode), value)
-            : null;
+        return value != null && value != IsoLanguageCode.None ? Enum.GetName(typeof(IsoLanguageCode), value) : null;
     }
 
     /// <summary>
@@ -92,10 +90,7 @@ public class Language_t : EnumTypeBase<IsoLanguageCode>
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override IsoLanguageCode? ConvertToNativeType(
-        IParameter hostParameter,
-        IParameterConvertible value
-    )
+    protected override IsoLanguageCode? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
     {
         string wireValue = value.ToString(hostParameter);
 

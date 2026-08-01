@@ -79,9 +79,7 @@ public class Country_t : EnumTypeBase<IsoCountryCode>
     /// <returns>If input value is not null, returns value converted to a string; null otherwise.</returns>
     protected override string? ConvertToWireValueFormat(IsoCountryCode? value)
     {
-        return value != null && value != IsoCountryCode.None
-            ? Enum.GetName(typeof(IsoCountryCode), value)
-            : null;
+        return value != null && value != IsoCountryCode.None ? Enum.GetName(typeof(IsoCountryCode), value) : null;
     }
 
     /// <summary>
@@ -92,10 +90,7 @@ public class Country_t : EnumTypeBase<IsoCountryCode>
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override IsoCountryCode? ConvertToNativeType(
-        IParameter hostParameter,
-        IParameterConvertible value
-    )
+    protected override IsoCountryCode? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
     {
         string wireValue = value.ToString(hostParameter);
 

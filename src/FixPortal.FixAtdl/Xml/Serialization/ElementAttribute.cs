@@ -77,12 +77,7 @@ public class ElementAttribute
     /// <param name="property">The target property name.</param>
     /// <param name="enumDefinition">The enum definition used to parse XML values.</param>
     /// <param name="required">Whether the attribute is required.</param>
-    public ElementAttribute(
-        string xmlName,
-        string property,
-        EnumDefinition enumDefinition,
-        Required required
-    )
+    public ElementAttribute(string xmlName, string property, EnumDefinition enumDefinition, Required required)
     {
         XmlName = xmlName;
         Property = property;
