@@ -29,6 +29,8 @@
     ".github/workflows/**",
     ".config/dotnet-tools.json",
     "nuget.config",
+    "global.json",
+    ".npmrc",
     "Directory.Build.props"
   ],
 
