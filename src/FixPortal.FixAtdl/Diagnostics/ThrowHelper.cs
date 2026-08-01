@@ -90,12 +90,7 @@ public static class ThrowHelper
     /// <param name="format">The format.</param>
     /// <param name="args">The args.</param>
     /// <returns>A new exception of the specified type.</returns>
-    public static T New<T>(
-        object? source,
-        Exception innerException,
-        string format,
-        params object?[] args
-    )
+    public static T New<T>(object? source, Exception innerException, string format, params object?[] args)
         where T : Exception
     {
         T ex = CreateException<T>(source, FormatMessage(format, args), innerException, null);
@@ -128,12 +123,7 @@ public static class ThrowHelper
     /// <param name="xmlNode">The XML node providing line-number context, or <see langword="null"/>.</param>
     /// <param name="message">The message.</param>
     /// <returns>A new exception of the specified type.</returns>
-    public static T New<T>(
-        object? source,
-        Exception innerException,
-        XObject? xmlNode,
-        string message
-    )
+    public static T New<T>(object? source, Exception innerException, XObject? xmlNode, string message)
         where T : Exception
     {
         T ex = CreateException<T>(source, message, innerException, xmlNode);
@@ -203,12 +193,7 @@ public static class ThrowHelper
     /// <param name="format">The format.</param>
     /// <param name="args">An array of zero or more arguments.</param>
     /// <returns>A new exception of the same type as the supplied exception.</returns>
-    public static Exception Rethrow(
-        object? source,
-        Exception ex,
-        string format,
-        params object[] args
-    )
+    public static Exception Rethrow(object? source, Exception ex, string format, params object[] args)
     {
         // Format ONCE. Callers of this params overload supply every argument the template needs
         // (including ex.Message where it is referenced). Routing the formatted result through another
@@ -248,13 +233,7 @@ public static class ThrowHelper
     /// <param name="format">The format.</param>
     /// <param name="arg">The arg.</param>
     /// <returns>A new exception of the same type as the supplied exception.</returns>
-    public static Exception Rethrow(
-        object? source,
-        Exception ex,
-        XObject? xmlNode,
-        string format,
-        object arg
-    )
+    public static Exception Rethrow(object? source, Exception ex, XObject? xmlNode, string format, object arg)
     {
         // Single-arg convention: the template references the argument as {0} and ex.Message as {1}.
         // Formatted exactly once here; BuildRethrown does no further formatting.
@@ -268,15 +247,9 @@ public static class ThrowHelper
     // Builds a replacement exception of the same runtime type as 'ex' from an ALREADY-FORMATTED
     // message (no further string.Format). If that type has no (string, Exception) constructor the
     // original exception is preserved rather than throwing a NullReferenceException off GetConstructor (F2).
-    private static Exception BuildRethrown(
-        object? source,
-        Exception ex,
-        XObject? xmlNode,
-        string message
-    )
+    private static Exception BuildRethrown(object? source, Exception ex, XObject? xmlNode, string message)
     {
-        ConstructorInfo? classConstructor = ex.GetType()
-            .GetConstructor([typeof(string), typeof(Exception)]);
+        ConstructorInfo? classConstructor = ex.GetType().GetConstructor([typeof(string), typeof(Exception)]);
 
         if (classConstructor == null)
         {
@@ -293,12 +266,7 @@ public static class ThrowHelper
     }
 
     // Workaround limitation in C# 3.0/4.0 - can't create an instance of a generic type with parameters using new T().
-    private static T CreateException<T>(
-        object? source,
-        string message,
-        XObject? xmlNode,
-        string paramName = "Value"
-    )
+    private static T CreateException<T>(object? source, string message, XObject? xmlNode, string paramName = "Value")
         where T : Exception
     {
         Type classType = typeof(T);
@@ -309,56 +277,45 @@ public static class ThrowHelper
             // a single string for these types makes its own message.
             case "ArgumentOutOfRangeException":
             case "ArgumentNullException":
-            {
-                ConstructorInfo classConstructor =
+                ConstructorInfo argumentNullConstructor =
                     classType.GetConstructor([typeof(string), typeof(string)])
                     ?? throw new InternalErrorException(
                         $"Exception type '{classType.FullName}' has no (string, string) constructor required by ThrowHelper. Message: {message}"
                     );
-                T exception = (T)classConstructor.Invoke([paramName, message]);
-                exception.Source = source?.ToString();
-                PopulateXmlLineInfo(exception, xmlNode);
+                T argumentNullException = (T)argumentNullConstructor.Invoke([paramName, message]);
+                argumentNullException.Source = source?.ToString();
+                PopulateXmlLineInfo(argumentNullException, xmlNode);
 
-                return exception;
-            }
+                return argumentNullException;
 
             case "ArgumentException":
-            {
-                ConstructorInfo classConstructor =
+                ConstructorInfo argumentConstructor =
                     classType.GetConstructor([typeof(string), typeof(string)])
                     ?? throw new InternalErrorException(
                         $"Exception type '{classType.FullName}' has no (string, string) constructor required by ThrowHelper. Message: {message}"
                     );
-                T exception = (T)classConstructor.Invoke([message, paramName]);
-                exception.Source = source?.ToString();
-                PopulateXmlLineInfo(exception, xmlNode);
+                T argumentException = (T)argumentConstructor.Invoke([message, paramName]);
+                argumentException.Source = source?.ToString();
+                PopulateXmlLineInfo(argumentException, xmlNode);
 
-                return exception;
-            }
+                return argumentException;
 
             default:
-            {
-                ConstructorInfo classConstructor =
+                ConstructorInfo defaultConstructor =
                     classType.GetConstructor([typeof(string)])
                     ?? throw new InternalErrorException(
                         $"Exception type '{classType.FullName}' has no (string) constructor required by ThrowHelper. Message: {message}"
                     );
-                T exception = (T)classConstructor.Invoke([message]);
-                exception.Source = source?.ToString();
-                PopulateXmlLineInfo(exception, xmlNode);
+                T defaultException = (T)defaultConstructor.Invoke([message]);
+                defaultException.Source = source?.ToString();
+                PopulateXmlLineInfo(defaultException, xmlNode);
 
-                return exception;
-            }
+                return defaultException;
         }
     }
 
     // Workaround limitation in C# 3.0/4.0 - can't create an instance of a generic type with parameters using new T().
-    private static T CreateException<T>(
-        object? source,
-        string message,
-        Exception innerException,
-        XObject? xmlNode
-    )
+    private static T CreateException<T>(object? source, string message, Exception innerException, XObject? xmlNode)
         where T : Exception
     {
         Type classType = typeof(T);

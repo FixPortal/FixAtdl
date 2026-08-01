@@ -155,10 +155,7 @@ public class KeyedCollectionTests
             new Region_t { Name = Region.TheAmericas, Inclusion = Inclusion_t.Exclude },
         };
 
-        regions
-            .GetApplicableRegions()
-            .Should()
-            .Be(Region.EuropeMiddleEastAfrica | Region.AsiaPacificJapan);
+        regions.GetApplicableRegions().Should().Be(Region.EuropeMiddleEastAfrica | Region.AsiaPacificJapan);
     }
 
     [Fact]
@@ -190,14 +187,8 @@ public class KeyedCollectionTests
     [Fact]
     public void RegionCollection_country_exclude_overrides_included_region()
     {
-        var emea = new Region_t
-        {
-            Name = Region.EuropeMiddleEastAfrica,
-            Inclusion = Inclusion_t.Include,
-        };
-        emea.Countries.Add(
-            new Country_t { CountryCode = IsoCountryCode.GB, Inclusion = Inclusion_t.Exclude }
-        );
+        var emea = new Region_t { Name = Region.EuropeMiddleEastAfrica, Inclusion = Inclusion_t.Include };
+        emea.Countries.Add(new Country_t { CountryCode = IsoCountryCode.GB, Inclusion = Inclusion_t.Exclude });
         var regions = new RegionCollection { emea };
 
         regions.IsApplicableTo(IsoCountryCode.GB).Should().BeFalse(); // explicitly excluded country
@@ -207,14 +198,8 @@ public class KeyedCollectionTests
     [Fact]
     public void RegionCollection_country_include_overrides_excluded_region()
     {
-        var emea = new Region_t
-        {
-            Name = Region.EuropeMiddleEastAfrica,
-            Inclusion = Inclusion_t.Exclude,
-        };
-        emea.Countries.Add(
-            new Country_t { CountryCode = IsoCountryCode.GB, Inclusion = Inclusion_t.Include }
-        );
+        var emea = new Region_t { Name = Region.EuropeMiddleEastAfrica, Inclusion = Inclusion_t.Exclude };
+        emea.Countries.Add(new Country_t { CountryCode = IsoCountryCode.GB, Inclusion = Inclusion_t.Include });
         var regions = new RegionCollection { emea };
 
         regions.IsApplicableTo(IsoCountryCode.GB).Should().BeTrue(); // explicitly included country

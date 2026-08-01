@@ -21,11 +21,7 @@ namespace FixPortal.FixAtdl.Model.Types;
 /// </summary>
 public class UTCTimeOnly_t : UTCDateTimeTypeBase
 {
-    private static readonly string[] _formatStrings =
-    [
-        FixDateTimeFormat.FixTimeOnly,
-        FixDateTimeFormat.FixTimeOnlyMs,
-    ];
+    private static readonly string[] _formatStrings = [FixDateTimeFormat.FixTimeOnly, FixDateTimeFormat.FixTimeOnlyMs];
 
     /// <inheritdoc />
     internal override bool IsTimeOnlyType => true;

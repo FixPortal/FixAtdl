@@ -67,10 +67,7 @@ public class Char_t : AtdlValueType<char>, IControlConvertible
     {
         if (string.IsNullOrEmpty(value))
         {
-            throw ThrowHelper.New<ArgumentException>(
-                this,
-                ErrorMessages.InvalidNullOrEmptyStringValue
-            );
+            throw ThrowHelper.New<ArgumentException>(this, ErrorMessages.InvalidNullOrEmptyStringValue);
         }
 
         // A Char value is exactly one character. Previously only null/empty was rejected, so a
@@ -104,10 +101,7 @@ public class Char_t : AtdlValueType<char>, IControlConvertible
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override char? ConvertToNativeType(
-        IParameter hostParameter,
-        IParameterConvertible value
-    )
+    protected override char? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
     {
         return value.ToChar(hostParameter);
     }

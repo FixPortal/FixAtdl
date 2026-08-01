@@ -157,10 +157,7 @@ public class Float_t : AtdlValueType<decimal>, IControlConvertible
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override decimal? ConvertToNativeType(
-        IParameter hostParameter,
-        IParameterConvertible value
-    )
+    protected override decimal? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
     {
         return value.ToDecimal(hostParameter, CultureInfo.InvariantCulture);
     }
@@ -206,9 +203,7 @@ public class Float_t : AtdlValueType<decimal>, IControlConvertible
     /// zeros are not padded, which is wire-legal for float fields (batch 5, M4).</remarks>
     protected static decimal? Round(decimal? value, int precision)
     {
-        return value != null
-            ? Math.Round((decimal)value, precision, MidpointRounding.AwayFromZero)
-            : null;
+        return value != null ? Math.Round((decimal)value, precision, MidpointRounding.AwayFromZero) : null;
     }
 
     #region IControlConvertible Members

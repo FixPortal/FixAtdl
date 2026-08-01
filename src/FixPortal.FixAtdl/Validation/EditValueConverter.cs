@@ -46,10 +46,7 @@ public static class EditValueConverter
         // domain exception, matching ConvertToBool's null handling (O-G2).
         if (value == null)
         {
-            throw ThrowHelper.New<InvalidFieldValueException>(
-                ExceptionContext,
-                ErrorMessages.IllegalUseOfNullError
-            );
+            throw ThrowHelper.New<InvalidFieldValueException>(ExceptionContext, ErrorMessages.IllegalUseOfNullError);
         }
 
         // Data_t (char[]) has no meaningful comparison target. Without this check the switch below
@@ -79,12 +76,9 @@ public static class EditValueConverter
                 "System.Char" => Convert.ToChar(value),
                 "System.DateTime" => ConvertToDateTime(typeInstanceToMatch, value),
                 "System.String" => value,
-                "FixPortal.FixAtdl.Model.Reference.IsoCountryCode" =>
-                    value.ParseAsEnum<IsoCountryCode>(),
-                "FixPortal.FixAtdl.Model.Reference.IsoCurrencyCode" =>
-                    value.ParseAsEnum<IsoCurrencyCode>(),
-                "FixPortal.FixAtdl.Model.Reference.IsoLanguageCode" =>
-                    value.ParseAsEnum<IsoLanguageCode>(),
+                "FixPortal.FixAtdl.Model.Reference.IsoCountryCode" => value.ParseAsEnum<IsoCountryCode>(),
+                "FixPortal.FixAtdl.Model.Reference.IsoCurrencyCode" => value.ParseAsEnum<IsoCurrencyCode>(),
+                "FixPortal.FixAtdl.Model.Reference.IsoLanguageCode" => value.ParseAsEnum<IsoLanguageCode>(),
                 "FixPortal.FixAtdl.Model.Types.Support.MonthYear" => MonthYear.Parse(value),
                 "FixPortal.FixAtdl.Model.Types.Support.Tenor" => Tenor.Parse(value),
                 "FixPortal.FixAtdl.Model.Controls.Support.EnumState" => value,
@@ -114,10 +108,7 @@ public static class EditValueConverter
     {
         if (value == null)
         {
-            throw ThrowHelper.New<InvalidFieldValueException>(
-                ExceptionContext,
-                ErrorMessages.IllegalUseOfNullError
-            );
+            throw ThrowHelper.New<InvalidFieldValueException>(ExceptionContext, ErrorMessages.IllegalUseOfNullError);
         }
 
         return value.ToUpperInvariant() switch

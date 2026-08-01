@@ -45,10 +45,7 @@ public class SchemaValidationTests
     [Fact]
     public async Task Missing_constructor_fed_parameter_name_throws_MissingMandatoryValueException()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         xml = xml.Replace("<Parameter name=\"StartTime\"", "<Parameter", StringComparison.Ordinal);
 
         var act = () => Load(xml);

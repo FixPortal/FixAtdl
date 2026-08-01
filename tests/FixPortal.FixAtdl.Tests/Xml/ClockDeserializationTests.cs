@@ -65,10 +65,7 @@ public class ClockDeserializationTests
     {
         var strategies = Load(ClockStrategyXml);
 
-        var clock = strategies
-            .Strategies[0]
-            .StrategyLayout.StrategyPanel.Controls.OfType<Clock_t>()
-            .Single();
+        var clock = strategies.Strategies[0].StrategyLayout.StrategyPanel.Controls.OfType<Clock_t>().Single();
 
         // Inject a fixed clock so a time-only initValue is anchored to a deterministic market date.
         // TimeZoneProvider defaults to TZDB, which resolves Europe/Berlin.
@@ -91,10 +88,7 @@ public class ClockDeserializationTests
     {
         var strategies = Load(ClockStrategyXmlMode1);
 
-        var clock = strategies
-            .Strategies[0]
-            .StrategyLayout.StrategyPanel.Controls.OfType<Clock_t>()
-            .Single();
+        var clock = strategies.Strategies[0].StrategyLayout.StrategyPanel.Controls.OfType<Clock_t>().Single();
 
         // "now" = 09:30Z (10:30 Berlin/CET), which is after initValue 08:00 Berlin (07:00Z).
         // With initValueMode=1 the control resolves to "now" and emits it as the UTC instant.

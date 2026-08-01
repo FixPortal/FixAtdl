@@ -165,11 +165,7 @@ public class ElementPropertyTests
     [Fact]
     public void Country_t_properties_round_trip()
     {
-        var country = new Country_t
-        {
-            CountryCode = IsoCountryCode.GB,
-            Inclusion = Inclusion_t.Include,
-        };
+        var country = new Country_t { CountryCode = IsoCountryCode.GB, Inclusion = Inclusion_t.Include };
         country.CountryCode.Should().Be(IsoCountryCode.GB);
         country.Inclusion.Should().Be(Inclusion_t.Include);
     }
@@ -177,11 +173,7 @@ public class ElementPropertyTests
     [Fact]
     public void Country_t_exclusion_round_trips()
     {
-        var country = new Country_t
-        {
-            CountryCode = IsoCountryCode.US,
-            Inclusion = Inclusion_t.Exclude,
-        };
+        var country = new Country_t { CountryCode = IsoCountryCode.US, Inclusion = Inclusion_t.Exclude };
         country.Inclusion.Should().Be(Inclusion_t.Exclude);
         country.CountryCode.Should().Be(IsoCountryCode.US);
     }

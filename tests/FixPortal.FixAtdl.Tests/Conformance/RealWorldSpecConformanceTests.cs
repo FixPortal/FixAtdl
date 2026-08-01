@@ -71,9 +71,7 @@ public class RealWorldSpecConformanceTests
 
     private static Clock_t StartTimeClock(Instant now)
     {
-        var clock = Load(TzClockFixture)["VWAP"]
-            .Controls.OfType<Clock_t>()
-            .First(c => c.Id == "i_StartTime");
+        var clock = Load(TzClockFixture)["VWAP"].Controls.OfType<Clock_t>().First(c => c.Id == "i_StartTime");
         clock.Clock = new FakeClock(now);
         clock.InitValueMode = 0;
         clock.LoadInitValue(FixFieldValueProvider.Empty);
@@ -103,8 +101,7 @@ public class RealWorldSpecConformanceTests
     [Fact]
     public void C2_time_only_maxValue_is_captured_as_text()
     {
-        var endTime =
-            (Parameter_t<UTCTimestamp_t>)Load(TzClockFixture)["VWAP"].Parameters["p_EndTime"];
+        var endTime = (Parameter_t<UTCTimestamp_t>)Load(TzClockFixture)["VWAP"].Parameters["p_EndTime"];
         endTime.Value.MaxValueText.Should().Be("23:59:59");
     }
 

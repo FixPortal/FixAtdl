@@ -135,10 +135,7 @@ public class EditRef_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
 
     #region IResolvable<Strategy_t> Members
 
-    void IResolvable<Strategy_t, T>.Resolve(
-        Strategy_t strategy,
-        ISimpleDictionary<T> sourceCollection
-    )
+    void IResolvable<Strategy_t, T>.Resolve(Strategy_t strategy, ISimpleDictionary<T> sourceCollection)
     {
         if (strategy.Edits.Contains(Id))
         {

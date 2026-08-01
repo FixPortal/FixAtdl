@@ -41,9 +41,7 @@ public class UTCDateOnly_t : DateTimeTypeBase
     /// AssumeUniversal | AdjustToUniversal sets Kind=Utc for a date-only value.
     /// </summary>
     protected override DateTimeStyles WireParseStyles =>
-        DateTimeStyles.AllowWhiteSpaces
-        | DateTimeStyles.AssumeUniversal
-        | DateTimeStyles.AdjustToUniversal;
+        DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal;
 
     /// <summary>
     /// Gets the human-readable type name for use in error messages shown to the user.

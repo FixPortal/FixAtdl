@@ -23,10 +23,7 @@ namespace FixPortal.FixAtdl.Model.Collections;
 /// <summary>
 /// Provides read-only keyed access to the controls defined for a strategy.
 /// </summary>
-public class ReadOnlyControlCollection
-    : IParentable<Strategy_t>,
-        IEnumerable<Control_t>,
-        ISimpleDictionary<Control_t>
+public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Control_t>, ISimpleDictionary<Control_t>
 {
     private Strategy_t Owner { get; set; }
     private readonly Dictionary<string, Control_t> _controls = [];
@@ -159,8 +156,7 @@ public class ReadOnlyControlCollection
     /// Gets the control with the specified identifier.
     /// </summary>
     /// <param name="key">The control identifier.</param>
-    public Control_t this[string key] =>
-        _controls.TryGetValue(key, out Control_t? value) ? value : null!;
+    public Control_t this[string key] => _controls.TryGetValue(key, out Control_t? value) ? value : null!;
 
     /// <summary>
     /// Loads the initial values for each control based on the InitPolicy, InitFixField and InitValue attributes.
@@ -277,12 +273,7 @@ public class ReadOnlyControlCollection
                     control.SetValueFromParameter(parameter);
                 }
                 catch (Exception ex)
-                    when (ex
-                            is ArgumentException
-                                or FormatException
-                                or InvalidCastException
-                                or OverflowException
-                    )
+                    when (ex is ArgumentException or FormatException or InvalidCastException or OverflowException)
                 {
                     // Defense in depth: a value/type-conversion failure while pushing a parameter value into
                     // its bound control (e.g. an unresolvable date/time Kind) must not propagate as a raw,
@@ -346,11 +337,7 @@ public class ReadOnlyControlCollection
         {
             Edit_t<Control_t>? edit = stateRule.Edit;
 
-            if (
-                edit is not { }
-                || stateRule.Value != Atdl.NullValue
-                || edit.Operator != Operator_t.Equal
-            )
+            if (edit is not { } || stateRule.Value != Atdl.NullValue || edit.Operator != Operator_t.Equal)
             {
                 continue;
             }
@@ -393,15 +380,10 @@ public class ReadOnlyControlCollection
         // Approach 1: RadioGroup name; Approach 2 (fallback): sibling controls on same panel.
         IEnumerable<RadioButton_t> radioButtons =
             radioButton.RadioGroup != null
-                ? from c in _controls.Values
-                where
-                    c.Id != radioButton.Id
-                    && c is RadioButton_t t
-                    && t.RadioGroup == radioButton.RadioGroup
-                select c as RadioButton_t
-                : from c in radioButton.OwningStrategyPanel.Controls
-                where c.Id != radioButton.Id && c is RadioButton_t
-                select c as RadioButton_t;
+                ? _controls
+                    .Values.OfType<RadioButton_t>()
+                    .Where(c => c.Id != radioButton.Id && c.RadioGroup == radioButton.RadioGroup)
+                : radioButton.OwningStrategyPanel.Controls.OfType<RadioButton_t>().Where(c => c.Id != radioButton.Id);
 
         // The query is lazy; Count() + First() would enumerate it twice. Materialise once
         // (Take(2) is enough to distinguish "exactly one companion").

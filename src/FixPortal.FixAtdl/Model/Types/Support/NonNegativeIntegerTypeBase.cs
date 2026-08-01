@@ -74,10 +74,7 @@ public abstract class NonNegativeIntegerTypeBase : AtdlValueType<uint>, IControl
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override uint? ConvertToNativeType(
-        IParameter hostParameter,
-        IParameterConvertible value
-    )
+    protected override uint? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
     {
         return value.ToUInt32(hostParameter, CultureInfo.InvariantCulture);
     }

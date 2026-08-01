@@ -15,15 +15,13 @@ public class MonthYearTests
     [InlineData("202601")]
     [InlineData("202612")]
     [InlineData("000001")]
-    public void Parse_roundtrips_YYYYMM_format(string wire) =>
-        MonthYear.Parse(wire).ToString().Should().Be(wire);
+    public void Parse_roundtrips_YYYYMM_format(string wire) => MonthYear.Parse(wire).ToString().Should().Be(wire);
 
     [Theory]
     [InlineData("20260115")]
     [InlineData("20261231")]
     [InlineData("20260101")]
-    public void Parse_roundtrips_YYYYMMDD_format(string wire) =>
-        MonthYear.Parse(wire).ToString().Should().Be(wire);
+    public void Parse_roundtrips_YYYYMMDD_format(string wire) => MonthYear.Parse(wire).ToString().Should().Be(wire);
 
     [Fact]
     public void Parse_roundtrips_YYYYMMWW_format()

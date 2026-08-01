@@ -68,8 +68,7 @@ public struct Tenor : IComparable
     /// <param name="lhs">Left hand side value.</param>
     /// <param name="rhs">Right hand side value.</param>
     /// <returns>True if both the tenor type and offset are equal; otherwise, false.</returns>
-    public static bool operator ==(Tenor lhs, Tenor rhs) =>
-        lhs.Offset == rhs.Offset && lhs.TenorType == rhs.TenorType;
+    public static bool operator ==(Tenor lhs, Tenor rhs) => lhs.Offset == rhs.Offset && lhs.TenorType == rhs.TenorType;
 
     /// <summary>
     /// Compares two tenor values for inequality.
@@ -77,8 +76,7 @@ public struct Tenor : IComparable
     /// <param name="lhs">Left hand side value.</param>
     /// <param name="rhs">Right hand side value.</param>
     /// <returns>True if the tenor values differ; otherwise, false.</returns>
-    public static bool operator !=(Tenor lhs, Tenor rhs) =>
-        lhs.Offset != rhs.Offset || lhs.TenorType != rhs.TenorType;
+    public static bool operator !=(Tenor lhs, Tenor rhs) => lhs.Offset != rhs.Offset || lhs.TenorType != rhs.TenorType;
 
     /// <summary>
     /// Determines whether the supplied object is equal to this tenor value.
@@ -133,11 +131,7 @@ public struct Tenor : IComparable
 
                 if (result.Offset <= 0)
                 {
-                    throw ThrowHelper.New<ArgumentException>(
-                        ExceptionContext,
-                        ErrorMessages.InvalidTenorValue,
-                        value
-                    );
+                    throw ThrowHelper.New<ArgumentException>(ExceptionContext, ErrorMessages.InvalidTenorValue, value);
                 }
 
                 if (result.TenorType != TenorTypeValue.Invalid)
@@ -147,20 +141,11 @@ public struct Tenor : IComparable
             }
             catch (Exception ex) when (ex is FormatException or OverflowException)
             {
-                throw ThrowHelper.New<ArgumentException>(
-                    ExceptionContext,
-                    ex,
-                    ErrorMessages.InvalidTenorValue,
-                    value
-                );
+                throw ThrowHelper.New<ArgumentException>(ExceptionContext, ex, ErrorMessages.InvalidTenorValue, value);
             }
         }
 
-        throw ThrowHelper.New<ArgumentException>(
-            ExceptionContext,
-            ErrorMessages.InvalidTenorValue,
-            value
-        );
+        throw ThrowHelper.New<ArgumentException>(ExceptionContext, ErrorMessages.InvalidTenorValue, value);
     }
 
     /// <summary>

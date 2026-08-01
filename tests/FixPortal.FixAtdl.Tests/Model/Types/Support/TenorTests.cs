@@ -15,29 +15,25 @@ public class TenorTests
     [InlineData("D5")]
     [InlineData("D1")]
     [InlineData("D365")]
-    public void Parse_roundtrips_day_tenors(string wire) =>
-        Tenor.Parse(wire).ToString().Should().Be(wire);
+    public void Parse_roundtrips_day_tenors(string wire) => Tenor.Parse(wire).ToString().Should().Be(wire);
 
     [Theory]
     [InlineData("W1")]
     [InlineData("W13")]
     [InlineData("W52")]
-    public void Parse_roundtrips_week_tenors(string wire) =>
-        Tenor.Parse(wire).ToString().Should().Be(wire);
+    public void Parse_roundtrips_week_tenors(string wire) => Tenor.Parse(wire).ToString().Should().Be(wire);
 
     [Theory]
     [InlineData("M1")]
     [InlineData("M3")]
     [InlineData("M12")]
-    public void Parse_roundtrips_month_tenors(string wire) =>
-        Tenor.Parse(wire).ToString().Should().Be(wire);
+    public void Parse_roundtrips_month_tenors(string wire) => Tenor.Parse(wire).ToString().Should().Be(wire);
 
     [Theory]
     [InlineData("Y1")]
     [InlineData("Y2")]
     [InlineData("Y10")]
-    public void Parse_roundtrips_year_tenors(string wire) =>
-        Tenor.Parse(wire).ToString().Should().Be(wire);
+    public void Parse_roundtrips_year_tenors(string wire) => Tenor.Parse(wire).ToString().Should().Be(wire);
 
     // ──────────────────────────────────────────────────────────────────────────
     // Equality and comparison
@@ -80,8 +76,7 @@ public class TenorTests
     }
 
     [Fact]
-    public void Tenor_CompareTo_null_returns_positive() =>
-        Tenor.Parse("M3").CompareTo(null).Should().BePositive();
+    public void Tenor_CompareTo_null_returns_positive() => Tenor.Parse("M3").CompareTo(null).Should().BePositive();
 
     // ──────────────────────────────────────────────────────────────────────────
     // Invalid inputs → ArgumentException

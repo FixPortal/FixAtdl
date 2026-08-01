@@ -34,11 +34,7 @@ public class UTCTimestamp_t : UTCDateTimeTypeBase
     /// <value>The local market timezone; null when not supplied in the ATDL.</value>
     public string? LocalMktTz { get; set; }
 
-    private static readonly string[] _formatStrings =
-    [
-        FixDateTimeFormat.FixDateTime,
-        FixDateTimeFormat.FixDateTimeMs,
-    ];
+    private static readonly string[] _formatStrings = [FixDateTimeFormat.FixDateTime, FixDateTimeFormat.FixDateTimeMs];
 
     /// <summary>
     /// Gets the DateTime format strings to use when converting this date/time to a FIX string and vice versa.

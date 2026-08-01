@@ -85,10 +85,7 @@ public class ControlValidationStateTests
     {
         var state = new ControlValidationState("ctrl-1")
         {
-            ControlValidationResult = new ValidationResult(
-                ValidationResult.ResultType.Invalid,
-                "bad"
-            ),
+            ControlValidationResult = new ValidationResult(ValidationResult.ResultType.Invalid, "bad"),
         };
         state.CurrentState.Should().BeFalse();
     }
@@ -96,10 +93,7 @@ public class ControlValidationStateTests
     [Fact]
     public void CurrentState_is_true_when_ControlValidationResult_is_valid()
     {
-        var state = new ControlValidationState("ctrl-1")
-        {
-            ControlValidationResult = ValidationResult.ValidResult,
-        };
+        var state = new ControlValidationState("ctrl-1") { ControlValidationResult = ValidationResult.ValidResult };
         state.CurrentState.Should().BeTrue();
     }
 
@@ -108,10 +102,7 @@ public class ControlValidationStateTests
     {
         var state = new ControlValidationState("ctrl-1")
         {
-            ParameterValidationResult = new ValidationResult(
-                ValidationResult.ResultType.Invalid,
-                "param-bad"
-            ),
+            ParameterValidationResult = new ValidationResult(ValidationResult.ResultType.Invalid, "param-bad"),
         };
         state.CurrentState.Should().BeFalse();
     }
@@ -199,10 +190,7 @@ public class ControlValidationStateTests
     [Fact]
     public void ErrorText_is_empty_when_all_valid()
     {
-        var state = new ControlValidationState("ctrl-1")
-        {
-            ControlValidationResult = ValidationResult.ValidResult,
-        };
+        var state = new ControlValidationState("ctrl-1") { ControlValidationResult = ValidationResult.ValidResult };
         state.ErrorText.Should().BeEmpty();
     }
 
@@ -211,10 +199,7 @@ public class ControlValidationStateTests
     {
         var state = new ControlValidationState("ctrl-1")
         {
-            ControlValidationResult = new ValidationResult(
-                ValidationResult.ResultType.Invalid,
-                "ctrl error"
-            ),
+            ControlValidationResult = new ValidationResult(ValidationResult.ResultType.Invalid, "ctrl error"),
         };
         state.ErrorText.Should().Contain("ctrl error");
     }
@@ -224,10 +209,7 @@ public class ControlValidationStateTests
     {
         var state = new ControlValidationState("ctrl-1")
         {
-            ParameterValidationResult = new ValidationResult(
-                ValidationResult.ResultType.Invalid,
-                "param error"
-            ),
+            ParameterValidationResult = new ValidationResult(ValidationResult.ResultType.Invalid, "param error"),
         };
         state.ErrorText.Should().Contain("param error");
     }
@@ -251,14 +233,8 @@ public class ControlValidationStateTests
 
         var state = new ControlValidationState("ctrl-1")
         {
-            ControlValidationResult = new ValidationResult(
-                ValidationResult.ResultType.Invalid,
-                "ctrl error"
-            ),
-            ParameterValidationResult = new ValidationResult(
-                ValidationResult.ResultType.Invalid,
-                "param error"
-            ),
+            ControlValidationResult = new ValidationResult(ValidationResult.ResultType.Invalid, "ctrl error"),
+            ParameterValidationResult = new ValidationResult(ValidationResult.ResultType.Invalid, "param error"),
         };
         state.Add(se);
 
@@ -295,11 +271,7 @@ public class ControlValidationStateTests
     [Fact]
     public void ValidationResult_Missing_type_reports_IsMissing_true()
     {
-        var result = new ValidationResult(
-            ValidationResult.ResultType.Missing,
-            "missing field {0}",
-            "Participation"
-        );
+        var result = new ValidationResult(ValidationResult.ResultType.Missing, "missing field {0}", "Participation");
         result.IsValid.Should().BeFalse();
         result.IsMissing.Should().BeTrue();
         result.ErrorText.Should().Contain("Participation");

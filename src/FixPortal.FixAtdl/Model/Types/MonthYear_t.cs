@@ -114,10 +114,7 @@ public class MonthYear_t : AtdlValueType<MonthYear>, IControlConvertible
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected override MonthYear? ConvertToNativeType(
-        IParameter hostParameter,
-        IParameterConvertible value
-    )
+    protected override MonthYear? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
     {
         string monthYear = value.ToString(hostParameter);
 

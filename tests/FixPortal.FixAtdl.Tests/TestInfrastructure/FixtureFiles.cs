@@ -7,10 +7,7 @@ internal static class FixtureFiles
         return File.ReadAllText(GetPath(relativePath));
     }
 
-    public static Task<string> ReadAllTextAsync(
-        string relativePath,
-        CancellationToken cancellationToken = default
-    )
+    public static Task<string> ReadAllTextAsync(string relativePath, CancellationToken cancellationToken = default)
     {
         return File.ReadAllTextAsync(GetPath(relativePath), cancellationToken);
     }

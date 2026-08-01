@@ -55,11 +55,7 @@ public class EditCollection : KeyedCollection<string, Edit_t>
         // directly.
         if (!Contains(Id))
         {
-            throw ThrowHelper.New<ReferencedObjectNotFoundException>(
-                this,
-                ErrorMessages.EditRefResolutionFailure,
-                Id
-            );
+            throw ThrowHelper.New<ReferencedObjectNotFoundException>(this, ErrorMessages.EditRefResolutionFailure, Id);
         }
 
         Edit_t sourceEdit = this[Id];

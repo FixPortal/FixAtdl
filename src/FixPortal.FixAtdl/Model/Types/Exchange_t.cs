@@ -35,10 +35,7 @@ public class Exchange_t : String_t
         // Length==4 check but is not a valid ISO 10383 code).
         if (value != null && (value.Length != 4 || string.IsNullOrWhiteSpace(value)))
         {
-            return new ValidationResult(
-                ValidationResult.ResultType.Invalid,
-                ErrorMessages.InvalidExchangeCode
-            );
+            return new ValidationResult(ValidationResult.ResultType.Invalid, ErrorMessages.InvalidExchangeCode);
         }
 
         return ValidationResult.ValidResult;

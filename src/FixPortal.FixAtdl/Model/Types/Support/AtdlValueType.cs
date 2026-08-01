@@ -31,8 +31,9 @@ namespace FixPortal.FixAtdl.Model.Types.Support;
 public abstract class AtdlValueType<T> : IParameterType
     where T : struct
 {
-    private static readonly CompositeFormat _attemptToSetConstValueParameterFormat =
-        CompositeFormat.Parse(ErrorMessages.AttemptToSetConstValueParameter);
+    private static readonly CompositeFormat _attemptToSetConstValueParameterFormat = CompositeFormat.Parse(
+        ErrorMessages.AttemptToSetConstValueParameter
+    );
 
     /// <summary>
     /// Storage for the value of this parameter, as type T?.
@@ -77,20 +78,13 @@ public abstract class AtdlValueType<T> : IParameterType
     /// <param name="value">Control value that implements <see cref="IParameterConvertible"/>.</param>
     /// <remarks>An <see cref="IParameterConvertible"/> is passed in enabling the control value to be converted into any
     /// desired type, provided that the value supports conversion to that type.</remarks>
-    public ValidationResult SetValueFromControl(
-        IParameter hostParameter,
-        IParameterConvertible value
-    )
+    public ValidationResult SetValueFromControl(IParameter hostParameter, IParameterConvertible value)
     {
         if (ConstValue != null)
         {
             return new ValidationResult(
                 ValidationResult.ResultType.Invalid,
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    _attemptToSetConstValueParameterFormat,
-                    ConstValue
-                )
+                string.Format(CultureInfo.InvariantCulture, _attemptToSetConstValueParameterFormat, ConstValue)
             );
         }
 
@@ -159,12 +153,7 @@ public abstract class AtdlValueType<T> : IParameterType
             convertedValue = ConvertFromWireValueFormat(value);
         }
         catch (Exception ex)
-            when (ex
-                    is FormatException
-                        or OverflowException
-                        or ArgumentException
-                        or InvalidCastException
-            )
+            when (ex is FormatException or OverflowException or ArgumentException or InvalidCastException)
         {
             // Translate raw BCL conversion failures (Convert.ToInt32/ToDecimal/etc. in the numeric
             // subclasses) into a domain InvalidFieldValueException, matching the control-set path
@@ -179,10 +168,7 @@ public abstract class AtdlValueType<T> : IParameterType
             );
         }
 
-        ValidationResult result = ValidateValue(
-            convertedValue,
-            hostParameter.Use == Use_t.Required
-        );
+        ValidationResult result = ValidateValue(convertedValue, hostParameter.Use == Use_t.Required);
 
         _value = result.IsValid
             ? convertedValue
@@ -294,10 +280,7 @@ public abstract class AtdlValueType<T> : IParameterType
     /// <returns>If input value is not null, returns value converted to T?; null otherwise.</returns>
     /// <remarks>Used when setting a parameter value from a control (or anything else that
     /// implements <see cref="IParameterConvertible"/>).</remarks>
-    protected abstract T? ConvertToNativeType(
-        IParameter hostParameter,
-        IParameterConvertible value
-    );
+    protected abstract T? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value);
 
     /// <summary>
     /// Gets the human-readable type name for use in error messages shown to the user.

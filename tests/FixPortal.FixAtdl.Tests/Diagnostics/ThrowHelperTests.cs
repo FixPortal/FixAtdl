@@ -27,10 +27,7 @@ public class ThrowHelperTests
     public void New_without_param_name_defaults_to_Value_for_argument_exceptions()
     {
         // Back-compat: the plain New<T> path keeps the historical synthetic "Value" name.
-        ArgumentOutOfRangeException ex = ThrowHelper.New<ArgumentOutOfRangeException>(
-            null,
-            "out of range"
-        );
+        ArgumentOutOfRangeException ex = ThrowHelper.New<ArgumentOutOfRangeException>(null, "out of range");
 
         ex.ParamName.Should().Be("Value");
     }

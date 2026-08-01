@@ -54,9 +54,7 @@ public class TZTimestamp_t : DateTimeTypeBase
     /// (e.g. "-05") is not retained — full fidelity would require carrying a DateTimeOffset.
     /// </summary>
     protected override DateTimeStyles WireParseStyles =>
-        DateTimeStyles.AllowWhiteSpaces
-        | DateTimeStyles.AssumeUniversal
-        | DateTimeStyles.AdjustToUniversal;
+        DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal;
 
     /// <summary>
     /// Gets the human-readable type name for use in error messages shown to the user.
@@ -125,11 +123,7 @@ public class TZTimestamp_t : DateTimeTypeBase
         // belongs to the parsed instant alone and must not be re-applied to a value set
         // programmatically (control/SetWireValue) after the parse, which previously emitted
         // the wrong offset.
-        if (
-            _originalWireValue != null
-            && _parsedUtcValue != null
-            && adjustedValue.Equals(_parsedUtcValue.Value)
-        )
+        if (_originalWireValue != null && _parsedUtcValue != null && adjustedValue.Equals(_parsedUtcValue.Value))
         {
             return _originalWireValue;
         }

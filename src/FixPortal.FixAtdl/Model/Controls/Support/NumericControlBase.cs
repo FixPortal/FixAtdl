@@ -103,14 +103,7 @@ public class NumericControlBase : InitializableControl<decimal?>
             {
                 _value = null;
             }
-            else if (
-                decimal.TryParse(
-                    value,
-                    NumberStyles.Number,
-                    CultureInfo.InvariantCulture,
-                    out decimal parsed
-                )
-            )
+            else if (decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal parsed))
             {
                 // Accept a numeric string (symmetry with TextControlBase) rather than rejecting it.
                 _value = parsed;
@@ -121,11 +114,7 @@ public class NumericControlBase : InitializableControl<decimal?>
                     this,
                     ErrorMessages.InitControlValueError,
                     Id,
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "'{0}' is not a valid value for this control",
-                        value
-                    )
+                    string.Format(CultureInfo.InvariantCulture, "'{0}' is not a valid value for this control", value)
                 );
             }
         }

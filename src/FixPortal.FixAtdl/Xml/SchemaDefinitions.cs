@@ -59,10 +59,7 @@ public static class SchemaDefinitions
         MarketAttributes
     );
 
-    private static readonly ContainerElementDefinition Markets = new(
-        AtdlNamespaces.core + "Markets",
-        Market_t
-    );
+    private static readonly ContainerElementDefinition Markets = new(AtdlNamespaces.core + "Markets", Market_t);
 
     #endregion // Market_t Definition
 
@@ -90,18 +87,10 @@ public static class SchemaDefinitions
         AtdlNamespaces.core + "Region",
         typeof(Region_t),
         RegionAttributes,
-        new ChildElementDefinition(
-            Country_t,
-            "Countries",
-            typeof(CountryCollection),
-            StandardContainerMethod.Add
-        )
+        new ChildElementDefinition(Country_t, "Countries", typeof(CountryCollection), StandardContainerMethod.Add)
     );
 
-    private static readonly ContainerElementDefinition Regions = new(
-        AtdlNamespaces.core + "Regions",
-        Region_t
-    );
+    private static readonly ContainerElementDefinition Regions = new(AtdlNamespaces.core + "Regions", Region_t);
 
     #endregion // Region_t & Country_t Definition
 
@@ -494,19 +483,9 @@ public static class SchemaDefinitions
     [
         new("initValue", "InitValue", typeof(decimal), Required.Optional),
         new("innerIncrement", "InnerIncrement", typeof(decimal), Required.Optional),
-        new(
-            "innerIncrementPolicy",
-            "InnerIncrementPolicy",
-            EnumDefinitions.IncrementPolicy_t,
-            Required.Optional
-        ),
+        new("innerIncrementPolicy", "InnerIncrementPolicy", EnumDefinitions.IncrementPolicy_t, Required.Optional),
         new("outerIncrement", "OuterIncrement", typeof(decimal), Required.Optional),
-        new(
-            "outerIncrementPolicy",
-            "OuterIncrementPolicy",
-            EnumDefinitions.IncrementPolicy_t,
-            Required.Optional
-        ),
+        new("outerIncrementPolicy", "OuterIncrementPolicy", EnumDefinitions.IncrementPolicy_t, Required.Optional),
     ];
 
     private static readonly ElementAttribute[] DropDownListAttributes =
@@ -557,12 +536,7 @@ public static class SchemaDefinitions
     [
         new("initValue", "InitValue", typeof(decimal), Required.Optional),
         new("increment", "Increment", typeof(decimal), Required.Optional),
-        new(
-            "incrementPolicy",
-            "IncrementPolicy",
-            EnumDefinitions.IncrementPolicy_t,
-            Required.Optional
-        ),
+        new("incrementPolicy", "IncrementPolicy", EnumDefinitions.IncrementPolicy_t, Required.Optional),
     ];
 
     private static readonly ElementAttribute[] SliderAttributes =
@@ -639,11 +613,7 @@ public static class SchemaDefinitions
         AtdlNamespaces.lay + "StrategyPanel",
         typeof(StrategyPanel_t),
         [
-            new ConstructorParameter(
-                typeof(Strategy_t),
-                SourceType.NamedPredecessor,
-                "CurrentStrategy"
-            ),
+            new ConstructorParameter(typeof(Strategy_t), SourceType.NamedPredecessor, "CurrentStrategy"),
             new ConstructorParameter(typeof(IStrategyPanel), SourceType.ParentObject, string.Empty),
         ],
         StrategyPanelAttributes,
@@ -654,12 +624,7 @@ public static class SchemaDefinitions
                 typeof(Collection<StrategyPanel_t>),
                 StandardContainerMethod.Add
             ),
-            new ChildElementDefinition(
-                Control_t,
-                "Controls",
-                typeof(ControlCollection),
-                StandardContainerMethod.Add
-            ),
+            new ChildElementDefinition(Control_t, "Controls", typeof(ControlCollection), StandardContainerMethod.Add),
         ]
     );
 
@@ -749,12 +714,7 @@ public static class SchemaDefinitions
                 typeof(ParameterCollection),
                 StandardContainerMethod.Add
             ),
-            new ChildElementDefinition(
-                Edit_t,
-                "Edits",
-                typeof(EditCollection),
-                StandardContainerMethod.Add
-            ),
+            new ChildElementDefinition(Edit_t, "Edits", typeof(EditCollection), StandardContainerMethod.Add),
             new ChildElementDefinition(
                 StrategyLayout_t,
                 "StrategyLayout",
@@ -767,18 +727,8 @@ public static class SchemaDefinitions
                 typeof(StrategyEditCollection),
                 StandardContainerMethod.Add
             ),
-            new ChildElementDefinition(
-                Regions,
-                "Regions",
-                typeof(RegionCollection),
-                StandardContainerMethod.Add
-            ),
-            new ChildElementDefinition(
-                Markets,
-                "Markets",
-                typeof(MarketCollection),
-                StandardContainerMethod.Add
-            ),
+            new ChildElementDefinition(Regions, "Regions", typeof(RegionCollection), StandardContainerMethod.Add),
+            new ChildElementDefinition(Markets, "Markets", typeof(MarketCollection), StandardContainerMethod.Add),
             new ChildElementDefinition(
                 SecurityTypes,
                 "SecurityTypes",
@@ -819,12 +769,7 @@ public static class SchemaDefinitions
                 typeof(StrategyCollection),
                 StandardContainerMethod.Add
             ),
-            new ChildElementDefinition(
-                Edit_t,
-                "Edits",
-                typeof(EditCollection),
-                StandardContainerMethod.Add
-            ),
+            new ChildElementDefinition(Edit_t, "Edits", typeof(EditCollection), StandardContainerMethod.Add),
         ]
     );
 

@@ -185,30 +185,21 @@ public class EditValueConverterTests
     [Fact]
     public void Converts_iso_country_code()
     {
-        IComparable result = EditValueConverter.ConvertToComparableType(
-            default(IsoCountryCode),
-            "US"
-        );
+        IComparable result = EditValueConverter.ConvertToComparableType(default(IsoCountryCode), "US");
         result.Should().Be(IsoCountryCode.US);
     }
 
     [Fact]
     public void Converts_iso_currency_code()
     {
-        IComparable result = EditValueConverter.ConvertToComparableType(
-            default(IsoCurrencyCode),
-            "USD"
-        );
+        IComparable result = EditValueConverter.ConvertToComparableType(default(IsoCurrencyCode), "USD");
         result.Should().Be(IsoCurrencyCode.USD);
     }
 
     [Fact]
     public void Converts_iso_language_code()
     {
-        IComparable result = EditValueConverter.ConvertToComparableType(
-            default(IsoLanguageCode),
-            "en"
-        );
+        IComparable result = EditValueConverter.ConvertToComparableType(default(IsoLanguageCode), "en");
         result.Should().Be(IsoLanguageCode.EN);
     }
 
@@ -217,18 +208,14 @@ public class EditValueConverterTests
     [Fact]
     public void Converts_month_year()
     {
-        IComparable result = EditValueConverter.ConvertToComparableType(
-            default(MonthYear),
-            "202401"
-        );
+        IComparable result = EditValueConverter.ConvertToComparableType(default(MonthYear), "202401");
         result.Should().Be(MonthYear.Parse("202401"));
     }
 
     [Fact]
     public void Wraps_invalid_month_year_values_in_InvalidFieldValueException()
     {
-        var act = () =>
-            EditValueConverter.ConvertToComparableType(default(MonthYear), "not-a-month-year");
+        var act = () => EditValueConverter.ConvertToComparableType(default(MonthYear), "not-a-month-year");
 
         act.Should().Throw<InvalidFieldValueException>();
     }

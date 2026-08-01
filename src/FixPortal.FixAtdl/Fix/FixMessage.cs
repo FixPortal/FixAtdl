@@ -38,10 +38,7 @@ public class FixMessage : Dictionary<FixField, string>
     {
         if (string.IsNullOrEmpty(rawMessage))
         {
-            throw ThrowHelper.New<FixParseException>(
-                this,
-                ErrorMessages.UnableToParseFixMessageEmpty
-            );
+            throw ThrowHelper.New<FixParseException>(this, ErrorMessages.UnableToParseFixMessageEmpty);
         }
 
         string[] nameValuePairs = rawMessage.Split([SOH], StringSplitOptions.RemoveEmptyEntries);

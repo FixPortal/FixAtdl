@@ -111,20 +111,15 @@ public class Percentage_t : Float_t
             return null;
         }
 
-        decimal adjustedValue =
-            MultiplyBy100 == true ? (decimal)RemoveTrailingZeroes(value * 100)! : (decimal)value;
+        decimal adjustedValue = MultiplyBy100 == true ? (decimal)RemoveTrailingZeroes(value * 100)! : (decimal)value;
 
         if (Precision == null)
         {
             return adjustedValue.ToString(CultureInfo.InvariantCulture);
         }
 
-        int effectivePrecision = Math.Min(
-            28,
-            MultiplyBy100 == true ? Precision.Value : Precision.Value + 2
-        );
-        return Round(adjustedValue, effectivePrecision)!
-            .Value.ToString(CultureInfo.InvariantCulture);
+        int effectivePrecision = Math.Min(28, MultiplyBy100 == true ? Precision.Value : Precision.Value + 2);
+        return Round(adjustedValue, effectivePrecision)!.Value.ToString(CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -139,10 +134,7 @@ public class Percentage_t : Float_t
     /// one-to-one mapping with its associated control value as the control will typically contain a user-oriented
     /// format (e.g., 25) when the parameter must contain the true value (i.e., 0.25, assuming multiplyBy100
     /// is not set to true).</remarks>
-    protected override decimal? ConvertToNativeType(
-        IParameter hostParameter,
-        IParameterConvertible value
-    )
+    protected override decimal? ConvertToNativeType(IParameter hostParameter, IParameterConvertible value)
     {
         decimal? convertedValue = value.ToDecimal(hostParameter, CultureInfo.InvariantCulture);
 
@@ -163,16 +155,11 @@ public class Percentage_t : Float_t
         if (value != null && applyWireValueFormat)
         {
             decimal adjustedValue =
-                MultiplyBy100 == true
-                    ? (decimal)RemoveTrailingZeroes(value * 100)!
-                    : (decimal)value;
+                MultiplyBy100 == true ? (decimal)RemoveTrailingZeroes(value * 100)! : (decimal)value;
 
             if (Precision != null)
             {
-                int effectivePrecision = Math.Min(
-                    28,
-                    MultiplyBy100 == true ? Precision.Value : Precision.Value + 2
-                );
+                int effectivePrecision = Math.Min(28, MultiplyBy100 == true ? Precision.Value : Precision.Value + 2);
                 return Round(adjustedValue, effectivePrecision)!;
             }
             return adjustedValue;

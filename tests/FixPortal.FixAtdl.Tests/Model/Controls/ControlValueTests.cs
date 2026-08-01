@@ -879,17 +879,11 @@ public class ClockControlTests
         initialProvider.InputFixValues.Returns(fixValues);
         var provider = new FixFieldValueProvider(initialProvider, null);
 
-        var clock = new Clock_t("clk")
-        {
-            InitPolicy = InitPolicy_t.UseFixField,
-            InitFixField = "FIX_TransactTime",
-        };
+        var clock = new Clock_t("clk") { InitPolicy = InitPolicy_t.UseFixField, InitFixField = "FIX_TransactTime" };
 
         clock.LoadInitValue(provider);
 
-        ((DateTime?)clock.GetCurrentValue())
-            .Should()
-            .Be(new DateTime(2026, 6, 1, 8, 0, 0, DateTimeKind.Utc));
+        ((DateTime?)clock.GetCurrentValue()).Should().Be(new DateTime(2026, 6, 1, 8, 0, 0, DateTimeKind.Utc));
     }
 
     [Fact]

@@ -239,8 +239,7 @@ public static class Regions
     /// <summary>
     /// Provides the set of ISO country codes that are in Europe, the Middle East and Africa.
     /// </summary>
-    public static IReadOnlySet<IsoCountryCode> EuropeMiddleEastAfricaCountries =>
-        _europeMiddleEastAfricaCountries;
+    public static IReadOnlySet<IsoCountryCode> EuropeMiddleEastAfricaCountries => _europeMiddleEastAfricaCountries;
 
     private static readonly FrozenSet<IsoCountryCode> _asiaPacificJapanCountries = new[]
     {
@@ -308,6 +307,5 @@ public static class Regions
     /// <summary>
     /// Provides the set of ISO country codes that are in the Asia Pacific and Japan region.
     /// </summary>
-    public static IReadOnlySet<IsoCountryCode> AsiaPacificJapanCountries =>
-        _asiaPacificJapanCountries;
+    public static IReadOnlySet<IsoCountryCode> AsiaPacificJapanCountries => _asiaPacificJapanCountries;
 }

@@ -171,11 +171,7 @@ public abstract class BinaryControlBase : InitializableControl<bool?>
                     this,
                     ErrorMessages.InitControlValueError,
                     Id,
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "'{0}' is not a valid value for this control",
-                        value
-                    )
+                    string.Format(CultureInfo.InvariantCulture, "'{0}' is not a valid value for this control", value)
                 );
             }
         }

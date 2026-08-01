@@ -42,9 +42,7 @@ public class StrategiesParserRejectionTests
             </Strategies>
             """;
         var act = () => Load(xml);
-        act.Should()
-            .Throw<FixAtdlException>()
-            .WithMessage("RepeatingGroup elements are not supported.");
+        act.Should().Throw<FixAtdlException>().WithMessage("RepeatingGroup elements are not supported.");
     }
 
     [Fact]
@@ -109,13 +107,10 @@ public class StrategiesParserRejectionTests
     [Fact]
     public void Parse_document_without_strategies_root_throws_fix_atdl_exception()
     {
-        const string xml =
-            """<Strategy xmlns="http://www.fixprotocol.org/FIXatdl-1-1/Core" name="Test" />""";
+        const string xml = """<Strategy xmlns="http://www.fixprotocol.org/FIXatdl-1-1/Core" name="Test" />""";
 
         var act = () => Load(xml);
 
-        act.Should()
-            .Throw<FixAtdlException>()
-            .WithMessage("*'Strategies' is not the root element*");
+        act.Should().Throw<FixAtdlException>().WithMessage("*'Strategies' is not the root element*");
     }
 }

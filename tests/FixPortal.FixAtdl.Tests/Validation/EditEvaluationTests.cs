@@ -25,12 +25,7 @@ public class EditEvaluationTests
         return new StrategiesReader().Load(stream).Strategies[0];
     }
 
-    private static Edit_t<IParameter> MakeEdit(
-        Strategy_t twap,
-        string field,
-        Operator_t op,
-        string? value = null
-    )
+    private static Edit_t<IParameter> MakeEdit(Strategy_t twap, string field, Operator_t op, string? value = null)
     {
         var edit = new Edit_t<IParameter>
         {
@@ -68,10 +63,7 @@ public class EditEvaluationTests
         bool expected
     )
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         var twap = LoadTwap(xml);
         twap.Parameters["Participation"].WireValue = paramValue;
 
@@ -86,10 +78,7 @@ public class EditEvaluationTests
     [Fact]
     public async Task Exist_is_true_when_parameter_has_value()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         var twap = LoadTwap(xml);
         twap.Parameters["Participation"].WireValue = "50";
 
@@ -102,10 +91,7 @@ public class EditEvaluationTests
     [Fact]
     public async Task Exist_is_false_when_parameter_was_never_set()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         var twap = LoadTwap(xml);
         // Participation is optional; don't assign WireValue — GetCurrentValue returns null.
 
@@ -118,10 +104,7 @@ public class EditEvaluationTests
     [Fact]
     public async Task NotExist_is_true_when_parameter_was_never_set()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         var twap = LoadTwap(xml);
         // Participation is optional; don't assign WireValue — GetCurrentValue returns null.
 
@@ -134,10 +117,7 @@ public class EditEvaluationTests
     [Fact]
     public async Task NotExist_is_false_when_parameter_has_value()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         var twap = LoadTwap(xml);
         twap.Parameters["Participation"].WireValue = "50";
 
@@ -192,10 +172,7 @@ public class EditEvaluationTests
         bool expected
     )
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         var twap = LoadTwap(xml);
         twap.Parameters["Participation"].WireValue = paramVal;
 
@@ -225,10 +202,7 @@ public class EditEvaluationTests
         bool expected
     )
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         var twap = LoadTwap(xml);
         twap.Parameters["Participation"].WireValue = paramVal;
 
@@ -249,16 +223,9 @@ public class EditEvaluationTests
     [InlineData("100", "100", false)]
     // NOT: param=100; child checks ==999 (false) → NOT false = true
     [InlineData("100", "999", true)]
-    public async Task Not_logic_operator_evaluates_correctly(
-        string paramVal,
-        string editVal,
-        bool expected
-    )
+    public async Task Not_logic_operator_evaluates_correctly(string paramVal, string editVal, bool expected)
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         var twap = LoadTwap(xml);
         twap.Parameters["Participation"].WireValue = paramVal;
 
@@ -283,10 +250,7 @@ public class EditEvaluationTests
         bool expected
     )
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         var twap = LoadTwap(xml);
         twap.Parameters["Participation"].WireValue = paramVal;
 
@@ -307,19 +271,12 @@ public class EditEvaluationTests
     [Fact]
     public async Task StrategyEdit_CurrentState_follows_wrapped_edit()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         var twap = LoadTwap(xml);
         twap.Parameters["Participation"].WireValue = "50";
 
         var edit = MakeEdit(twap, "Participation", Operator_t.Equal, "50");
-        var strategyEdit = new StrategyEdit_t
-        {
-            Edit = edit,
-            ErrorMessage = "Participation must be 50",
-        };
+        var strategyEdit = new StrategyEdit_t { Edit = edit, ErrorMessage = "Participation must be 50" };
         ((IResolvable<Strategy_t, IParameter>)strategyEdit).Resolve(twap, twap.Parameters);
 
         strategyEdit.Evaluate();
@@ -330,19 +287,12 @@ public class EditEvaluationTests
     [Fact]
     public async Task StrategyEdit_CurrentState_is_false_when_edit_fails()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         var twap = LoadTwap(xml);
         twap.Parameters["Participation"].WireValue = "30";
 
         var edit = MakeEdit(twap, "Participation", Operator_t.Equal, "50");
-        var strategyEdit = new StrategyEdit_t
-        {
-            Edit = edit,
-            ErrorMessage = "Participation must be 50",
-        };
+        var strategyEdit = new StrategyEdit_t { Edit = edit, ErrorMessage = "Participation must be 50" };
         ((IResolvable<Strategy_t, IParameter>)strategyEdit).Resolve(twap, twap.Parameters);
 
         strategyEdit.Evaluate();
@@ -355,10 +305,7 @@ public class EditEvaluationTests
     [Fact]
     public async Task Sources_contains_field_name_after_resolve()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         var twap = LoadTwap(xml);
         twap.Parameters["Participation"].WireValue = "50";
 
@@ -372,19 +319,12 @@ public class EditEvaluationTests
     [Fact]
     public async Task StrategyEditCollection_EvaluateAll_returns_false_when_edit_fails()
     {
-        var xml = await FixtureFiles.ReadAllTextAsync(
-            "Fixtures/twap.xml",
-            TestContext.Current.CancellationToken
-        );
+        var xml = await FixtureFiles.ReadAllTextAsync("Fixtures/twap.xml", TestContext.Current.CancellationToken);
         var twap = LoadTwap(xml);
         twap.Parameters["Participation"].WireValue = "30";
 
         var edit = MakeEdit(twap, "Participation", Operator_t.Equal, "50");
-        var strategyEdit = new StrategyEdit_t
-        {
-            Edit = edit,
-            ErrorMessage = "Participation must be 50",
-        };
+        var strategyEdit = new StrategyEdit_t { Edit = edit, ErrorMessage = "Participation must be 50" };
         ((IResolvable<Strategy_t, IParameter>)strategyEdit).Resolve(twap, twap.Parameters);
 
         var col = new StrategyEditCollection { strategyEdit };

@@ -146,9 +146,7 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
 
         // Guard the trailing ", " trim: an empty edit leaves the buffer as just "(", so text[..^2]
         // would throw ArgumentOutOfRangeException.
-        return text.Length > 1
-            ? string.Format(CultureInfo.InvariantCulture, "{0})", text[..^2])
-            : "()";
+        return text.Length > 1 ? string.Format(CultureInfo.InvariantCulture, "{0})", text[..^2]) : "()";
     }
 
     /// <summary>
@@ -301,10 +299,7 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
             CurrentState = Operator switch
             {
                 Operator_t.Exist or Operator_t.NotExist => EvaluateExists(lhs),
-                Operator_t.Equal or Operator_t.NotEqual => EvaluateEquality(
-                    lhs,
-                    GetRhsValue(additionalValues, lhs)
-                ),
+                Operator_t.Equal or Operator_t.NotEqual => EvaluateEquality(lhs, GetRhsValue(additionalValues, lhs)),
                 _ => EvaluateInequalityComparison(lhs, GetRhsValue(additionalValues, lhs)),
             };
         }
@@ -316,10 +311,7 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
         }
         else
         {
-            throw ThrowHelper.New<InvalidOperationException>(
-                this,
-                ErrorMessages.MissingOperatorsOnEdit
-            );
+            throw ThrowHelper.New<InvalidOperationException>(this, ErrorMessages.MissingOperatorsOnEdit);
         }
     }
 
@@ -333,9 +325,7 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
         // (not null and not ""), so it must be treated as absent here or EX/NX would always be wrong
         // for list controls. Scalar/text/clock controls already return null when unset.
         bool empty =
-            value == null
-            || value as string == string.Empty
-            || value is EnumState enumState && !enumState.HasSelection;
+            value == null || value as string == string.Empty || value is EnumState enumState && !enumState.HasSelection;
 
         bool result = checkingForExist ? !empty : empty;
 
@@ -421,8 +411,7 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
         // since "{NULL}" is not a valid EnumID.
         if (rhs as string == Atdl.NullValue)
         {
-            return lhs is EnumState lhsEnumStateForNullCheck
-                && !lhsEnumStateForNullCheck.HasSelection;
+            return lhs is EnumState lhsEnumStateForNullCheck && !lhsEnumStateForNullCheck.HasSelection;
         }
 
         if (lhs is EnumState lhsEnumState)
@@ -441,10 +430,7 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
         }
 
         return lhs is IComparable comparableLhs && rhs is IComparable comparableRhs
-            ? (
-                comparableLhs.GetType() == comparableRhs.GetType()
-                && comparableLhs.CompareTo(comparableRhs) == 0
-            )
+            ? (comparableLhs.GetType() == comparableRhs.GetType() && comparableLhs.CompareTo(comparableRhs) == 0)
             : lhs.Equals(rhs);
     }
 
@@ -496,12 +482,7 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
             return fieldValue;
         }
 
-        return decimal.TryParse(
-            value,
-            NumberStyles.Number,
-            CultureInfo.InvariantCulture,
-            out decimal number
-        )
+        return decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal number)
             ? number
             : value;
     }
@@ -534,28 +515,17 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
 
         if (val is double d && (double.IsNaN(d) || double.IsInfinity(d)))
         {
-            throw ThrowHelper.New<InvalidOperationException>(
-                null,
-                "Cannot compare NaN or Infinity values."
-            );
+            throw ThrowHelper.New<InvalidOperationException>(null, "Cannot compare NaN or Infinity values.");
         }
 
         if (val is float f && (float.IsNaN(f) || float.IsInfinity(f)))
         {
-            throw ThrowHelper.New<InvalidOperationException>(
-                null,
-                "Cannot compare NaN or Infinity values."
-            );
+            throw ThrowHelper.New<InvalidOperationException>(null, "Cannot compare NaN or Infinity values.");
         }
 
         if (val is string str)
         {
-            return decimal.TryParse(
-                str,
-                NumberStyles.Number,
-                CultureInfo.InvariantCulture,
-                out decimal dec
-            )
+            return decimal.TryParse(str, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal dec)
                 ? dec
                 : str;
         }
@@ -566,8 +536,7 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
             {
                 return Convert.ToDecimal(val, CultureInfo.InvariantCulture);
             }
-            catch (Exception ex)
-                when (ex is FormatException or InvalidCastException or OverflowException)
+            catch (Exception ex) when (ex is FormatException or InvalidCastException or OverflowException)
             {
                 throw ThrowHelper.New<InvalidOperationException>(
                     null,
@@ -616,12 +585,7 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
         result = gotValue switch
         {
             false => null,
-            _ => decimal.TryParse(
-                value,
-                NumberStyles.Number,
-                CultureInfo.InvariantCulture,
-                out decimal number
-            )
+            _ => decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal number)
                 ? number
                 : value,
         };
@@ -635,10 +599,7 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
     /// Resolves all interdependencies e.g. edits to edit refs, control values to edits, etc.  Called once
     /// all strategies have been loaded as there may be dependencies on EditRefs at the global level.
     /// </summary>
-    void IResolvable<Strategy_t, T>.Resolve(
-        Strategy_t strategy,
-        ISimpleDictionary<T> sourceCollection
-    )
+    void IResolvable<Strategy_t, T>.Resolve(Strategy_t strategy, ISimpleDictionary<T> sourceCollection)
     {
         ValidateInvariants();
 
@@ -685,11 +646,7 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
         }
     }
 
-    private T ResolveField(
-        string fieldName,
-        string propertyName,
-        ISimpleDictionary<T> sourceCollection
-    )
+    private T ResolveField(string fieldName, string propertyName, ISimpleDictionary<T> sourceCollection)
     {
         return sourceCollection.Contains(fieldName)
             ? sourceCollection[fieldName]

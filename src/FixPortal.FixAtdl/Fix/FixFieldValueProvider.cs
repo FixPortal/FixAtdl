@@ -26,10 +26,7 @@ public class FixFieldValueProvider
     /// </summary>
     /// <param name="initialValueProvider"></param>
     /// <param name="parameters">Parameters to use.</param>
-    public FixFieldValueProvider(
-        IInitialFixValueProvider? initialValueProvider,
-        ParameterCollection? parameters
-    )
+    public FixFieldValueProvider(IInitialFixValueProvider? initialValueProvider, ParameterCollection? parameters)
     {
         _initialValueProvider = initialValueProvider;
         Parameters = parameters;
@@ -48,8 +45,7 @@ public class FixFieldValueProvider
     /// <summary>
     /// Gets the FIX values collection for this value provider.
     /// </summary>
-    public FixTagValuesCollection FixValues =>
-        _initialValueProvider?.InputFixValues ?? FixTagValuesCollection.Empty;
+    public FixTagValuesCollection FixValues => _initialValueProvider?.InputFixValues ?? FixTagValuesCollection.Empty;
 
     /// <summary>
     /// Attempts to get the value of the specified FIX field (in FIX_ format), returning the value as a string.
@@ -113,10 +109,7 @@ public class FixFieldValueProvider
         return retrieved;
     }
 
-    private static bool ProcessPercentageValue(
-        Parameter_t<Percentage_t> parameter,
-        ref string value
-    )
+    private static bool ProcessPercentageValue(Parameter_t<Percentage_t> parameter, ref string value)
     {
         bool adjustmentNeeded = parameter.Value.MultiplyBy100 != true;
 
@@ -125,14 +118,7 @@ public class FixFieldValueProvider
             return true;
         }
 
-        if (
-            decimal.TryParse(
-                value,
-                NumberStyles.Number,
-                CultureInfo.InvariantCulture,
-                out decimal decimalValue
-            )
-        )
+        if (decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal decimalValue))
         {
             value = (decimalValue * 100).ToString("0.####", CultureInfo.InvariantCulture);
             return true;

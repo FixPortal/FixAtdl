@@ -154,8 +154,7 @@ public class EnumState
         // Compare the bit states element-wise. The previous _enumStates.Equals(state) compared a
         // BitArray to an EnumState by reference, so it was ALWAYS false for two distinct instances,
         // breaking equality / HashSet / Dictionary / dirty-checking semantics.
-        return _nonEnumValue == state._nonEnumValue
-            && BitArraysEqual(_enumStates, state._enumStates);
+        return _nonEnumValue == state._nonEnumValue && BitArraysEqual(_enumStates, state._enumStates);
     }
 
     private static bool BitArraysEqual(BitArray left, BitArray right)
@@ -234,11 +233,7 @@ public class EnumState
                 }
             }
 
-            throw ThrowHelper.New<ArgumentException>(
-                this,
-                ErrorMessages.UnrecognisedEnumIdValue,
-                enumId
-            );
+            throw ThrowHelper.New<ArgumentException>(this, ErrorMessages.UnrecognisedEnumIdValue, enumId);
         }
         set
         {
@@ -261,11 +256,7 @@ public class EnumState
                 }
             }
 
-            throw ThrowHelper.New<ArgumentException>(
-                this,
-                ErrorMessages.UnrecognisedEnumIdValue,
-                enumId
-            );
+            throw ThrowHelper.New<ArgumentException>(this, ErrorMessages.UnrecognisedEnumIdValue, enumId);
         }
     }
 
@@ -279,8 +270,7 @@ public class EnumState
     /// enumerated value is enabled, or a non-enum (free-text) value is present. An all-false EnumState
     /// with no non-enum value represents "nothing selected" and is treated as absent by EX/NX edits.
     /// </summary>
-    public bool HasSelection =>
-        GetFirstSelectedEnumIdIndex() != -1 || !string.IsNullOrEmpty(_nonEnumValue);
+    public bool HasSelection => GetFirstSelectedEnumIdIndex() != -1 || !string.IsNullOrEmpty(_nonEnumValue);
 
     /// <summary>
     /// Determines whether the supplied EnumID value is valid for this EnumState instance.
@@ -296,11 +286,7 @@ public class EnumState
     {
         if (!IsValidEnumId(enumId))
         {
-            throw ThrowHelper.New<InvalidFieldValueException>(
-                this,
-                ErrorMessages.UnrecognisedEnumIdValue,
-                enumId
-            );
+            throw ThrowHelper.New<InvalidFieldValueException>(this, ErrorMessages.UnrecognisedEnumIdValue, enumId);
         }
 
         return this[enumId];
@@ -400,11 +386,7 @@ public class EnumState
         // throw before ClearAll so the current state is not left half-cleared / half-set (Theme D).
         if (!allAreValid && !allowNonEnumValue)
         {
-            throw ThrowHelper.New<ArgumentException>(
-                this,
-                ErrorMessages.UnrecognisedEnumIdValue,
-                initValues
-            );
+            throw ThrowHelper.New<ArgumentException>(this, ErrorMessages.UnrecognisedEnumIdValue, initValues);
         }
 
         ClearAll();
@@ -494,10 +476,7 @@ public class EnumState
     {
         // Drop empty tokens so a blank, double-delimited or trailing-delimiter input does not yield
         // a "" token that TryParseWireValue would reject.
-        string[] inputValues = multiValueString.Split(
-            [';', ' ', ','],
-            StringSplitOptions.RemoveEmptyEntries
-        );
+        string[] inputValues = multiValueString.Split([';', ' ', ','], StringSplitOptions.RemoveEmptyEntries);
 
         EnumState result = new(enumPairs.EnumIds);
 
