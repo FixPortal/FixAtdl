@@ -1,0 +1,41 @@
+{
+  "$comment": [
+    "PR review risk tiering. Read by ~/.claude/hooks/pr-review-policy.sh.",
+    "Any file matching 'high' => HIGH (Gitar + CodeRabbit). All files matching 'low' => LOW.",
+    "Everything else => NORMAL (Gitar only). No match anywhere => NORMAL, deliberately.",
+    "",
+    "This repo PUBLISHES a package (release.yml), so its dependency manifests are supply",
+    "chain in both directions - what it consumes and what consumers then inherit.",
+    "LOW justification for THIS repo: docs/ is developer documentation with no site build.",
+    "Root *.md is low, but note that any readme packaged INTO the published artefact would",
+    "not be - none is today.",
+    "",
+    "Dependency manifests are deliberately NOT in 'high' and must not be added (estate rule,",
+    "2026-07-29) - package.json, package-lock.json, Directory.Packages.props, **/*.csproj. They are",
+    "what Dependabot edits, and dependency PRs are out of AI code review on both vendors:",
+    "CodeRabbit refuses bot authors outright and Gitar's bot review is switched off, because",
+    "reviewing every bump exhausts the allowance and starves the changes that need it. Listing",
+    "them HIGH would demand a reviewer that can never run - coverage on paper, none in fact. CI",
+    "plus Dependabot's own advisory data is what gates a bump. nuget.config, global.json, .npmrc",
+    "and Directory.Build.props stay HIGH: registry/feed and analyzer config, not bot-edited."
+  ],
+
+  "version": 1,
+
+  "high": [
+    ".claude/review-policy.json",
+    ".coderabbit.yaml",
+    ".github/workflows/**",
+    ".config/dotnet-tools.json",
+    "nuget.config",
+    "global.json",
+    ".npmrc",
+    "Directory.Build.props"
+  ],
+
+  "low": [
+    "docs/**",
+    "*.md",
+    ".vscode/**"
+  ]
+}
