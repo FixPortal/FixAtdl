@@ -12,7 +12,7 @@
     ],
     "report-file-name": "mutation-report",
     "mutation-level": "Standard",
-    "coverage-analysis": "perTest",
+    "coverage-analysis": "off",
     "test-runner": "mtp",
     "concurrency": 4,
     "thresholds": {
@@ -20,7 +20,6 @@
       "low": 70,
       "break": 0
     },
-    "test-case-filter": "Category!=Integration",
     "mutate": [
       "**/*.cs"
     ]
