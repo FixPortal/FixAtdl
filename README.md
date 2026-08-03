@@ -1,3 +1,7 @@
+![Release](https://img.shields.io/github/v/release/FixPortal/fixportal-fixatdl)
+![CI](https://github.com/FixPortal/fixportal-fixatdl/actions/workflows/ci.yml/badge.svg)
+![License](https://img.shields.io/github/license/FixPortal/fixportal-fixatdl)
+
 # FixPortal.FixAtdl
 
 > Modernised .NET 10 fork of [Atdl4net](https://github.com/atdl4net/atdl4net) — the open-source reference implementation of FIXatdl v1.1. Maintained by [FixPortal](https://www.fixportal.org).
@@ -105,6 +109,12 @@ CI uploads both the full Stryker output and compact summaries:
 
 - `mutation-summary.json`
 - `mutation-summary.md`
+
+## Troubleshooting
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| `dotnet restore` fails with NU1301 ("Unable to find package FixPortal.CodeStyle") or 401 Unauthorized on the `github-fixportal` feed | The build consumes `FixPortal.CodeStyle` from the private FixPortal GitHub Packages feed, and `nuget.config` reads its credentials from the `GITHUB_PACKAGES_TOKEN` environment variable. Without it, the feed rejects the restore anonymously. | Set `$env:GITHUB_PACKAGES_TOKEN = "<token with read:packages on the FixPortal org>"` (Windows PowerShell) or `export GITHUB_PACKAGES_TOKEN=...` (bash), then restore again. |
 
 ## Licence
 
