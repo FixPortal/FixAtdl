@@ -3,7 +3,7 @@ name: mutation
 on:
   workflow_dispatch:
   schedule:
-    - cron: '15 4 * * *'
+    - cron: '15 4 * * 2'
 
 concurrency:
   group: mutation-${{ github.ref }}
@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   stryker:
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
