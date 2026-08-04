@@ -36,11 +36,13 @@ Examples of unacceptable behaviour:
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behaviour may be
-reported to the project maintainers via
-[GitHub Security Advisories](https://github.com/FixPortal/fixportal-fixatdl/security/advisories/new)
-or by contacting [FixPortal](https://www.fixportal.org). All complaints will be
-reviewed and investigated promptly and fairly, and the privacy of the reporter
-will be respected.
+reported to the project maintainers by contacting
+[FixPortal](https://www.fixportal.org). All complaints will be reviewed and
+investigated promptly and fairly, and the privacy of the reporter will be
+respected.
+
+Do not use GitHub Security Advisories for conduct reports — that channel is
+reserved for vulnerability disclosure (see `SECURITY.md`).
 
 The full text of the Contributor Covenant, including enforcement guidelines and
 scope, is available at
