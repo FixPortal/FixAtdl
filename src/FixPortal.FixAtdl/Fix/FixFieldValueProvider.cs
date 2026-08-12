@@ -99,9 +99,9 @@ public class FixFieldValueProvider
         bool retrieved = false;
         string? result = null;
 
-        if (_initialValueProvider != null && _initialValueProvider.InputFixValues != null)
+        if (_initialValueProvider?.InputFixValues is { } inputFixValues)
         {
-            retrieved = _initialValueProvider.InputFixValues.TryGetValue(fixField, out result);
+            retrieved = inputFixValues.TryGetValue(fixField, out result);
         }
 
         value = retrieved ? result! : null!;

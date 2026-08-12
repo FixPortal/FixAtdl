@@ -225,7 +225,7 @@ public class ClockTimeZoneTests
         // Set value first using a valid UTC DateTime
         clock.SetValue(new DateTime(2026, 1, 15, 12, 0, 0, DateTimeKind.Utc));
 
-        var act = () => clock.GetCurrentValue();
+        Func<object?> act = clock.GetCurrentValue;
         act.Should().Throw<InvalidFieldValueException>();
     }
 }

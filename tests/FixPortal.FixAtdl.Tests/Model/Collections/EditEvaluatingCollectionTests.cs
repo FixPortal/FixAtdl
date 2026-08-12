@@ -36,7 +36,7 @@ public class EditEvaluatingCollectionTests
         var path = Path.Join(AppContext.BaseDirectory, "Fixtures", "twap.xml");
         File.Exists(path).Should().BeTrue();
 
-        var act = () => LoadTwap();
+        Func<Strategy_t> act = LoadTwap;
         act.Should().NotThrow();
     }
 

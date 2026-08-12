@@ -214,8 +214,7 @@ public class FixMessageTests
         initialProvider.InputFixValues.Returns(fixValues);
 
         // Build a minimal ParameterCollection with a plain String_t parameter (no enum pairs)
-        ParameterCollection parameters = [];
-        parameters.Add(new Parameter_t<String_t>("MsgType") { FixTag = 35 });
+        ParameterCollection parameters = [new Parameter_t<String_t>("MsgType") { FixTag = 35 }];
 
         var provider = new FixFieldValueProvider(initialProvider, parameters);
 
@@ -240,8 +239,7 @@ public class FixMessageTests
     [Fact]
     public void FixFieldValueProvider_Parameters_returns_supplied_parameter_collection()
     {
-        ParameterCollection parameters = [];
-        parameters.Add(new Parameter_t<String_t>("MsgType") { FixTag = 35 });
+        ParameterCollection parameters = [new Parameter_t<String_t>("MsgType") { FixTag = 35 }];
 
         var provider = new FixFieldValueProvider(null, parameters);
 
@@ -257,7 +255,7 @@ public class FixMessageTests
         // would have rejected; ToFix must refuse to serialize it rather than emit a (uint)-corrupted tag.
         var message = new FixMessage { [(FixField)(-1)] = "x" };
 
-        var act = () => message.ToFix();
+        Func<string> act = message.ToFix;
 
         act.Should().Throw<InvalidOperationException>();
     }
@@ -267,7 +265,7 @@ public class FixMessageTests
     {
         var message = new FixMessage { [(FixField)35] = $"A{FixMessage.SOH}B" };
 
-        var act = () => message.ToFix();
+        Func<string> act = message.ToFix;
 
         act.Should().Throw<InvalidOperationException>();
     }
@@ -296,8 +294,7 @@ public class FixMessageTests
         var percentageParameter = new Parameter_t<Percentage_t>("Pct");
         percentageParameter.Value.MultiplyBy100 = multiplyBy100;
 
-        ParameterCollection parameters = [];
-        parameters.Add(percentageParameter);
+        ParameterCollection parameters = [percentageParameter];
 
         var provider = new FixFieldValueProvider(initialProvider, parameters);
 

@@ -97,7 +97,7 @@ public class Data_t : AtdlReferenceType<char[]>, IControlConvertible
     /// <returns>If input value is not null, returns value converted to a string; null otherwise.</returns>
     protected override string? ConvertToWireValueFormat(char[]? value)
     {
-        return value != null && value.Length > 0 ? new string(value) : null;
+        return value is { Length: > 0 } ? new string(value) : null;
     }
 
     /// <summary>

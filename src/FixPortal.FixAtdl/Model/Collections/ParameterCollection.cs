@@ -56,7 +56,7 @@ public class ParameterCollection : KeyedCollection<string, IParameter>, ISimpleD
     {
         FixTagValuesCollection output = [];
 
-        foreach (IParameter parameter in Items.Where(p => p.FixTag != null && p.WireValue != null))
+        foreach (IParameter parameter in Items.Where(p => p is { FixTag: not null, WireValue: not null }))
         {
             output.Add((FixTag)parameter.FixTag!, parameter.WireValue!);
         }

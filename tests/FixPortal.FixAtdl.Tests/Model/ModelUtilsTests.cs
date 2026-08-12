@@ -18,9 +18,9 @@ public class ModelUtilsTests
         second.Visited.Should().BeTrue();
     }
 
-    public interface IVisitor { }
+    public interface IVisitor;
 
-    public sealed class Target { }
+    public sealed class Target;
 
     public sealed class FirstVisitor : IVisitor
     {

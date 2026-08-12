@@ -22,7 +22,7 @@ public static class ThrowHelper
     // parse the format string for placeholders and throw FormatException on literal braces (e.g.
     // "{NULL}", "Nullable{Int32}", XML payloads), corrupting the error-reporting path (F1c).
     private static string FormatMessage(string format, object?[] args) =>
-        args?.Length > 0 ? string.Format(CultureInfo.InvariantCulture, format, args) : format;
+        args.Length > 0 ? string.Format(CultureInfo.InvariantCulture, format, args) : format;
 
     private static void PopulateXmlLineInfo(Exception exception, XObject? node)
     {

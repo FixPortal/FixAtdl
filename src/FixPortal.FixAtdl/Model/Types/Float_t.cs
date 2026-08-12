@@ -41,9 +41,6 @@ public class Float_t : AtdlValueType<decimal>, IControlConvertible
     /// <value>The minimum value.</value>
     public decimal? MinValue { get; set; }
 
-#pragma warning disable IDE0032
-    private int? _precision;
-
     /// <summary>
     /// Gets/sets the precision of this value, taken as the number of digits to the right of the decimal point in
     /// which to round when populating the FIX message. Lack of this attribute indicates that the value entered by
@@ -51,7 +48,7 @@ public class Float_t : AtdlValueType<decimal>, IControlConvertible
     /// </summary>
     public int? Precision
     {
-        get => _precision;
+        get;
         set
         {
             if (value is < 0 or > 28)
@@ -61,10 +58,9 @@ public class Float_t : AtdlValueType<decimal>, IControlConvertible
                     "Precision must be between 0 and 28."
                 );
             }
-            _precision = value;
+            field = value;
         }
     }
-#pragma warning restore IDE0032
 
     #region AtdlValueType<T> Overrides
 

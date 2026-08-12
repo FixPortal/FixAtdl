@@ -1048,7 +1048,7 @@ public class ElementFactory : INotifyClassDeserialized
 
     #endregion
 
-    private struct DepthGuard : IDisposable
+    private readonly struct DepthGuard : IDisposable
     {
         private readonly ElementFactory _factory;
 
