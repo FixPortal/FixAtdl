@@ -115,7 +115,7 @@ resharper_introduce_optional_parameters_global_highlighting = none
 [src/FixPortal.FixAtdl/Model/Types/Support/DateTimeTypeBase.cs]
 resharper_member_can_be_protected_global_highlighting = none
 
-[src/FixPortal.FixAtdl/Xml/Serialization/{INotifyClassDeserialized}.cs]
+[src/FixPortal.FixAtdl/Xml/Serialization/INotifyClassDeserialized.cs]
 resharper_event_never_subscribed_to_global_highlighting = none
 
 [src/FixPortal.FixAtdl/Xml/StrategiesReader.cs]
@@ -137,6 +137,14 @@ resharper_type_parameter_can_be_variant_highlighting = none
 # XML population uses null-forgiving annotations for a non-null post-resolution
 # API, while these guards deliberately protect the pre-resolution graph.
 [src/FixPortal.FixAtdl/Model/Collections/ReadOnlyControlCollection.cs]
+resharper_conditional_access_qualifier_is_non_nullable_according_to_api_contract_highlighting = none
+
+# Preserve upstream no-op/null-tolerant behavior for explicit null params arrays
+# and list controls reset before their XML initialization phase.
+[src/FixPortal.FixAtdl/Diagnostics/ThrowHelper.cs]
+resharper_conditional_access_qualifier_is_non_nullable_according_to_api_contract_highlighting = none
+
+[src/FixPortal.FixAtdl/Model/Controls/Support/ListControlBase.cs]
 resharper_conditional_access_qualifier_is_non_nullable_according_to_api_contract_highlighting = none
 
 [src/FixPortal.FixAtdl/Model/Controls/Label_t.cs]
