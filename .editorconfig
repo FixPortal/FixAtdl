@@ -1,5 +1,6 @@
-# Thin formatter configuration. Analyzer/style rules come from FixPortal.CodeStyle;
-# only documented project-specific exceptions belong below.
+# Thin, formatter-only .editorconfig for projects that consume FixPortal.CodeStyle.
+# Analyzer rules and severities come from the package; only documented, scoped
+# compatibility exceptions belong below.
 
 root = true
 
@@ -23,7 +24,7 @@ indent_size = 2
 # markdown line breaks are two trailing spaces — don't trim them
 trim_trailing_whitespace = false
 
-#### C# files (formatter keys only) ####
+#### C# files ####
 [*.cs]
 end_of_line = crlf
 indent_size = 4
@@ -37,66 +38,122 @@ csharp_prefer_braces = true:error
 dotnet_style_predefined_type_for_locals_parameters_members = true:error
 dotnet_style_predefined_type_for_member_access = true:error
 
-#### Project-specific rule overrides ####
-# Each entry below overrides the FixPortal.CodeStyle global config for a reason
-# specific to this FIXatdl parser/model library. Do not add entries without one.
+#### Project-specific compatibility exceptions ####
 
-# ReSharper/Rider naming highlight — FIXatdl spec type names carry a mandatory
-# '_t' suffix (Clock_t, Qty_t, …) that trips InconsistentNaming; analyzer-side
-# equivalents (S101, CA1707) are handled below / in the package.
+# FIXatdl names carry the specification's mandatory `_t` suffix. Renaming these
+# published model types would break XML xsi:type dispatch and source compatibility.
+[src/FixPortal.FixAtdl/Model/**/*.cs]
+dotnet_diagnostic.S101.severity = none
 resharper_inconsistent_naming_highlighting = none
 
-# CSharpier and FixPortal.CodeStyle own mechanical style. ReSharper's equivalent
-# qualifier/import suggestions add no independent signal.
-resharper_redundant_name_qualifier_highlighting = none
-resharper_redundant_using_directive_highlighting = none
-
-# S101 — "type name should be PascalCase". Every FIXatdl element/type/control name
-#   carries the spec's mandatory '_t' suffix (Clock_t, Qty_t, Strategy_t, …). The
-#   suffix is part of the XML xsi:type contract, not a style slip; renaming would
-#   break the spec-to-CLR mapping. (~128 occurrences, the bulk of the warnings.)
-dotnet_diagnostic.S101.severity = none
-
-# S2225 — "ToString() should not return null". For the FIXatdl value/control types a
-#   null ToString result is the protocol signal "omit this field from the FIX wire"
-#   (a non-present optional tag), distinct from an empty string. Returning "" would
-#   change wire semantics.
+# A null string means "omit this optional FIX field", which is distinct from an
+# empty wire value. Preserve that protocol contract for value/control types.
+[src/FixPortal.FixAtdl/Model/Controls/**/*.cs]
 dotnet_diagnostic.S2225.severity = none
 
-# S3925 — "implement the full ISerializable pattern". Demands the legacy
-#   (SerializationInfo, StreamingContext) constructor for BinaryFormatter-style
-#   serialization, which is obsolete and disabled on modern .NET. The exceptions are
-#   never binary-serialized; the pattern would be dead ceremony.
-dotnet_diagnostic.S3925.severity = none
+[src/FixPortal.FixAtdl/Model/Controls/*.cs]
+dotnet_diagnostic.S2225.severity = none
 
-# S2094 — "remove this empty class". The empty types are intentional spec markers
-#   (e.g. TagNum_t : NonZeroPositiveIntegerTypeBase) that give each FIXatdl type a
-#   distinct CLR identity for the xsi:type dispatch; they are deliberately bodyless.
+[src/FixPortal.FixAtdl/Model/Types/**/*.cs]
+dotnet_diagnostic.S2225.severity = none
+
+[src/FixPortal.FixAtdl/Model/Types/*.cs]
+dotnet_diagnostic.S2225.severity = none
+
+# These published exception types inherit the upstream serializable API surface,
+# but BinaryFormatter is obsolete and disabled; the legacy constructor is dead.
+[src/FixPortal.FixAtdl/Diagnostics/Exceptions/*.cs]
+dotnet_diagnostic.S3925.severity = none
+resharper_class_never_instantiated_global_highlighting = none
+resharper_member_can_be_protected_global_highlighting = none
+resharper_unused_type_global_highlighting = none
+
+# Bodyless FIXatdl marker types provide distinct CLR identities for XML dispatch.
+[src/FixPortal.FixAtdl/Model/Elements/**/*.cs]
 dotnet_diagnostic.S2094.severity = none
 
-# S2743 — "static field in a generic type is not shared across closed types". The
-#   per-closed-type behaviour is exactly what AtdlValueType<T>/AtdlReferenceType<T>
-#   rely on (one cache slot per concrete value type). The rule's concern is the
-#   intended design here.
-dotnet_diagnostic.S2743.severity = none
+[src/FixPortal.FixAtdl/Model/Elements/*.cs]
+dotnet_diagnostic.S2094.severity = none
 
-# CA1062 — "validate arguments of public methods". Package default is suggestion;
-#   suppressed here by design: this is a parser/model library whose public surface is
-#   reached almost entirely through the nullable-annotated model graph, and the few
-#   genuine entry points (StrategiesReader, value/control converters) already fail
-#   fast via ThrowHelper with FIXatdl-specific exceptions. Blanket ArgumentNullException
-#   guards on every externally-visible member would be ~85 sites of dead ceremony that
-#   change wire/error semantics for no real safety gain.
-dotnet_diagnostic.CA1062.severity = none
+[src/FixPortal.FixAtdl/Model/Types/**/*.cs]
+dotnet_diagnostic.S2094.severity = none
+
+[src/FixPortal.FixAtdl/Model/Types/*.cs]
+dotnet_diagnostic.S2094.severity = none
+
+# These caches intentionally belong to each closed generic value type.
+[src/FixPortal.FixAtdl/Model/Types/Support/{AtdlReferenceType,AtdlValueType}.cs]
+dotnet_diagnostic.S2743.severity = none
+resharper_static_member_in_generic_type_highlighting = none
+
+# The published upstream API is populated and consumed by XML reflection and by
+# downstream callers, so solution-local liveness/visibility analysis is incomplete.
+[src/FixPortal.FixAtdl/Model/Controls/{Clock_t,RadioButton_t}.cs]
+resharper_auto_property_can_be_made_get_only_global_highlighting = none
+
+[src/FixPortal.FixAtdl/Model/Elements/{Control_t,Strategy_t,StrategyLayout_t,StrategyPanel_t}.cs]
+resharper_auto_property_can_be_made_get_only_global_highlighting = none
+
+[src/FixPortal.FixAtdl/Xml/Serialization/ElementDefinition.cs]
+resharper_auto_property_can_be_made_get_only_global_highlighting = none
+resharper_introduce_optional_parameters_global_highlighting = none
+resharper_member_can_be_protected_global_highlighting = none
+
+[src/FixPortal.FixAtdl/{Configuration/FixAtdlOptions,Model/Controls/Support/AtdlControlName,Model/Types/Support/AtdlTypeName,Utility/DataEntryMode}.cs]
+resharper_unused_type_global_highlighting = none
+
+[src/FixPortal.FixAtdl/Model/Elements/RepeatingGroup_t.cs]
+resharper_class_never_instantiated_global_highlighting = none
+
+[src/FixPortal.FixAtdl/Model/Elements/Control_t.cs]
+resharper_member_can_be_protected_global_highlighting = none
+resharper_virtual_member_never_overridden_global_highlighting = none
+
+[src/FixPortal.FixAtdl/Model/Elements/StrategyPanel_t.cs]
+resharper_introduce_optional_parameters_global_highlighting = none
+
+[src/FixPortal.FixAtdl/Model/Types/Support/DateTimeTypeBase.cs]
+resharper_member_can_be_protected_global_highlighting = none
+
+[src/FixPortal.FixAtdl/Xml/Serialization/{INotifyClassDeserialized}.cs]
+resharper_event_never_subscribed_to_global_highlighting = none
+
+[src/FixPortal.FixAtdl/Xml/StrategiesReader.cs]
+resharper_event_never_subscribed_to_global_highlighting = none
+
+[src/FixPortal.FixAtdl/Model/{Controls/Support/IParameterConvertible,Elements/Support/IEdit,Elements/Support/IParameter,Types/Support/IParameterType}.cs]
+resharper_unused_member_in_super_global_highlighting = none
+resharper_unused_parameter_global_highlighting = none
+
+[src/FixPortal.FixAtdl/Utility/IParentable.cs]
+resharper_unused_member_in_super_global_highlighting = none
+
+[src/FixPortal.FixAtdl/Model/Types/String_t.cs]
+resharper_return_type_can_be_not_nullable_highlighting = none
+
+[src/FixPortal.FixAtdl/Utility/IResolvable.cs]
+resharper_type_parameter_can_be_variant_highlighting = none
+
+# XML population uses null-forgiving annotations for a non-null post-resolution
+# API, while these guards deliberately protect the pre-resolution graph.
+[src/FixPortal.FixAtdl/Model/Collections/ReadOnlyControlCollection.cs]
+resharper_conditional_access_qualifier_is_non_nullable_according_to_api_contract_highlighting = none
+
+[src/FixPortal.FixAtdl/Model/Controls/Label_t.cs]
+resharper_null_coalescing_condition_is_always_not_null_according_to_api_contract_highlighting = none
+
+# Preserve the upstream tolerance for null wire input and nullable protocol
+# conversion results despite the public nullable annotations.
+[src/FixPortal.FixAtdl/Model/Collections/EnumPairCollection.cs]
+resharper_null_coalescing_condition_is_always_not_null_according_to_api_contract_highlighting = none
+
+[src/FixPortal.FixAtdl/Model/Types/Data_t.cs]
+resharper_conditional_access_qualifier_is_non_nullable_according_to_api_contract_highlighting = none
 
 #### Test project overrides ####
-[*Tests.cs]
-# CA2007 (ConfigureAwait) is actively wrong in xUnit test methods — it trips xUnit1030
-# (ConfigureAwait(false) can bypass the runner's parallelism limits). Never suggest it here.
-dotnet_diagnostic.CA2007.severity = none
-
 [**/tests/**.cs]
-# Same xUnit1030 rationale as above, scoped to the tests tree.
+# CA2007 is wrong in xUnit tests: ConfigureAwait(false) trips xUnit1030 and can
+# bypass the runner's parallelism limits.
 dotnet_diagnostic.CA2007.severity = none
 
 # FIXatdl and XML Schema namespace URIs are immutable identifiers, not network endpoints.
@@ -109,10 +166,6 @@ dotnet_diagnostic.S5332.severity = none
 [src/FixPortal.FixAtdl/Model/Elements/{Edit_t,Strategy_t,StrategyPanel_t}.cs]
 resharper_collection_never_updated_global_highlighting = none
 
-# These caches intentionally belong to each closed generic type, matching S2743 above.
-[src/FixPortal.FixAtdl/Model/Types/Support/{AtdlReferenceType,AtdlValueType}.cs]
-resharper_static_member_in_generic_type_highlighting = none
-
 # Implementing IEquatable would alter the library's locked public API for no measured
 # parser benefit.
 [src/FixPortal.FixAtdl/Model/Types/Support/{MonthYear,Tenor}.cs]
@@ -122,3 +175,7 @@ resharper_struct_lacks_i_equatable_global_highlighting = none
 # an individual test asserts only its category.
 [tests/FixPortal.FixAtdl.Tests/TestDoubles/RecordingLoggerFactory.cs]
 resharper_not_accessed_positional_property_global_highlighting = none
+
+# The empty target type is the payload for a reflection-dispatch regression test.
+[tests/FixPortal.FixAtdl.Tests/Model/ModelUtilsTests.cs]
+dotnet_diagnostic.S2094.severity = none

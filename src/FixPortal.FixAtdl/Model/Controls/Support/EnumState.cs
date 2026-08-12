@@ -7,7 +7,6 @@
 
 using System.Collections;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using FixPortal.FixAtdl.Diagnostics.Exceptions;
 using FixPortal.FixAtdl.Model.Collections;
@@ -107,15 +106,12 @@ public class EnumState
 
         // Validate that every EnumID lines up BEFORE mutating any bit, so a mismatch leaves this
         // instance untouched rather than partially copied (Theme D — no partial mutation before throw).
-        for (int n = 0; n < _enumIds.Length; n++)
+        if (_enumIds.Any(enumId => Array.IndexOf(source._enumIds, enumId) < 0))
         {
-            if (Array.IndexOf(source._enumIds, _enumIds[n]) < 0)
-            {
-                throw ThrowHelper.New<ArgumentException>(
-                    this,
-                    "Mismatch between the EnumIDs of the source and target EnumState"
-                );
-            }
+            throw ThrowHelper.New<ArgumentException>(
+                this,
+                "Mismatch between the EnumIDs of the source and target EnumState"
+            );
         }
 
         for (int n = 0; n < _enumIds.Length; n++)

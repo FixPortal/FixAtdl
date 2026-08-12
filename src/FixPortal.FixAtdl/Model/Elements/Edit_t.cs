@@ -9,7 +9,6 @@ using System.Globalization;
 using System.Text;
 using FixPortal.FixAtdl.Diagnostics.Exceptions;
 using FixPortal.FixAtdl.Fix;
-using FixPortal.FixAtdl.Model;
 using FixPortal.FixAtdl.Model.Collections;
 using FixPortal.FixAtdl.Model.Controls.Support;
 using FixPortal.FixAtdl.Model.Elements.Support;
@@ -324,8 +323,7 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
         // A list control returns a never-null EnumState; "nothing selected" is an all-false EnumState
         // (not null and not ""), so it must be treated as absent here or EX/NX would always be wrong
         // for list controls. Scalar/text/clock controls already return null when unset.
-        bool empty =
-            value == null || value as string == string.Empty || value is EnumState enumState && !enumState.HasSelection;
+        bool empty = value is null or "" or EnumState { HasSelection: false };
 
         bool result = checkingForExist ? !empty : empty;
 
@@ -409,9 +407,9 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
         // set", so EQ-to-null is false (NE is true, via the caller's negation). An EnumState LHS
         // uses its own "no selection" check rather than Matches("{NULL}"), which would throw
         // since "{NULL}" is not a valid EnumID.
-        if (rhs as string == Atdl.NullValue)
+        if (rhs is Atdl.NullValue)
         {
-            return lhs is EnumState lhsEnumStateForNullCheck && !lhsEnumStateForNullCheck.HasSelection;
+            return lhs is EnumState { HasSelection: false };
         }
 
         if (lhs is EnumState lhsEnumState)
@@ -576,13 +574,11 @@ public class Edit_t<T> : IEdit<T>, IResolvable<Strategy_t, T>
 
     private static object GetFixFieldValue(FixFieldValueProvider additionalValues, string fixField)
     {
-        object? result;
-
         bool gotValue = additionalValues.TryGetValue(fixField, out var value);
 
         // If the FIX value can be converted into a number, most likely it should be treated as one
         // for comparison purposes
-        result = gotValue switch
+        object? result = gotValue switch
         {
             false => null,
             _ => decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal number)

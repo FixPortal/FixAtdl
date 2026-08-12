@@ -62,8 +62,7 @@ public class ValidationResult
     public ValidationResult(ResultType resultType, string format, params object[] args)
     {
         _validityType = resultType;
-        ErrorText =
-            args != null && args.Length > 0 ? string.Format(CultureInfo.InvariantCulture, format, args) : format;
+        ErrorText = args is { Length: > 0 } ? string.Format(CultureInfo.InvariantCulture, format, args) : format;
     }
 
     private ValidationResult()

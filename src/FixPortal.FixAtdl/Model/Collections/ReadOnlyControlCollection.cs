@@ -73,17 +73,7 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
     {
         foreach (Control_t control in panel.Controls)
         {
-            if (_controls.ContainsKey(control.Id))
-            {
-                throw ThrowHelper.New<DuplicateKeyException>(
-                    this,
-                    ErrorMessages.AttemptToAddDuplicateKey,
-                    control.Id,
-                    "Controls"
-                );
-            }
-
-            _controls.Add(control.Id, control);
+            AddControl(control);
         }
         foreach (StrategyPanel_t childPanel in panel.StrategyPanels)
         {
@@ -91,21 +81,24 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
         }
     }
 
+    private void AddControl(Control_t control)
+    {
+        if (!_controls.TryAdd(control.Id, control))
+        {
+            throw ThrowHelper.New<DuplicateKeyException>(
+                this,
+                ErrorMessages.AttemptToAddDuplicateKey,
+                control.Id,
+                "Controls"
+            );
+        }
+    }
+
     private void HandleAddAction(NotifyCollectionChangedEventArgs e)
     {
         foreach (Control_t item in e.NewItems!)
         {
-            if (_controls.ContainsKey(item.Id))
-            {
-                throw ThrowHelper.New<DuplicateKeyException>(
-                    this,
-                    ErrorMessages.AttemptToAddDuplicateKey,
-                    item.Id,
-                    "Controls"
-                );
-            }
-
-            _controls.Add(item.Id, item);
+            AddControl(item);
         }
     }
 
@@ -113,10 +106,7 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
     {
         foreach (Control_t item in e.OldItems!)
         {
-            if (_controls.ContainsKey(item.Id))
-            {
-                _controls.Remove(item.Id);
-            }
+            _controls.Remove(item.Id);
         }
     }
 
@@ -127,7 +117,7 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
             string oldId = ((Control_t)e.OldItems[n]!).Id;
             Control_t newControl = (Control_t)e.NewItems![n]!;
 
-            if (newControl.Id != oldId && _controls.ContainsKey(newControl.Id))
+            if (newControl.Id != oldId && !_controls.TryAdd(newControl.Id, newControl))
             {
                 throw ThrowHelper.New<DuplicateKeyException>(
                     this,
@@ -137,8 +127,14 @@ public class ReadOnlyControlCollection : IParentable<Strategy_t>, IEnumerable<Co
                 );
             }
 
-            _controls.Remove(oldId);
-            _controls[newControl.Id] = newControl;
+            if (newControl.Id != oldId)
+            {
+                _controls.Remove(oldId);
+            }
+            else
+            {
+                _controls[oldId] = newControl;
+            }
         }
     }
 

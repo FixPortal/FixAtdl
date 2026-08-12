@@ -743,12 +743,12 @@ public class ParameterTypeFeatureTests
 
         // Setting them to the same value throws ArgumentException during ResolveAll
         p.Value.TrueWireValue = "N";
-        var act1 = () => strategies.ResolveAll();
+        Action act1 = strategies.ResolveAll;
         act1.Should().Throw<ArgumentException>();
 
         p.Value.TrueWireValue = "Y";
         p.Value.FalseWireValue = "Y";
-        var act2 = () => strategies.ResolveAll();
+        Action act2 = strategies.ResolveAll;
         act2.Should().Throw<ArgumentException>();
     }
 
@@ -783,8 +783,9 @@ public class ParameterTypeFeatureTests
             .FixAtdl.Model.Reference.Regions.AsiaPacificJapanCountries.Should()
             .BeAssignableTo<System.Collections.Frozen.FrozenSet<FixPortal.FixAtdl.Model.Reference.IsoCountryCode>>();
 
-        var americasColl = (System.Collections.Generic.ICollection<FixPortal.FixAtdl.Model.Reference.IsoCountryCode>)
-            FixPortal.FixAtdl.Model.Reference.Regions.TheAmericasCountries;
+        var americasColl =
+            (ICollection<FixPortal.FixAtdl.Model.Reference.IsoCountryCode>)
+                FixPortal.FixAtdl.Model.Reference.Regions.TheAmericasCountries;
         Action addAct = () => americasColl.Add(FixPortal.FixAtdl.Model.Reference.IsoCountryCode.US);
         addAct.Should().Throw<NotSupportedException>();
     }

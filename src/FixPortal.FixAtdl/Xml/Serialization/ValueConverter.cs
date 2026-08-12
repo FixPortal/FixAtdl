@@ -22,7 +22,7 @@ public static class ValueConverter
     /// <summary>
     /// Gets the exception context used when reporting conversion failures.
     /// </summary>
-    public static readonly string ExceptionContext = typeof(ValueConverter).Name;
+    public static readonly string ExceptionContext = nameof(ValueConverter);
 
     /// <summary>
     /// Converts the supplied text value to the specified target type.

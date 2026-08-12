@@ -131,7 +131,7 @@ public class ParameterCollectionTests
         var parameters = await LoadTwapParametersAsync();
         parameters.Add(new Parameter_t<String_t>("LocalOnly") { WireValue = "internal" });
 
-        var act = () => parameters.GetOutputValues();
+        Func<FixTagValuesCollection> act = parameters.GetOutputValues;
 
         act.Should().Throw<MissingMandatoryValueException>();
     }

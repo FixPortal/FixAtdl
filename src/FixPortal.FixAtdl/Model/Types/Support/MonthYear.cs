@@ -158,8 +158,7 @@ public struct MonthYear : IComparable
             // Reject calendar-impossible days (e.g. 20260230 = 30 Feb). Year 0 has no Gregorian
             // calendar, so DateTime.DaysInMonth cannot be consulted and the day check is skipped.
             if (
-                result.Day != null
-                && result.Year >= 1
+                result is { Day: not null, Year: >= 1 }
                 && result.Day.Value > DateTime.DaysInMonth(result.Year, result.Month)
             )
             {
