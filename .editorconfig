@@ -42,7 +42,12 @@ dotnet_style_predefined_type_for_member_access = true:error
 
 # FIXatdl names carry the specification's mandatory `_t` suffix. Renaming these
 # published model types would break XML xsi:type dispatch and source compatibility.
-[src/FixPortal.FixAtdl/Model/**/*.cs]
+[src/FixPortal.FixAtdl/Model/**/*_t.cs]
+dotnet_diagnostic.S101.severity = none
+resharper_inconsistent_naming_highlighting = none
+
+# Preserve this published upstream base type's FIX acronym casing.
+[src/FixPortal.FixAtdl/Model/Types/Support/UTCDataTimeTypeBase.cs]
 dotnet_diagnostic.S101.severity = none
 resharper_inconsistent_naming_highlighting = none
 
