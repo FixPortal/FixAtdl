@@ -47,7 +47,6 @@ updates:
           - "AwesomeAssertions"
           - "AwesomeAssertions.*"
           - "Microsoft.NET.Test.Sdk"
-          - "coverlet.*"
       nodatime:
         patterns:
           - "NodaTime"
