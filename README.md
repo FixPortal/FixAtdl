@@ -82,7 +82,7 @@ dotnet build FixPortal.FixAtdl.slnx --configuration Release --no-restore
 ```
 
 ```powershell
-dotnet test FixPortal.FixAtdl.slnx --configuration Release --no-build
+dotnet test --solution FixPortal.FixAtdl.slnx --configuration Release --no-build
 ```
 
 ```powershell

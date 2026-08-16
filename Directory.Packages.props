@@ -8,9 +8,7 @@
     <PackageVersion Include="NodaTime" Version="3.3.3" />
   </ItemGroup>
   <ItemGroup Label="Test">
-    <PackageVersion Include="xunit.v3" Version="3.2.2" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
+    <PackageVersion Include="xunit.v3" Version="4.0.0" />
     <PackageVersion Include="AwesomeAssertions" Version="9.5.0" />
     <PackageVersion Include="NSubstitute" Version="6.2.0" />
     <PackageVersion Include="NodaTime.Testing" Version="3.3.3" />
