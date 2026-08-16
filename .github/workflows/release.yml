@@ -43,7 +43,7 @@ jobs:
           dotnet build FixPortal.FixAtdl.slnx -c Release --no-restore /p:Version="${VERSION}"
 
       - name: Test (Release)
-        run: dotnet test FixPortal.FixAtdl.slnx -c Release --no-build
+        run: dotnet test --solution FixPortal.FixAtdl.slnx -c Release --no-build
 
       - name: Pack
         env:

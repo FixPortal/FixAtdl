@@ -4,8 +4,8 @@
 
 - Restore: `dotnet restore FixPortal.FixAtdl.sln`
 - Build: `dotnet build FixPortal.FixAtdl.sln -c Release --no-restore`
-- Test: `dotnet test FixPortal.FixAtdl.sln -c Release --no-build`
-- Single test: `dotnet test tests\FixPortal.FixAtdl.Tests\FixPortal.FixAtdl.Tests.csproj --filter "FullyQualifiedName~FixPortal.FixAtdl.Tests.Parsing.StrategiesParserTests.Parse_twap_fixture_yields_one_strategy_named_TWAP"`
+- Test: `dotnet test --solution FixPortal.FixAtdl.slnx -c Release --no-build`
+- Single test: `dotnet test --project tests\FixPortal.FixAtdl.Tests\FixPortal.FixAtdl.Tests.csproj --filter "FullyQualifiedName~FixPortal.FixAtdl.Tests.Parsing.StrategiesParserTests.Parse_twap_fixture_yields_one_strategy_named_TWAP"`
 - Mutation pilot: `dotnet tool restore` then `dotnet stryker --config-file stryker-config.json`
 - Formatting check: `dotnet format --verify-no-changes`
 
