@@ -22,7 +22,8 @@ name: Review policy guard
 # review of workflow changes; it was crowding out review of code.
 #
 # What a reviewer was nominally catching on a workflow diff is checked below instead:
-# unpinned actions, pull_request_target, and a blanket write-all token. actionlint covers
+# unvetted or unpinned third-party actions, privileged-context triggers
+# (pull_request_target, workflow_run), and a blanket write-all token. actionlint covers
 # syntax in the main CI workflow.
 #
 # THIS FILE DELETING ITSELF is covered by branch rules, not by review: "Review policy
@@ -123,10 +124,20 @@ jobs:
       # the evidence. Parsing also removes the self-match hazard that forced the old
       # `^[^#]*` prefixes: a parser reads values, so a comment describing a rule -- such
       # as this one -- cannot be mistaken for a violation of it.
-      # Deliberately NO actions/setup-python step. That installs a clean interpreter from
-      # the tool cache, and PyYAML is not in it -- which failed this job on its first run
-      # (2026-08-22, "PyYAML is not available to this runner"). The runner image's SYSTEM
-      # python3 does carry PyYAML, which is what the sibling assert_gate_coverage.py has
-      # been relying on. Adding setup-python here shadows the interpreter that works.
-      - name: Workflows must be hygienic (no target-context trigger, no write-all, actions pinned)
+      # setup-python previously was omitted here DELIBERATELY: it installs a clean
+      # interpreter from the tool cache, PyYAML is not in it, and that failed this job on
+      # its first run (2026-08-22, "PyYAML is not available to this runner"). The fallback
+      # -- the runner image's SYSTEM python3 -- carried PyYAML only as an image accident,
+      # so the gate depended on what GitHub happened to bake into ubuntu-latest. PyYAML is
+      # now provisioned explicitly below: a SHA-pinned setup-python plus a version-pinned
+      # pip install, both reviewed YAML in this file. The script's exit-2 path stays as
+      # the belt-and-braces if this provisioning ever breaks.
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+
+      - name: Install PyYAML (pinned)
+        run: pip install PyYAML==6.0.3
+
+      - name: Workflows must be hygienic (no privileged-context trigger, no write-all, actions pinned)
         run: python3 .github/scripts/assert_workflow_hygiene.py
