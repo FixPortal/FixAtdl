@@ -93,19 +93,21 @@ Files modified from upstream carry a `// FP Enhancement: <date> — <reason>` ba
 
 ## Mutation testing
 
-This repo includes a scoped Stryker pilot for the first part of the library the
-current characterization tests can prove well:
+This repo uses Stryker.NET for mutation testing. `stryker-config.json` sets
+`mutate: ["**/*.cs"]`, so the whole library is in scope.
 
-- `Model/Collections/ParameterCollection.cs`
-
-Run it locally with:
+Run it locally from the test project directory — the working directory is
+load-bearing, because `stryker-config.json` names no test project:
 
 ```powershell
 dotnet tool restore
-dotnet stryker --config-file stryker-config.json
+cd tests/FixPortal.FixAtdl.Tests
+dotnet stryker --config-file ../../stryker-config.json
 ```
 
-CI uploads both the full Stryker output and compact summaries:
+Output lands under `tests/FixPortal.FixAtdl.Tests/StrykerOutput/<timestamp>/reports/`.
+CI summarizes the run with `scripts/summarize-stryker.ps1` and uploads both the
+full Stryker output and compact summaries:
 
 - `mutation-summary.json`
 - `mutation-summary.md`

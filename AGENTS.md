@@ -39,6 +39,9 @@ parser / model / validator / FIX-tag emitter; `net10.0` only; no UI layer
 - Tests are xUnit v3 + AwesomeAssertions + NSubstitute in
   `tests/FixPortal.FixAtdl.Tests`, running on Microsoft.Testing.Platform.
 - Assert with `.Should()`, never xUnit `Assert.*`.
+- No coverage floor is currently enforced in CI — the old 65% line floor
+  left with `build-and-test.yml`, and no current workflow collects
+  coverage (coverlet is broken on .NET 10; see `docs/coverage-baseline.md`).
 
 ## Private feed restore
 
@@ -49,6 +52,11 @@ build is broken.
 
 ## Review workflow
 
-PRs merge rebase-only. `.claude/review-policy.json` tiers risk: workflows,
+PRs merge rebase-only. `.claude/review-policy.json` tiers risk:
 `nuget.config`, `Directory.Build.props`, and the review control plane itself
-are HIGH; `docs/**` is LOW; root `*.md` is NORMAL (it ships in the package).
+(`review-policy-guard.yml`, its two assertion scripts under
+`.github/scripts/`, `review-policy.json`, `.coderabbit.yaml`) are HIGH; other
+workflows are NORMAL — workflow hygiene is asserted mechanically by
+`review-policy-guard.yml` instead. `docs/**` is LOW except
+`docs/ai-findings.md` (NORMAL — it is the findings ledger); root `*.md` is
+NORMAL (it ships in the package).

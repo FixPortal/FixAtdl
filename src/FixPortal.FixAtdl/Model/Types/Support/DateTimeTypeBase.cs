@@ -21,15 +21,37 @@ namespace FixPortal.FixAtdl.Model.Types.Support;
 /// </summary>
 public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConvertible
 {
+    // TY1-G — MaxValue/MinValue are backed by fields whose setters also clear the corresponding
+    // time-only slot, so a programmatic bound assignment cannot leave a stale _maxTimeOfDay/
+    // _minTimeOfDay (written earlier via MaxValueText/MinValueText) applying alongside the new bound.
+    private DateTime? _maxValue;
+    private DateTime? _minValue;
+
     /// <summary>
     /// Maximum value for this date/time type, i.e., the latest acceptable date/time.
     /// </summary>
-    public DateTime? MaxValue { get; set; }
+    public DateTime? MaxValue
+    {
+        get => _maxValue;
+        set
+        {
+            _maxValue = value;
+            _maxTimeOfDay = null;
+        }
+    }
 
     /// <summary>
     /// Minimum value for this date/time type, i.e., the earliest acceptable date/time.
     /// </summary>
-    public DateTime? MinValue { get; set; }
+    public DateTime? MinValue
+    {
+        get => _minValue;
+        set
+        {
+            _minValue = value;
+            _minTimeOfDay = null;
+        }
+    }
 
     // C2 — time-only bound capture. A maxValue/minValue written as a bare time-of-day (HH:mm:ss[.fff])
     // is a time-of-day constraint, not a date+time one. The reflective parser routes the raw bound text
@@ -55,7 +77,6 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
             if (value == null)
             {
                 MaxValue = null;
-                _maxTimeOfDay = null;
                 return;
             }
             SetBound(value, isMax: true);
@@ -74,7 +95,6 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
             if (value == null)
             {
                 MinValue = null;
-                _minTimeOfDay = null;
                 return;
             }
             SetBound(value, isMax: false);
@@ -91,13 +111,13 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
             TimeOnly timeOfDay = TimeOnly.FromDateTime(normalised);
             if (isMax)
             {
+                _maxValue = null;
                 _maxTimeOfDay = timeOfDay;
-                MaxValue = null;
             }
             else
             {
+                _minValue = null;
                 _minTimeOfDay = timeOfDay;
-                MinValue = null;
             }
         }
         else
@@ -112,12 +132,10 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
             if (isMax)
             {
                 MaxValue = normalised;
-                _maxTimeOfDay = null;
             }
             else
             {
                 MinValue = normalised;
-                _minTimeOfDay = null;
             }
         }
     }

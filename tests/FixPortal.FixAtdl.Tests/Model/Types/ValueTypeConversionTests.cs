@@ -512,4 +512,23 @@ public class ValueTypeConversionTests
         p.WireValue = "{NULL}";
         p.WireValue.Should().BeNull();
     }
+
+    // TY2-G — the {NULL} guard now lives in AtdlValueType<T>.SetWireValue, so types whose
+    // converters cannot parse the sentinel (Char_t, MonthYear_t, Tenor_t, Country_t, etc.)
+    // clear rather than throw.
+    [Fact]
+    public void Char_t_treats_NULL_sentinel_as_clear()
+    {
+        var p = new Parameter_t<Char_t>("Ccy") { WireValue = "A" };
+        p.WireValue = "{NULL}";
+        p.WireValue.Should().BeNull();
+    }
+
+    [Fact]
+    public void MonthYear_t_treats_NULL_sentinel_as_clear()
+    {
+        var p = new Parameter_t<MonthYear_t>("Expiry") { WireValue = "202601" };
+        p.WireValue = "{NULL}";
+        p.WireValue.Should().BeNull();
+    }
 }
