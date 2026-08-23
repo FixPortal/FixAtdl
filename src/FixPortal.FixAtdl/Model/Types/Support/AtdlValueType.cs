@@ -146,6 +146,15 @@ public abstract class AtdlValueType<T> : IParameterType
             );
         }
 
+        // A '{NULL}' wire value is the FIXatdl "clear this field" instruction — clear the value
+        // here rather than handing the sentinel to the per-type converter, which several types
+        // (Char_t, MonthYear_t, Tenor_t, etc.) cannot parse. Matches the control-path guards.
+        if (value == Atdl.NullValue)
+        {
+            _value = null;
+            return;
+        }
+
         T? convertedValue;
 
         try

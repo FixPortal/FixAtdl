@@ -33,7 +33,7 @@ _The table covers the core namespaces only (~4,004 of ~5,072 coverable lines); t
 - `Xml.Serialization`: the best-covered core namespace thanks to the XML round-trip tests — `ElementFactory` (71%) and `StrategiesReader` (72%) carry it.
 
 ## Mutation testing
-Stryker `mutate` scope is currently `**/ParameterCollection.cs` only. Phase 1 broadens this to the core namespaces.
+`stryker-config.json` now sets `mutate: ["**/*.cs"]` — the whole library, not just the original `ParameterCollection.cs` pilot scope.
 
 ## Finalized coverage bar
 
@@ -105,4 +105,4 @@ mutate:
 
 ### CI coverage floor
 
-A floor of **65% line coverage** has been added to `.github/workflows/build-and-test.yml`. The floor is set 4 percentage points below the achieved 69.3% to catch regressions while tolerating minor natural fluctuation.
+A floor of **65% line coverage** was briefly enforced via `.github/workflows/build-and-test.yml`, set 4 percentage points below the achieved 69.3% to catch regressions while tolerating minor natural fluctuation. **That workflow and floor no longer exist** — the current workflows are `ci.yml`, `mutation.yml`, `release.yml`, and `review-policy-guard.yml`, and none of them collects coverage. The surviving trace is commit `0a7f903` ("chore: drop coverlet.collector"), which removed the `coverlet.*` pattern from the Dependabot `testing` group in `.github/dependabot.yml` because coverlet emits invalid IL on .NET 10 under instrumentation. **No coverage floor is currently enforced in CI.**

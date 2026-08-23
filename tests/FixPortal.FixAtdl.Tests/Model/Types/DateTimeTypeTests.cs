@@ -275,6 +275,42 @@ public class DateTimeTypeTests
     }
 
     [Fact]
+    public void DateTimeTypeBase_MaxValue_setter_clears_time_only_slot()
+    {
+        var param = new Parameter_t<UTCTimestamp_t>("Ts");
+
+        // Time-only bound first (populates the _maxTimeOfDay slot), then a programmatic
+        // full date+time MaxValue. The setter must clear the stale time-only slot, otherwise
+        // 13:00:00 would be rejected by the leftover 12:00:00 time-of-day bound.
+        param.Value.MaxValueText = "12:00:00";
+        param.Value.MaxValue = new DateTime(2026, 6, 2, 15, 0, 0, DateTimeKind.Utc);
+
+        var actValid = () => param.WireValue = "20260602-13:00:00";
+        actValid.Should().NotThrow();
+
+        // The full date+time bound itself is still enforced.
+        var actInvalid = () => param.WireValue = "20260602-16:00:00";
+        actInvalid.Should().Throw<FixPortal.FixAtdl.Diagnostics.Exceptions.InvalidFieldValueException>();
+    }
+
+    [Fact]
+    public void DateTimeTypeBase_MinValue_setter_clears_time_only_slot()
+    {
+        var param = new Parameter_t<UTCTimestamp_t>("Ts");
+
+        // Symmetric minimum case: 08:00:00 on the following day satisfies the 09:00 date+time
+        // minimum but would be rejected by a stale 12:00:00 time-of-day minimum.
+        param.Value.MinValueText = "12:00:00";
+        param.Value.MinValue = new DateTime(2026, 6, 2, 9, 0, 0, DateTimeKind.Utc);
+
+        var actValid = () => param.WireValue = "20260603-08:00:00";
+        actValid.Should().NotThrow();
+
+        var actInvalid = () => param.WireValue = "20260602-08:00:00";
+        actInvalid.Should().Throw<FixPortal.FixAtdl.Diagnostics.Exceptions.InvalidFieldValueException>();
+    }
+
+    [Fact]
     public void DateTimeTypeBase_SetBound_handles_offset_bearing_and_minute_only_bounds()
     {
         var param = new Parameter_t<UTCTimeOnly_t>("T");
