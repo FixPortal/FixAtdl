@@ -53,22 +53,28 @@ reviews:
     - "!**/coverage/**"
     - "!**/*.lock"
 
-  instructions: |
-    Review as a senior engineer. Prioritise correctness, security, maintainability,
-    testability, and accidental complexity.
+  # The brief was previously a bare `instructions:` block under `reviews:` — a key that
+  # does not exist in CodeRabbit's schema v2 (validated 2026-08-23), so it was silently
+  # ignored. The valid vehicle is `path_instructions`, a list of {path, instructions}
+  # entries; `path: "**"` carries the same brief repo-wide, verbatim.
+  path_instructions:
+    - path: "**"
+      instructions: |
+        Review as a senior engineer. Prioritise correctness, security, maintainability,
+        testability, and accidental complexity.
 
-    Do not nitpick style unless it affects readability or consistency.
-    Prefer actionable findings over commentary.
-    Call out missing tests for changed behaviour.
-    Treat generated files, lock files, snapshots, and formatting churn as low value.
+        Do not nitpick style unless it affects readability or consistency.
+        Prefer actionable findings over commentary.
+        Call out missing tests for changed behaviour.
+        Treat generated files, lock files, snapshots, and formatting churn as low value.
 
-    For .NET code, pay particular attention to:
-    - async/await correctness
-    - nullability
-    - DI lifetime mistakes
-    - exception handling and logging
-    - test coverage around edge cases
+        For .NET code, pay particular attention to:
+        - async/await correctness
+        - nullability
+        - DI lifetime mistakes
+        - exception handling and logging
+        - test coverage around edge cases
 
-    This library parses FIXatdl and is PUBLISHED as a package, so its public API is a
-    compatibility surface: flag breaking signature or behaviour changes explicitly, and
-    treat parser edge cases (malformed, unusual or hostile input) as security-relevant.
+        This library parses FIXatdl and is PUBLISHED as a package, so its public API is a
+        compatibility surface: flag breaking signature or behaviour changes explicitly, and
+        treat parser edge cases (malformed, unusual or hostile input) as security-relevant.

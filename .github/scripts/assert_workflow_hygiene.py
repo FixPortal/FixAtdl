@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Assert workflow hygiene structurally: no target-context trigger, no blanket
-write token, third-party actions pinned to an immutable ref.
+"""Assert workflow hygiene structurally: no privileged-context trigger, no blanket
+write token, third-party actions allowlisted and pinned to an immutable ref.
 
 This replaces three line-anchored `grep` assertions. They were bypassable by
 ORDINARY block-style YAML, not by any evasion technique: a value may sit on the
@@ -30,18 +30,21 @@ from pathlib import Path
 try:
     import yaml
 except ImportError:
-    # Same policy as assert_gate_coverage.py: fail legibly rather than installing
-    # PyYAML at CI time. This gates merges, so an arbitrary-at-install-time
-    # dependency must not enter the gating path.
+    # review-policy-guard.yml provisions a pinned PyYAML via setup-python + pip before
+    # invoking this script, so reaching this branch means the provisioning step broke
+    # or the script was run outside the workflow. The exit stays a hard stop rather
+    # than installing at gate time: this gates merges, so an arbitrary-at-install-time
+    # dependency must not enter the gating path from HERE -- the pinned install in the
+    # workflow is reviewed YAML, an install scripted from this file would not be.
     #
     # sys.exit(2), not sys.exit(<str>): the string form prints to stderr and exits 1,
     # which is the code this module documents for a real violation. Both fail the step,
     # but a consumer branching on 2 ("infra problem, retry") versus 1 ("violation, do
     # not retry") would misclassify a missing interpreter dependency as a bad workflow.
     print(
-        "PyYAML is not available to this runner. Install it in the image rather "
-        "than at gate time, or restore '.github/workflows/**' to the review "
-        "policy's high tier so a reviewer sees these diffs.",
+        "PyYAML is not available to this runner. It is provisioned by "
+        "review-policy-guard.yml (setup-python plus a pinned pip install); this exit "
+        "means that provisioning failed or the script ran outside the workflow.",
         file=sys.stderr,
     )
     sys.exit(2)
@@ -49,6 +52,17 @@ except ImportError:
 WORKFLOWS = Path(".github/workflows")
 SHA_LEN = 40
 DIGEST_LEN = 64
+
+# Third-party actions this repo has reviewed and chosen to trust, by owner/name.
+# A 40-hex ref proves only the SHAPE of an immutable revision -- a branch or tag
+# named with 40 lowercase hex characters satisfies it while remaining movable, so
+# the pin check alone cannot prove immutability, and resolving it over the network
+# is refused (see the PyYAML note at the top: nothing arbitrary enters a merge-gating
+# path). The complement is provenance: outside actions/ and github/ (GitHub's own
+# namespaces, which every workflow already trusts by running on their runners), an
+# action must be named here AND SHA-pinned to run at all. Add an entry only with a
+# written rationale in the commit that adds it.
+TRUSTED_THIRD_PARTY_ACTIONS = frozenset({"raven-actions/actionlint"})
 
 
 def load(path):
@@ -163,16 +177,19 @@ def main():
             continue
 
         for event in triggers(document):
-            # This trigger runs with a write token and repository secrets in the
-            # base repo's context, while able to check out attacker-controlled head
-            # code. It has legitimate uses; none should land without being argued
-            # for, so it is refused here rather than reviewed by glob.
-            if event == "pull_request_target":
+            # Both triggers run with a write token and repository secrets in the
+            # base repo's context. pull_request_target can also check out
+            # attacker-controlled head code; workflow_run needs no head checkout
+            # to be dangerous -- it runs privileged on another workflow's say-so,
+            # which an attacker can influence through the triggering workflow.
+            # They have legitimate uses; none should land without being argued
+            # for, so they are refused here rather than reviewed by glob.
+            if event in ("pull_request_target", "workflow_run"):
                 print(
-                    f"::error file={path}::This workflow uses the target-context trigger, which grants "
-                    "a write token and repository secrets to a workflow that can check out untrusted "
-                    "head code. Use the plain pull_request trigger, or remove this assertion "
-                    "deliberately with a written rationale."
+                    f"::error file={path}::This workflow uses a privileged-context trigger "
+                    f"('{event}'), which runs with a write token and repository secrets in the "
+                    "base repo's context. Use the plain pull_request trigger, or remove this "
+                    "assertion deliberately with a written rationale."
                 )
                 failed = True
 
@@ -185,6 +202,27 @@ def main():
                 failed = True
 
         for job, ref in action_refs(document):
+            # Provenance is gated before pin shape. Outside GitHub's own namespaces
+            # (actions/, github/) a `uses:` must name an action this repo has reviewed
+            # into TRUSTED_THIRD_PARTY_ACTIONS -- pin shape alone accepts a 40-hex-named
+            # branch, and trusting any third party the SHA happens to fit means trusting
+            # an owner nobody chose. Local (./) and docker:// refs are exempt: the first
+            # is this repository's own reviewed code, the second is digest-gated below.
+            owner_path = ref.split("@", 1)[0]
+            if (
+                not ref.startswith("./")
+                and not ref.startswith("docker://")
+                and not owner_path.startswith(("actions/", "github/"))
+                and owner_path not in TRUSTED_THIRD_PARTY_ACTIONS
+            ):
+                print(
+                    f"::error file={path}::Third-party action '{ref}' (job '{job}') is not in "
+                    "TRUSTED_THIRD_PARTY_ACTIONS. Pinning cannot be verified for an action nobody "
+                    "reviewed; add it to the allowlist in assert_workflow_hygiene.py with a written "
+                    "rationale, or remove the use."
+                )
+                failed = True
+                continue
             if is_pinned(ref):
                 continue
             # actions/* is GitHub's own namespace, and a mutable tag there means
@@ -209,8 +247,8 @@ def main():
         return 1
 
     print(
-        "Workflow hygiene: no target-context trigger, no write-all token, every third-party "
-        f"action pinned ({unpinned_first_party} first-party ref(s) unpinned, not gated)."
+        "Workflow hygiene: no privileged-context trigger, no write-all token, every third-party "
+        f"action allowlisted and pinned ({unpinned_first_party} first-party ref(s) unpinned, not gated)."
     )
     return 0
 
