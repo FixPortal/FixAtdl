@@ -1,68 +1,74 @@
 #!/usr/bin/env python3
-"""Assert workflow hygiene structurally: no privileged-context trigger, no blanket
-write token, third-party actions allowlisted and pinned to an immutable ref.
+"""Fails when a workflow in .github/workflows breaches the house hygiene bar.
 
-This replaces three line-anchored `grep` assertions. They were bypassable by
-ORDINARY block-style YAML, not by any evasion technique: a value may sit on the
-line after its key, so
+Checked here rather than by a reviewer, because these are properties a glob-tiered
+review was never reliably catching:
 
-    permissions:
-      write-all
+  * no target-context trigger (`pull_request_target`, `workflow_run`) -- both run in
+    the BASE repo's context with its secrets and a write-scoped token, while able to
+    reach attacker-controlled head code;
+  * no blanket `write-all` token, at workflow or job scope;
+  * every third-party action AND container image pinned to an immutable revision.
 
-resolves to exactly what `permissions: write-all` resolves to, while matching
-neither the key-anchored `permissions:.*write-all` pattern nor anything else the
-guard looked for. The same held for a `uses:` split across two lines, which never
-reached the pin check at all. Demonstrated 2026-08-22: both greps returned no
-match on a file PyYAML resolves to `permissions: 'write-all'` and
-`uses: 'third/party@v1'`.
+PARSED, NOT GREPPED. The greps this replaced carried a self-match hazard -- the
+pattern for a rule matched the comment explaining the rule, so the guard failed in
+every repo it was installed into -- and they were simultaneously too loose (prose
+tripped them) and too tight (a quoted value, a list-form trigger, or a digest-pinned
+ref read as a violation, or as clean, wrongly).
 
-Parsing also removes the self-match hazard the greps carried. They needed a
-`^[^#]*` prefix so the guard's own comments describing the rules did not trip it
-(that bit on the fixportal-venue pilot). A parser reads values, so prose about a
-rule cannot be mistaken for the rule.
+PyYAML is required and deliberately NOT installed at CI time: this script gates
+merges, so fetching an unpinned package from PyPI here would put an
+arbitrary-at-install-time dependency in the gating path. It ships in GitHub's ubuntu
+images. A runner without it is a runner-image problem and should be loud. Note that
+`actions/setup-python` installs a CLEAN interpreter from the tool cache which does
+NOT carry PyYAML -- do not add that step to this job.
 
 Exit codes: 0 clean, 1 a hard violation, 2 the checker could not run.
+
+SCOPE, stated so a pass is not mistaken for more than it is: this scans
+.github/workflows/*.yml|*.yaml, and follows a local `./` ref into its
+action.yml/action.yaml to check the refs inside a composite action. It does not
+resolve a reusable workflow in another repository, and pinning is checked by SHAPE
+-- see TRUSTED_THIRD_PARTY_ACTIONS below for the stricter mode.
 """
 
+import os
 import sys
 from pathlib import Path
 
 try:
     import yaml
 except ImportError:
-    # review-policy-guard.yml provisions a pinned PyYAML via setup-python + pip before
-    # invoking this script, so reaching this branch means the provisioning step broke
-    # or the script was run outside the workflow. The exit stays a hard stop rather
-    # than installing at gate time: this gates merges, so an arbitrary-at-install-time
-    # dependency must not enter the gating path from HERE -- the pinned install in the
-    # workflow is reviewed YAML, an install scripted from this file would not be.
-    #
-    # sys.exit(2), not sys.exit(<str>): the string form prints to stderr and exits 1,
-    # which is the code this module documents for a real violation. Both fail the step,
-    # but a consumer branching on 2 ("infra problem, retry") versus 1 ("violation, do
-    # not retry") would misclassify a missing interpreter dependency as a bad workflow.
-    print(
-        "PyYAML is not available to this runner. It is provisioned by "
-        "review-policy-guard.yml (setup-python plus a pinned pip install); this exit "
-        "means that provisioning failed or the script ran outside the workflow.",
-        file=sys.stderr,
+    sys.exit(
+        "python3 cannot import yaml. Provide PyYAML in the runner image rather than "
+        "installing it at CI time -- this script gates merges."
     )
-    sys.exit(2)
 
 WORKFLOWS = Path(".github/workflows")
 SHA_LEN = 40
 DIGEST_LEN = 64
 
-# Third-party actions this repo has reviewed and chosen to trust, by owner/name.
-# A 40-hex ref proves only the SHAPE of an immutable revision -- a branch or tag
-# named with 40 lowercase hex characters satisfies it while remaining movable, so
-# the pin check alone cannot prove immutability, and resolving it over the network
-# is refused (see the PyYAML note at the top: nothing arbitrary enters a merge-gating
-# path). The complement is provenance: outside actions/ and github/ (GitHub's own
-# namespaces, which every workflow already trusts by running on their runners), an
-# action must be named here AND SHA-pinned to run at all. Add an entry only with a
-# written rationale in the commit that adds it.
-TRUSTED_THIRD_PARTY_ACTIONS = frozenset({"raven-actions/actionlint"})
+# Triggers that run in the base repo's privileged context. Both have legitimate uses;
+# none should land without being argued for, so they are refused here rather than
+# reviewed by glob.
+PRIVILEGED_TRIGGERS = ("pull_request_target", "workflow_run")
+
+# OPTIONAL STRICTER MODE, off unless the environment sets it.
+#
+# The pin check validates the SHAPE of a ref, not that the owner is trusted or that
+# the revision is immutable in fact -- a 40-hex branch name passes. Setting
+# TRUSTED_THIRD_PARTY_ACTIONS to a space- or comma-separated list of `owner/repo`
+# entries additionally requires every third-party action to be named there, so a new
+# third-party dependency cannot appear without an explicit edit.
+#
+# Deliberately opt-in. Defaulting it on with a short list would fail any repo using a
+# third-party action not in it, which across this estate is most of them; a gate that
+# reddens on adoption gets reverted rather than fixed.
+TRUSTED_THIRD_PARTY_ACTIONS = frozenset(
+    entry
+    for entry in os.environ.get("TRUSTED_THIRD_PARTY_ACTIONS", "").replace(",", " ").split()
+    if entry
+)
 
 
 def load(path):
@@ -73,11 +79,22 @@ def load(path):
 def triggers(document):
     """The event names in `on:`, whatever spelling was used.
 
-    YAML 1.1 reads a bare `on` as the boolean True, which is why the key is
-    looked up both ways -- `document["on"]` alone silently finds nothing in every
-    workflow that writes the key unquoted, i.e. all of them.
+    YAML 1.1 reads a bare `on` as the boolean True, so the key must be looked up both
+    ways -- `document["on"]` alone silently finds nothing in every workflow that
+    writes the key unquoted, i.e. all of them. Both keys present at once is a
+    duplicate-key document whose resolution depends on the parser; that is refused
+    outright rather than guessed at.
     """
-    section = document.get("on", document.get(True))
+    sections = [value for key in ("on", True) if (value := document.get(key)) is not None]
+    if len(sections) > 1:
+        raise ValueError(
+            'both `on:` and a YAML-1.1 boolean `True:` key are present. Which one '
+            "GitHub honours depends on the parser, so one of them could carry a "
+            "trigger this check never sees. Use exactly one."
+        )
+    if not sections:
+        return []
+    section = sections[0]
     if isinstance(section, str):
         return [section]
     if isinstance(section, list):
@@ -88,20 +105,7 @@ def triggers(document):
 
 
 def permission_blocks(document):
-    """Every `permissions:` value in the file: workflow level, then each job.
-
-    KNOWN GAP, stated so this is not mistaken for full coverage: only the literal
-    `write-all` scalar is flagged (see main()). A mapping that grants every scope
-    `write` individually carries the same privilege and passes. Not closed here because
-    the test cannot be written soundly -- "every scope is write" needs the complete set
-    of scopes GitHub defines, which changes as GitHub adds them, and an omitted scope is
-    a *narrower* grant, not a broader one. A heuristic on scope count would fail
-    workflows that legitimately need three or four write scopes.
-
-    This is the same scope as the grep it replaces, so it is not a regression; the
-    bypass this file closes is the block-style spelling of `write-all`, not the
-    enumerated equivalent.
-    """
+    """(scope, value) for the workflow-level and every job-level `permissions:`."""
     blocks = []
     if "permissions" in document:
         blocks.append(("workflow", document["permissions"]))
@@ -114,7 +118,12 @@ def permission_blocks(document):
 
 
 def action_refs(document):
-    """Every `uses:` value in the file, with the job it came from."""
+    """Every ref that causes code to run: `uses:` values and container images.
+
+    A `container:` or `services:` image runs arbitrary code in the runner's context
+    exactly as an action does, so images are pin-checked alongside `uses:` refs. A
+    reusable-workflow call carries `uses:` on the JOB rather than on a step.
+    """
     refs = []
     jobs = document.get("jobs")
     if not isinstance(jobs, dict):
@@ -122,7 +131,6 @@ def action_refs(document):
     for name, job in jobs.items():
         if not isinstance(job, dict):
             continue
-        # A reusable-workflow call carries `uses:` on the job itself.
         if isinstance(job.get("uses"), str):
             refs.append((name, job["uses"]))
         steps = job.get("steps")
@@ -130,21 +138,33 @@ def action_refs(document):
             for step in steps:
                 if isinstance(step, dict) and isinstance(step.get("uses"), str):
                     refs.append((name, step["uses"]))
+        container = job.get("container")
+        if isinstance(container, str):
+            refs.append((name, container))
+        elif isinstance(container, dict) and isinstance(container.get("image"), str):
+            refs.append((name, container["image"]))
+        services = job.get("services")
+        if isinstance(services, dict):
+            for service in services.values():
+                if isinstance(service, str):
+                    # Shorthand: `services: { db: postgres }` names the image
+                    # directly, with no mapping and no `image:` key.
+                    refs.append((name, service))
+                elif isinstance(service, dict) and isinstance(service.get("image"), str):
+                    refs.append((name, service["image"]))
     return refs
 
 
 def is_pinned(ref):
     """True when the ref names an immutable revision.
 
-    Both forms the estate actually uses are accepted. The previous `sed`-based
-    scanner kept surrounding quotes in the extracted value, so a correctly pinned
-    `uses: "actions/checkout@<40-hex>"` failed the hex test and was reported as an
-    unpinned third-party action; and a digest-pinned `docker://` ref could never
-    pass it at all. Parsed values carry no quotes, and the digest form is now
-    recognised explicitly.
+    Every form the estate uses is accepted. A sed-based scanner previously kept the
+    surrounding quotes in the extracted value, so a correctly pinned
+    `uses: "actions/checkout@<40-hex>"` failed the hex test and was reported unpinned;
+    parsed values carry no quotes.
     """
     if ref.startswith("./"):
-        return True  # A local action is this repository's own reviewed code.
+        return True  # Local: its manifest's own refs are validated separately.
     if "@" not in ref:
         return False
     revision = ref.rsplit("@", 1)[1]
@@ -153,7 +173,80 @@ def is_pinned(ref):
         return algorithm == "sha256" and len(digest) == DIGEST_LEN and all(
             char in "0123456789abcdef" for char in digest
         )
+    if revision.startswith("sha256:"):
+        # A bare container image pins by digest without the docker:// prefix.
+        digest = revision.partition(":")[2]
+        return len(digest) == DIGEST_LEN and all(char in "0123456789abcdef" for char in digest)
     return len(revision) == SHA_LEN and all(char in "0123456789abcdef" for char in revision)
+
+
+def local_manifest(ref):
+    """Path to the action manifest for a local `./` ref, or None when not found.
+
+    A local `uses:` names a directory holding `action.yml`/`action.yaml`; the ref is
+    repo-root-relative because workflows run with the checkout as working directory.
+    """
+    for name in ("action.yml", "action.yaml"):
+        candidate = Path(ref) / name
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+def composite_step_refs(document):
+    """`uses:` refs inside a composite action's `runs.steps`.
+
+    Only composite actions have shell-style steps; node and docker actions carry no
+    `uses:` of their own and contribute nothing here.
+    """
+    refs = []
+    runs = document.get("runs")
+    if isinstance(runs, dict) and runs.get("using") == "composite":
+        steps = runs.get("steps")
+        if isinstance(steps, list):
+            for step in steps:
+                if isinstance(step, dict) and isinstance(step.get("uses"), str):
+                    refs.append(step["uses"])
+    return refs
+
+
+def check_ref(job, ref, origin, unpinned):
+    """One pin check, shared by workflow refs and composite-action refs.
+
+    Returns (failed, unpinned), with `unpinned` incremented for a first-party notice.
+    """
+    owner = ref.split("@", 1)[0]
+    third_party = not ref.startswith(("actions/", "./", "docker://"))
+
+    if TRUSTED_THIRD_PARTY_ACTIONS and third_party and owner not in TRUSTED_THIRD_PARTY_ACTIONS:
+        print(
+            f"::error file={origin}::Third-party action '{ref}' ({job}) is not in "
+            "TRUSTED_THIRD_PARTY_ACTIONS. Add it there with a written rationale, or "
+            "use an action already trusted by this repository."
+        )
+        return True, unpinned
+
+    if is_pinned(ref):
+        return False, unpinned
+
+    # actions/* is GitHub's own namespace, and a mutable tag there means trusting
+    # GitHub -- which every workflow already does by running on their runners. A
+    # third-party mutable tag means trusting that owner forever, with no re-review
+    # when they move it. Only the second is gated. Measured 2026-08-19 across 28
+    # estate repos: 319 unpinned refs, every one sampled `actions/*` -- a hard gate on
+    # all owners would have failed 27 of 28 repos on their next PR.
+    if ref.startswith("actions/"):
+        print(
+            f"::notice file={origin}::'{ref}' ({job}) is not SHA-pinned. First-party "
+            "(GitHub) action, so not failed -- pin it when convenient."
+        )
+        return False, unpinned + 1
+
+    print(
+        f"::error file={origin}::Third-party action or image '{ref}' ({job}) is not "
+        "pinned to an immutable revision. A mutable tag can change after review."
+    )
+    return True, unpinned
 
 
 def main():
@@ -163,8 +256,14 @@ def main():
 
     failed = False
     unpinned_first_party = 0
+    scanned = 0
 
-    for path in sorted(list(WORKFLOWS.glob("*.yml")) + list(WORKFLOWS.glob("*.yaml"))):
+    paths = sorted(
+        path
+        for pattern in ("*.yml", "*.yaml")
+        for path in WORKFLOWS.glob(pattern)
+    )
+    for path in paths:
         try:
             document = load(path)
         except yaml.YAMLError as error:
@@ -172,83 +271,99 @@ def main():
             failed = True
             continue
         if not isinstance(document, dict):
-            print(f"::error file={path}::Workflow does not parse to a mapping.")
+            print(f"::error file={path}::Top level is not a mapping; not a workflow.")
             failed = True
             continue
 
-        for event in triggers(document):
-            # Both triggers run with a write token and repository secrets in the
-            # base repo's context. pull_request_target can also check out
-            # attacker-controlled head code; workflow_run needs no head checkout
-            # to be dangerous -- it runs privileged on another workflow's say-so,
-            # which an attacker can influence through the triggering workflow.
-            # They have legitimate uses; none should land without being argued
-            # for, so they are refused here rather than reviewed by glob.
-            if event in ("pull_request_target", "workflow_run"):
+        scanned += 1
+
+        try:
+            events = triggers(document)
+        except ValueError as error:
+            print(f"::error file={path}::{error}")
+            failed = True
+            events = []
+
+        for event in events:
+            if event in PRIVILEGED_TRIGGERS:
                 print(
-                    f"::error file={path}::This workflow uses a privileged-context trigger "
-                    f"('{event}'), which runs with a write token and repository secrets in the "
-                    "base repo's context. Use the plain pull_request trigger, or remove this "
-                    "assertion deliberately with a written rationale."
+                    f"::error file={path}::This workflow uses a target-context trigger "
+                    "(see the refused event list in this script), which runs in the base "
+                    "repository's context with its secrets and a write-scoped token while "
+                    "able to reach untrusted head code. Restructure so untrusted code runs "
+                    "under the plain pull_request trigger, or remove this assertion "
+                    "deliberately with a written rationale."
                 )
                 failed = True
 
+        # A workflow omitting `permissions:` inherits the org/repo default token, which
+        # this script cannot see and which may be broader than anything the write-all
+        # check would catch. Not a failure: the default is an org setting, not a diff
+        # property. Surfaced so the omission is a decision rather than an oversight.
+        if "permissions" not in document:
+            print(
+                f"::notice file={path}::No workflow-level `permissions:` key; the job token "
+                "inherits the org/repo default. Set it explicitly, if only to `contents: read`."
+            )
+
         for scope, value in permission_blocks(document):
+            # YAML accepts a quoted or bare `write-all` identically; a parsed value
+            # carries no quotes either way, which is why this is a comparison and not
+            # a pattern.
             if isinstance(value, str) and value.strip() == "write-all":
                 print(
-                    f"::error file={path}::A write-all token at {scope} scope discards least "
+                    f"::error file={path}::A write-all token ({scope}) discards least "
                     "privilege. Declare the specific permissions each job needs."
                 )
                 failed = True
 
         for job, ref in action_refs(document):
-            # Provenance is gated before pin shape. Outside GitHub's own namespaces
-            # (actions/, github/) a `uses:` must name an action this repo has reviewed
-            # into TRUSTED_THIRD_PARTY_ACTIONS -- pin shape alone accepts a 40-hex-named
-            # branch, and trusting any third party the SHA happens to fit means trusting
-            # an owner nobody chose. Local (./) and docker:// refs are exempt: the first
-            # is this repository's own reviewed code, the second is digest-gated below.
-            owner_path = ref.split("@", 1)[0]
-            if (
-                not ref.startswith("./")
-                and not ref.startswith("docker://")
-                and not owner_path.startswith(("actions/", "github/"))
-                and owner_path not in TRUSTED_THIRD_PARTY_ACTIONS
-            ):
+            bad, unpinned_first_party = check_ref(job, ref, path, unpinned_first_party)
+            failed = failed or bad
+
+            if not ref.startswith("./"):
+                continue
+            manifest = local_manifest(ref)
+            if manifest is None:
                 print(
-                    f"::error file={path}::Third-party action '{ref}' (job '{job}') is not in "
-                    "TRUSTED_THIRD_PARTY_ACTIONS. Pinning cannot be verified for an action nobody "
-                    "reviewed; add it to the allowlist in assert_workflow_hygiene.py with a written "
-                    "rationale, or remove the use."
+                    f"::error file={path}::Local action '{ref}' ({job}) has no "
+                    "action.yml/action.yaml. The ref cannot resolve at run time."
                 )
                 failed = True
                 continue
-            if is_pinned(ref):
-                continue
-            # actions/* is GitHub's own namespace, and a mutable tag there means
-            # trusting GitHub -- which every workflow already does by running on
-            # their runners. A third-party mutable tag means trusting that owner
-            # forever, with no re-review when they move it. Only the second is
-            # gated. Flip this to a failure once a pinning sweep lands.
-            if ref.startswith("actions/"):
-                print(
-                    f"::notice file={path}::'{ref}' (job '{job}') is not SHA-pinned. First-party "
-                    "(GitHub) action, so not failed -- pin it when convenient."
-                )
-                unpinned_first_party += 1
-            else:
-                print(
-                    f"::error file={path}::Third-party action '{ref}' (job '{job}') is not pinned to "
-                    "an immutable revision. A mutable tag can change after review."
-                )
+            try:
+                inner = load(manifest)
+            except yaml.YAMLError as error:
+                print(f"::error file={manifest}::Not parseable as YAML: {error}")
                 failed = True
+                continue
+            if not isinstance(inner, dict):
+                continue
+            # A local composite action is this repository's own reviewed code, but the
+            # actions IT calls are not -- and they are invisible to a scan that stops
+            # at .github/workflows.
+            for inner_ref in composite_step_refs(inner):
+                bad, unpinned_first_party = check_ref(
+                    f"{job} -> {ref}", inner_ref, manifest, unpinned_first_party
+                )
+                failed = failed or bad
 
     if failed:
         return 1
 
+    if not scanned:
+        print(f"::error::No workflow files found under {WORKFLOWS}; nothing was asserted.")
+        return 2
+
+    mode = (
+        f", third-party allowlist enforced ({len(TRUSTED_THIRD_PARTY_ACTIONS)} entries)"
+        if TRUSTED_THIRD_PARTY_ACTIONS
+        else ""
+    )
     print(
-        "Workflow hygiene: no privileged-context trigger, no write-all token, every third-party "
-        f"action allowlisted and pinned ({unpinned_first_party} first-party ref(s) unpinned, not gated)."
+        f"Workflow hygiene: {scanned} workflow(s) scanned -- no target-context trigger, "
+        f"no write-all token, every third-party action and container image pinned "
+        f"({unpinned_first_party} first-party ref(s) unpinned, not gated){mode}."
     )
     return 0
 

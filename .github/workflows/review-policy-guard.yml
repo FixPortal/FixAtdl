@@ -140,4 +140,11 @@ jobs:
         run: pip install PyYAML==6.0.3
 
       - name: Workflows must be hygienic (no privileged-context trigger, no write-all, actions pinned)
+        env:
+          # This repo enforces the stricter mode. The pin check validates a ref's SHAPE,
+          # so the allowlist is the only thing that catches a NEW third-party dependency
+          # appearing at all. It was a hardcoded frozenset in this repo's own copy of the
+          # script; the shared asset reads it from here instead, so the list is visible in
+          # the workflow that depends on it. Add an entry only with a written rationale.
+          TRUSTED_THIRD_PARTY_ACTIONS: 'raven-actions/actionlint'
         run: python3 .github/scripts/assert_workflow_hygiene.py
