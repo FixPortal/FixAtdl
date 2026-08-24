@@ -144,7 +144,7 @@ public static class ValueConverter
                 throw ThrowHelper.New<InternalErrorException>(
                     ExceptionContext,
                     InternalErrors.UnrecognisedAttributeType,
-                    targetType.FullName!
+                    targetType.FullName
                 );
         }
     }

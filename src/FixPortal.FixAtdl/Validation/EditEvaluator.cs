@@ -187,7 +187,7 @@ public abstract class EditEvaluator<T> : IResolvable<Strategy_t, T>
         }
         else
         {
-            ((IResolvable<Strategy_t, T>)EditRef)!.Resolve(strategy, sourceCollection);
+            ((IResolvable<Strategy_t, T>)EditRef).Resolve(strategy, sourceCollection);
         }
     }
 
