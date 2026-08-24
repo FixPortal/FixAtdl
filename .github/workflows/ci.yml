@@ -54,15 +54,31 @@ jobs:
       - name: Build
         run: dotnet build FixPortal.FixAtdl.slnx -c Release --no-restore
 
-      - name: Test
-        run: dotnet test --solution FixPortal.FixAtdl.slnx -c Release --no-build --report-xunit-trx --timeout 5m
+      # Coverage is collected by dotnet-coverage (a local tool, restored above) wrapping
+      # the unchanged test command, NOT by coverlet: coverlet.collector 10.0.1 emits
+      # invalid IL under .NET 10 instrumentation (InvalidProgramException), which is why
+      # `coverlet.*` was dropped from this repo in 0a7f903 and the old floor went with it.
+      - name: Test with coverage
+        run: dotnet dotnet-coverage collect -f cobertura -o coverage.cobertura.xml "dotnet test --solution FixPortal.FixAtdl.slnx -c Release --no-build --report-xunit-trx --timeout 5m"
+
+      # Gates the LIBRARY's line rate, not the report's top-level rate: the latter
+      # averages in the test assembly, which covers itself almost completely. Measured
+      # when this was added: 84.3% whole-report against 73.3% library alone.
+      # The floor sits ~3 points under the measured figure, matching the convention the
+      # original 65%/69.3% floor used -- tight enough to catch a regression, loose enough
+      # to tolerate ordinary fluctuation.
+      - name: Coverage floor
+        shell: pwsh
+        run: ./scripts/assert-coverage-floor.ps1 -ReportPath coverage.cobertura.xml -Package FixPortal.FixAtdl -MinimumLineRate 70 | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
 
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: test-results
-          path: '**/*.trx'
+          path: |
+            **/*.trx
+            coverage.cobertura.xml
 
   gate-coverage:
     name: Gate coverage
