@@ -105,4 +105,15 @@ mutate:
 
 ### CI coverage floor
 
-A floor of **65% line coverage** was briefly enforced via `.github/workflows/build-and-test.yml`, set 4 percentage points below the achieved 69.3% to catch regressions while tolerating minor natural fluctuation. **That workflow and floor no longer exist** — the current workflows are `ci.yml`, `mutation.yml`, `release.yml`, and `review-policy-guard.yml`, and none of them collects coverage. The surviving trace is commit `0a7f903` ("chore: drop coverlet.collector"), which removed the `coverlet.*` pattern from the Dependabot `testing` group in `.github/dependabot.yml` because coverlet emits invalid IL on .NET 10 under instrumentation. **No coverage floor is currently enforced in CI.**
+A floor of **65% line coverage** was originally enforced via `.github/workflows/build-and-test.yml`, set 4 percentage points below the achieved 69.3%. That workflow and floor were lost when `coverlet.collector` was dropped in commit `0a7f903` — coverlet emits invalid IL on .NET 10 under instrumentation (`InvalidProgramException`) — and for a period **no floor was enforced at all**, while this document still claimed one was. An adversarial review caught the contradiction (finding A3, 2026-08-23).
+
+**A floor is enforced again as of 2026-08-24**, in `ci.yml`'s `Build and test` job:
+
+- Coverage is collected by **`dotnet-coverage`** (a local tool in `.config/dotnet-tools.json`) wrapping the unchanged `dotnet test` command. Not coverlet — that is the tool whose .NET 10 breakage started this.
+- `scripts/assert-coverage-floor.ps1` gates **`FixPortal.FixAtdl` at 70% line coverage**.
+
+The floor is on the **library package specifically, not the report's top-level `line-rate`**. The top-level figure averages in the test assembly, which covers itself almost completely: measured when this was reinstated, the whole report read **84.3%** while the library alone was **73.3%**. Gating the flattered number would have let real library coverage rot roughly eleven points before anything failed.
+
+The script fails — rather than passes — when the report is missing, unparsable, empty of packages, or contains no package by that name. A renamed assembly would otherwise end coverage enforcement silently, which is the same class of defect as the one this section records.
+
+Current measured figures, 729 tests all passing: library **73.3% line, 64.7% branch**.
