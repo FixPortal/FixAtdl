@@ -67,6 +67,13 @@ jobs:
       # The floor sits ~3 points under the measured figure, matching the convention the
       # original 65%/69.3% floor used -- tight enough to catch a regression, loose enough
       # to tolerate ordinary fluctuation.
+      # The floor script decides whether a PR can merge, so its own failure paths are
+      # tested. It is a step in this job rather than a job of its own: a new job would
+      # have to be wired into ci-gate's needs: for no benefit.
+      - name: Test the coverage-floor script
+        shell: pwsh
+        run: ./scripts/test/verify-coverage-floor.ps1
+
       - name: Coverage floor
         shell: pwsh
         run: ./scripts/assert-coverage-floor.ps1 -ReportPath coverage.cobertura.xml -Package FixPortal.FixAtdl -MinimumLineRate 70 | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
