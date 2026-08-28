@@ -91,6 +91,14 @@ dotnet pack FixPortal.FixAtdl.slnx --configuration Release --no-build --output .
 
 Files modified from upstream carry a `// FP Enhancement: <date> — <reason>` banner.
 
+## Benchmarks
+
+The repository-owned BenchmarkDotNet workloads cover representative FIXatdl XML parsing and FIX message parse/emit paths. Run them manually in Release mode; CI compiles the project but does not use workstation timings as a performance gate.
+
+```powershell
+dotnet run --project benchmarks/FixPortal.FixAtdl.Benchmarks/FixPortal.FixAtdl.Benchmarks.csproj --configuration Release -- --filter '*'
+```
+
 ## Mutation testing
 
 This repo uses Stryker.NET for mutation testing. `stryker-config.json` sets
