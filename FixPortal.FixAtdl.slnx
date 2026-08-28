@@ -35,6 +35,9 @@
   <Folder Name="/src/">
     <Project Path="src/FixPortal.FixAtdl/FixPortal.FixAtdl.csproj" />
   </Folder>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/FixPortal.FixAtdl.Benchmarks/FixPortal.FixAtdl.Benchmarks.csproj" />
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/FixPortal.FixAtdl.Tests/FixPortal.FixAtdl.Tests.csproj" />
   </Folder>
