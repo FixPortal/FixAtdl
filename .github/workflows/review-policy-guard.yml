@@ -110,10 +110,14 @@ jobs:
           # count here: the list started at three and the hygiene checker took it to six,
           # so a number goes stale and misleads whoever next adjusts it. Adjust the
           # ci.yml path if this repo's main workflow is named differently.
+          # The coverage-floor checker and verifier also run from the PR's own checkout;
+          # protecting both prevents one PR from neutering the floor and its self-test.
           for required in .claude/review-policy.json .coderabbit.yaml \
             .github/workflows/ci.yml .github/workflows/review-policy-guard.yml \
             .github/scripts/assert_gate_coverage.py \
-            .github/scripts/assert_workflow_hygiene.py; do
+            .github/scripts/assert_workflow_hygiene.py \
+            scripts/assert-coverage-floor.ps1 \
+            scripts/test/verify-coverage-floor.ps1; do
             if ! jq -e --arg r "$required" '.high | index($r)' "$policy" >/dev/null; then
               echo "::error file=$policy::'$required' is missing from the high list. An edit to it would get the lighter review."
               exit 1

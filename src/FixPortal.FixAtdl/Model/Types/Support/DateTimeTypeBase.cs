@@ -66,8 +66,9 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
     internal virtual bool IsTimeOnlyType => false;
 
     /// <summary>Deserialization-only round-trip of the raw <c>maxValue</c> attribute text; parsed with
-    /// time-only awareness on set (C2). The getter returns the last raw text set (or null). Not intended
-    /// for programmatic use; set <see cref="MaxValue"/> directly for a full date+time bound.</summary>
+    /// time-only awareness on set (C2). The getter returns the last raw text set (or null), even after
+    /// <see cref="MaxValue"/> is assigned directly. Not intended for programmatic use; set
+    /// <see cref="MaxValue"/> directly for a full date+time bound.</summary>
     public string? MaxValueText
     {
         get;
@@ -84,8 +85,9 @@ public abstract class DateTimeTypeBase : AtdlValueType<DateTime>, IControlConver
     }
 
     /// <summary>Deserialization-only round-trip of the raw <c>minValue</c> attribute text; parsed with
-    /// time-only awareness on set (C2). The getter returns the last raw text set (or null). Not intended
-    /// for programmatic use; set <see cref="MinValue"/> directly for a full date+time bound.</summary>
+    /// time-only awareness on set (C2). The getter returns the last raw text set (or null), even after
+    /// <see cref="MinValue"/> is assigned directly. Not intended for programmatic use; set
+    /// <see cref="MinValue"/> directly for a full date+time bound.</summary>
     public string? MinValueText
     {
         get;
