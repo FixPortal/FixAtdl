@@ -39,9 +39,9 @@ parser / model / validator / FIX-tag emitter; `net10.0` only; no UI layer
 - Tests are xUnit v3 + AwesomeAssertions + NSubstitute in
   `tests/FixPortal.FixAtdl.Tests`, running on Microsoft.Testing.Platform.
 - Assert with `.Should()`, never xUnit `Assert.*`.
-- No coverage floor is currently enforced in CI — the old 65% line floor
-  left with `build-and-test.yml`, and no current workflow collects
-  coverage (coverlet is broken on .NET 10; see `docs/coverage-baseline.md`).
+- CI collects coverage with `dotnet-coverage` and enforces a 70% line floor on
+  `FixPortal.FixAtdl` via `scripts/assert-coverage-floor.ps1`; see
+  `docs/coverage-baseline.md`.
 
 ## Private feed restore
 
@@ -54,9 +54,12 @@ build is broken.
 
 PRs merge rebase-only. `.claude/review-policy.json` tiers risk:
 `nuget.config`, `Directory.Build.props`, and the review control plane itself
-(`review-policy-guard.yml`, its two assertion scripts under
-`.github/scripts/`, `review-policy.json`, `.coderabbit.yaml`) are HIGH; other
-workflows are NORMAL — workflow hygiene is asserted mechanically by
-`review-policy-guard.yml` instead. `docs/**` is LOW except
-`docs/ai-findings.md` (NORMAL — it is the findings ledger); root `*.md` is
-NORMAL (it ships in the package).
+(`ci.yml`, `review-policy-guard.yml`, its two assertion scripts under
+`.github/scripts/`, the two coverage-floor scripts under `scripts/`,
+`review-policy.json`, `.coderabbit.yaml`) are HIGH; other workflows are NORMAL
+— workflow hygiene is asserted mechanically by `review-policy-guard.yml`
+instead. LOW documentation is limited to `docs/architecture/**`,
+`docs/superpowers/**`, `docs/batch-3-findings-disposition.md`,
+`docs/batch-5-conformance-review.md`, and `docs/coverage-baseline.md`; unmatched
+docs, including `docs/ai-findings.md` and new root-level files, are NORMAL.
+Root markdown includes the README shipped in the package.

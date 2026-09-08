@@ -1,5 +1,6 @@
 using FixPortal.FixAtdl.Diagnostics.Exceptions;
 using FixPortal.FixAtdl.Model.Elements;
+using FixPortal.FixAtdl.Model.Enumerations;
 using FixPortal.FixAtdl.Model.Types;
 using Country_t = FixPortal.FixAtdl.Model.Types.Country_t;
 
@@ -480,6 +481,18 @@ public class ValueTypeConversionTests
     // FIXatdl "clear this field" instruction; Boolean_t/String_t/Data_t already honour it,
     // so Int_t/Float_t/Percentage_t and the date types must clear too, not throw.
     // ──────────────────────────────────────────────────────────────────────────
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Required_parameters_reject_NULL_sentinel(bool usesValueTypeBase)
+    {
+        Action act = usesValueTypeBase
+            ? () => new Parameter_t<Int_t>("Required") { Use = Use_t.Required }.WireValue = "{NULL}"
+            : () => new Parameter_t<String_t>("Required") { Use = Use_t.Required }.WireValue = "{NULL}";
+
+        act.Should().Throw<InvalidFieldValueException>();
+    }
 
     [Fact]
     public void Int_t_treats_NULL_sentinel_as_clear()

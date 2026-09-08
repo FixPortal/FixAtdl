@@ -84,3 +84,7 @@ finally {
         Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue
     }
 }
+
+# GitHub's pwsh wrapper exits with $LASTEXITCODE when it exists; do not leak the
+# final child process's code after every verifier assertion has passed.
+exit 0
